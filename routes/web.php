@@ -1,0 +1,300 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\AvailabilityController;
+use App\Http\Controllers\ProfessionalController;
+
+// ========================================
+// RUTAS PÚBLICAS
+// ========================================
+
+/**
+ * Página principal / home
+ * Muestra categorías destacadas y profesionales con mejor calificación
+ */
+Route::get('/', function () {
+    $categories = \App\Models\Category::limit(12)->get();
+    $professionals = \App\Models\User::where('role', 'pro')
+        ->with(['services.category'])
+        ->limit(8)
+        ->get();
+    
+    return view('home', compact('categories', 'professionals'));
+})->name('home');
+
+// ========================================
+// RUTAS DE CATEGORÍAS
+// ========================================
+
+/**
+ * Listar todas las categorías
+ * GET /categories
+ */
+Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+
+/**
+ * Ver servicios de una categoría específica
+ * GET /categories/{category}/services
+ */
+Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
+
+// ========================================
+// RUTAS DE SERVICIOS
+// ========================================
+
+/**
+ * Listar todos los servicios (con filtros)
+ * GET /services
+ */
+Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+
+/**
+ * Ver detalle de un servicio
+ * GET /services/{service}
+ */
+Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
+
+// ========================================
+// RUTAS DE PROFESIONALES
+// ========================================
+
+/**
+ * Listar todos los profesionales
+ * GET /professionals
+ */
+Route::get('/professionals', [ProfessionalController::class, 'index'])->name('professionals.index');
+
+/**
+ * Ver perfil de un profesional
+ * GET /professionals/{professional}
+ */
+Route::get('/professionals/{professional}', [ProfessionalController::class, 'show'])->name('professionals.show');
+
+/**
+ * Ver servicios de un profesional
+ * GET /professionals/{professional}/services
+ */
+Route::get('/professionals/{professional}/services', [ProfessionalController::class, 'services'])->name('professionals.services');
+
+/**
+ * Ver disponibilidad de un profesional
+ * GET /professionals/{professional}/availability
+ */
+Route::get('/professionals/{professional}/availability', [ProfessionalController::class, 'availability'])->name('professionals.availability');
+
+/**
+ * Ver reseñas de un profesional
+ * GET /professionals/{professional}/reviews
+ */
+Route::get('/professionals/{professional}/reviews', [ProfessionalController::class, 'reviews'])->name('professionals.reviews');
+
+// ========================================
+// RUTAS PROTEGIDAS (requieren autenticación)
+// ========================================
+
+Route::middleware(['auth'])->group(function () {
+    
+    // ========================================
+    // RUTAS DE SERVICIOS (para profesionales)
+    // ========================================
+    
+    /**
+     * Formulario para crear un servicio
+     * GET /services/create
+     */
+    Route::get('/services/create', [ServiceController::class, 'create'])->name('services.create');
+    
+    /**
+     * Guardar un nuevo servicio
+     * POST /services
+     */
+    Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
+    
+    /**
+     * Formulario para editar un servicio
+     * GET /services/{service}/edit
+     */
+    Route::get('/services/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
+    
+    /**
+     * Actualizar un servicio
+     * PUT /services/{service}
+     */
+    Route::put('/services/{service}', [ServiceController::class, 'update'])->name('services.update');
+    
+    /**
+     * Eliminar un servicio
+     * DELETE /services/{service}
+     */
+    Route::delete('/services/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
+
+    // ========================================
+    // RUTAS DE RESERVAS (BOOKINGS)
+    // ========================================
+    
+    /**
+     * Listar reservas del usuario (cliente o profesional)
+     * GET /bookings
+     */
+    Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+    
+    /**
+     * Ver detalle de una reserva
+     * GET /bookings/{booking}
+     */
+    Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+    
+    /**
+     * Crear una nueva reserva
+     * POST /bookings
+     */
+    Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+    
+    /**
+     * Profesional acepta una reserva
+     * PATCH /bookings/{booking}/accept
+     */
+    Route::patch('/bookings/{booking}/accept', [BookingController::class, 'accept'])->name('bookings.accept');
+    
+    /**
+     * Profesional rechaza una reserva
+     * PATCH /bookings/{booking}/reject
+     */
+    Route::patch('/bookings/{booking}/reject', [BookingController::class, 'reject'])->name('bookings.reject');
+    
+    /**
+     * Cliente cancela una reserva
+     * PATCH /bookings/{booking}/cancel
+     */
+    Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+    
+    /**
+     * Profesional marca una reserva como completada
+     * PATCH /bookings/{booking}/complete
+     */
+    Route::patch('/bookings/{booking}/complete', [BookingController::class, 'complete'])->name('bookings.complete');
+
+    // ========================================
+    // RUTAS DE RESEÑAS (REVIEWS)
+    // ========================================
+    
+    /**
+     * Formulario para crear una reseña
+     * GET /bookings/{booking}/review/create
+     */
+    Route::get('/bookings/{booking}/review/create', [ReviewController::class, 'create'])->name('reviews.create');
+    
+    /**
+     * Guardar una nueva reseña
+     * POST /reviews
+     */
+    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+
+    // ========================================
+    // RUTAS DE MENSAJES (CHAT)
+    // ========================================
+    
+    /**
+     * Listar conversaciones del usuario
+     * GET /messages
+     */
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    
+    /**
+     * Ver conversación con un usuario específico
+     * GET /messages/{user}
+     */
+    Route::get('/messages/{user}', [MessageController::class, 'show'])->name('messages.show');
+    
+    /**
+     * Enviar un mensaje
+     * POST /messages
+     */
+    Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
+    
+    /**
+     * Obtener mensajes no leídos (API)
+     * GET /messages/unread
+     */
+    Route::get('/messages/unread', [MessageController::class, 'unread'])->name('messages.unread');
+    
+    /**
+     * Marcar mensaje como leído
+     * PATCH /messages/{message}/read
+     */
+    Route::patch('/messages/{message}/read', [MessageController::class, 'markAsRead'])->name('messages.markAsRead');
+
+    // ========================================
+    // RUTAS DE DISPONIBILIDAD (para profesionales)
+    // ========================================
+    
+    /**
+     * Ver disponibilidad del profesional autenticado
+     * GET /availability
+     */
+    Route::get('/availability', [AvailabilityController::class, 'index'])->name('availability.index');
+    
+    /**
+     * Crear un bloque de disponibilidad
+     * POST /availability
+     */
+    Route::post('/availability', [AvailabilityController::class, 'store'])->name('availability.store');
+    
+    /**
+     * Actualizar un bloque de disponibilidad
+     * PUT /availability/{availability}
+     */
+    Route::put('/availability/{availability}', [AvailabilityController::class, 'update'])->name('availability.update');
+    
+    /**
+     * Eliminar un bloque de disponibilidad
+     * DELETE /availability/{availability}
+     */
+    Route::delete('/availability/{availability}', [AvailabilityController::class, 'destroy'])->name('availability.destroy');
+
+});
+
+// ========================================
+// RUTAS DE ADMINISTRACIÓN
+// Solo accesibles por usuarios con rol 'admin'
+// ========================================
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    
+    /**
+     * Dashboard administrativo
+     * GET /admin/dashboard
+     */
+    Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    
+    /**
+     * Gestión de usuarios
+     */
+    Route::get('/users', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
+    Route::get('/users/{user}', [App\Http\Controllers\Admin\UserController::class, 'show'])->name('users.show');
+    Route::patch('/users/{user}/role', [App\Http\Controllers\Admin\UserController::class, 'updateRole'])->name('users.updateRole');
+    Route::delete('/users/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
+    
+});
+
+// ========================================
+// RUTAS DE AUTENTICACIÓN
+// (Se deben agregar con Laravel Breeze/Jetstream)
+// ========================================
+// require __DIR__.'/auth.php';
+
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});

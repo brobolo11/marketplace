@@ -1,0 +1,358 @@
+RECOGIDO DE UNA CONVERSACION CON CHATGPT
+
+
+
+la idea que tengo es un marketplace de servicios hacia el hogar, es decir, tu contratas a gente para cosas especificas para arreglar la casa, clases extraescolares, jardineria, electricista…
+
+¡Muy buena idea! Un marketplace de servicios para el hogar es un proyecto súper útil y completo, te permitirá trabajar:
+
+Roles (cliente / profesional / admin)
+
+Reservas y agenda
+
+Geolocalización
+
+Valoraciones
+
+Chat
+
+Pasarelas de pago (si quieres)
+
+Upload de imágenes y documentos (portafolio)
+
+Vamos a definirlo para que puedas empezar con claridad 👇
+
+✅ Concepto General
+
+Una plataforma tipo TaskRabbit / Cronoshare, donde los usuarios pueden contratar profesionales para:
+
+🧹 Limpieza
+
+🔧 Reparaciones del hogar
+
+💡 Electricista
+
+🚿 Fontanero
+
+🌱 Jardinería
+
+👶 Cuidado de niños
+
+🐶 Servicios de mascotas
+
+🎸 Clases particulares (música, idiomas, refuerzo escolar)
+
+🚚 Mudanzas
+
+🧰 Montaje de muebles
+
+🏗️ Funcionalidades Principales
+👤 Roles
+Usuario	Funciones
+Cliente	Buscar servicios, contratar, reseñar
+Profesional	Crear perfil, ofertar servicios, gestionar agenda
+Administrador	Moderar servicios, usuarios, categorías
+
+📌 Módulos Clave
+Módulo	Funciones
+Autenticación	Registro/Login, recuperación, email verification
+Perfiles	Datos personales, foto, descripción, habilidades
+Servicios	Categorías, filtros, precio, disponibilidad
+Geolocalización	Profesionales cercanos (lat/long + Mapbox/Google)
+Reservas	Calendario, horarios, gestión de citas
+Pagos (opcional)	Stripe / PayPal / Bizum
+Chat	Cliente ↔ Profesional
+Valoraciones	Reviews, puntuación ⭐⭐⭐⭐⭐
+Notificaciones	Email + sistema interno
+🗂️ Estructura de Tablas (idea inicial)
+Usuarios
+
+id
+
+nombre
+
+email
+
+rol (cliente/profesional/admin)
+
+ubicación (ciudad, lat, long)
+
+bio
+
+skills (json)
+
+experiencia
+
+precio_hora (para profesionales)
+
+Servicios
+
+id
+
+professional_id
+
+categoría (fontanero, profesor, jardinero, …)
+
+descripción
+
+precio base / por hora
+
+fotos
+
+Reservas
+
+id
+
+user_id
+
+professional_id
+
+fecha/hora inicio-fin
+
+estado (pendiente, aceptada, completada, cancelada)
+
+precio final
+
+dirección
+
+Reviews
+
+user_id
+
+professional_id
+
+rating
+
+comentario
+
+Mensajes (para chat)
+
+remitente_id
+
+receptor_id
+
+mensaje
+
+timestamp
+
+🧩 Rutas sugeridas
+Cliente
+GET /profesionales
+GET /profesionales/{id}
+POST /reservas
+GET /mis-reservas
+POST /valoracion
+
+Profesional
+GET /mis-servicios
+POST /servicios
+PATCH /servicios/{id}
+GET /mis-reservas
+PATCH /reservas/{id}/aceptar
+PATCH /reservas/{id}/rechazar
+
+Admin
+GET /admin/usuarios
+GET /admin/servicios
+PATCH /admin/usuario/{id}/ban
+
+🛠️ Stack sugerido
+FunciónTecnologíaFrontendBlade + Tailwind / BootstrapAutenticaciónLaravel Breeze / JetstreamBase de datosMySQL / MariaDBMapasLeaflet + OpenStreetMap (free)NotificacionesLaravel NotificationsPagosStripeRealtime ChatLaravel WebSockets / Pusher
+
+🎨 UI que puedes implementar
+
+
+🏠 Home con buscador por tipo de servicio y ciudad
+
+
+🧑‍🔧 Card de profesional con experiencia + rating
+
+
+📅 Calendario para reservar citas
+
+
+📨 Chat tipo WhatsApp
+
+
+⭐ Sistema de reseñas
+
+
+💳 Checkout si integras pagos
+
+
+
+🚀 To-Do del Proyecto (roadmap)
+Fase 1 — Base
+✅ Roles
+✅ Registro/Login
+✅ Categorías y servicios
+✅ Buscador + filtros
+Fase 2 — Operativa
+✅ Perfiles profesionales
+✅ Calendario y reservas
+✅ Chat básico
+✅ Reviews
+Fase 3 — Plus (para destacar)
+✨ Pagos
+✨ Geolocalización exacta
+✨ Notificaciones Push
+✨ Panel Admin completo
+
+Si quieres, te puedo preparar:
+🔧 Comandos Artisan para crear modelos, controladores y migraciones
+🗂️ Estructura completa del proyecto
+🧠 Diagrama UML y ER
+🧪 Seeders + Factories para datos falsos
+🖼️ Plantilla HTML/Tailwind para empezar
+Solo dime:
+
+❓ ¿Quieres que te genere la arquitectura del proyecto ya?
+
+o ¿prefieres que empecemos por el diagram ER y rutas?
+
+Perfecto, vamos a definir tu modelo entidad-relación (ER) y las rutas para tu marketplace de servicios a domicilio.
+
+✅ Modelo Entidad–Relación (ER)
+🧾 Descripción de entidades
+Entidad	Campos principales
+users	id, name, email, password, role, city, lat, lng, bio
+categories	id, name, icon
+services	id, user_id (pro), category_id, title, description, price_hour
+service_photos	id, service_id, image_path
+bookings	id, user_id, pro_id, service_id, datetime, status, address, total_price
+reviews	id, booking_id, user_id, pro_id, rating, comment
+messages	id, sender_id, receiver_id, message
+availability	id, user_id, weekday, start_time, end_time
+
+🧠 Diagrama ER (texto estructurado)
+users (1) -------------------- (N) services
+ |                                 |
+ |                                 |--- categories (1)
+ |
+ |--- bookings (N) ---- services (1)
+ |          |
+ |          |---- reviews (1)
+ |
+ |--- messages (N) ---- users (N)
+
+services (1) ---- service_photos (N)
+
+users (pro) ---- availability (N)
+
+📊 Versión ERD más formal
+users
+- id PK
+- name
+- email UNIQUE
+- password
+- role (client|pro|admin)
+- phone
+- city
+- lat
+- lng
+- bio
+- created_at
+- updated_at
+
+categories
+- id PK
+- name
+- icon
+
+services
+- id PK
+- user_id FK -> users
+- category_id FK -> categories
+- title
+- description
+- price_hour
+- created_at
+- updated_at
+
+service_photos
+- id PK
+- service_id FK -> services
+- image_path
+
+bookings
+- id PK
+- user_id FK -> users (cliente)
+- pro_id FK -> users (profesional)
+- service_id FK -> services
+- datetime
+- address
+- status (pending, accepted, rejected, completed, cancelled)
+- total_price
+
+reviews
+- id PK
+- booking_id FK -> bookings
+- user_id FK -> users (cliente)
+- pro_id FK -> users (pro)
+- rating (1–5)
+- comment
+
+messages
+- id PK
+- sender_id FK -> users
+- receiver_id FK -> users
+- message
+- created_at
+
+availability
+- id PK
+- user_id FK -> users
+- weekday (0-6)
+- start_time
+- end_time
+
+✅ Rutas (Laravel)
+Auth
+POST /register
+POST /login
+POST /logout
+
+Categorías
+GET /categories
+GET /categories/{id}/services  // servicios por categoría
+
+Servicios
+GET /services          // listado
+GET /services/{id}     // detalle
+POST /services         // crear (pro)
+PUT /services/{id}     // actualizar
+DELETE /services/{id}  // eliminar
+
+Profesionales
+GET /professionals                  // lista
+GET /professionals/{id}             // perfil
+GET /professionals/{id}/services
+GET /professionals/{id}/availability
+
+Disponibilidad del profesional
+POST /availability
+PUT /availability/{id}
+DELETE /availability/{id}
+
+Reservas (bookings)
+GET /bookings                      // mis reservas (cliente o pro)
+POST /bookings                    // crear reserva
+GET /bookings/{id}
+PATCH /bookings/{id}/accept       // pro
+PATCH /bookings/{id}/reject       // pro
+PATCH /bookings/{id}/cancel       // client
+PATCH /bookings/{id}/complete     // pro
+
+Valoraciones
+POST /reviews
+GET /professionals/{id}/reviews
+
+Mensajería / chat
+GET /messages/{user_id}
+POST /messages
+
+Admin (si lo agregas)
+GET /admin/users
+PATCH /admin/users/{id}/ban
+GET /admin/bookings
+GET /admin/services
