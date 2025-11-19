@@ -52,6 +52,15 @@ class AvailabilityController extends Controller
             'weekday' => 'required|integer|min:0|max:6',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
+        ], [
+            'weekday.required' => 'El día de la semana es requerido.',
+            'weekday.min' => 'El día de la semana debe estar entre 0 (Domingo) y 6 (Sábado).',
+            'weekday.max' => 'El día de la semana debe estar entre 0 (Domingo) y 6 (Sábado).',
+            'start_time.required' => 'La hora de inicio es requerida.',
+            'start_time.date_format' => 'El formato de hora debe ser HH:MM.',
+            'end_time.required' => 'La hora de fin es requerida.',
+            'end_time.date_format' => 'El formato de hora debe ser HH:MM.',
+            'end_time.after' => 'La hora de fin debe ser posterior a la hora de inicio.',
         ]);
 
         // Verifica que no haya solapamiento de horarios
@@ -94,6 +103,15 @@ class AvailabilityController extends Controller
             'weekday' => 'required|integer|min:0|max:6',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
+        ], [
+            'weekday.required' => 'El día de la semana es requerido.',
+            'weekday.min' => 'El día de la semana debe estar entre 0 (Domingo) y 6 (Sábado).',
+            'weekday.max' => 'El día de la semana debe estar entre 0 (Domingo) y 6 (Sábado).',
+            'start_time.required' => 'La hora de inicio es requerida.',
+            'start_time.date_format' => 'El formato de hora debe ser HH:MM.',
+            'end_time.required' => 'La hora de fin es requerida.',
+            'end_time.date_format' => 'El formato de hora debe ser HH:MM.',
+            'end_time.after' => 'La hora de fin debe ser posterior a la hora de inicio.',
         ]);
 
         // Verifica que no haya solapamiento con otros bloques (excluyendo el actual)

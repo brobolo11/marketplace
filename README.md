@@ -1,52 +1,262 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏠 HouseFixes - Marketplace de Servicios Profesionales
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Laravel](https://img.shields.io/badge/Laravel-12.x-red.svg)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.2+-blue.svg)](https://php.net)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8.svg)](https://tailwindcss.com)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-## About Laravel
+Plataforma web completa para conectar clientes con profesionales de servicios del hogar. Sistema de reservas, pagos, reseñas y gestión administrativa integrada.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📋 Tabla de Contenidos
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- [Características](#-características)
+- [Requisitos](#-requisitos)
+- [Instalación](#-instalación)
+- [Configuración](#️-configuración)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [Uso](#-uso)
+- [Testing](#-testing)
+- [Tecnologías](#-tecnologías)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## ✨ Características
 
-## Learning Laravel
+### Para Clientes
+- 🔍 Búsqueda y filtrado de servicios por categoría
+- 📅 Sistema de reservas con calendario en tiempo real
+- 💳 Pasarela de pagos integrada (Stripe)
+- ⭐ Sistema de reseñas y valoraciones
+- 💬 Chat directo con profesionales
+- 📊 Historial de reservas y servicios
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Para Profesionales
+- 🛠️ Gestión completa de servicios ofrecidos
+- 📆 Control de disponibilidad (horarios semanales y bloqueos específicos)
+- 🔔 Notificaciones de nuevas solicitudes
+- 💰 Dashboard de ingresos y estadísticas
+- 📸 Galería de fotos por servicio
+- ⏰ Gestión de solicitudes pendientes
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Para Administradores
+- 👥 Gestión de usuarios (clientes, profesionales, admins)
+- 🏷️ CRUD de categorías de servicios
+- 📊 Panel de estadísticas en tiempo real
+- 📋 Supervisión de reservas y servicios
+- 🔧 Herramientas de moderación
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 💻 Requisitos
 
-## Laravel Sponsors
+- PHP >= 8.2
+- Composer >= 2.6
+- Node.js >= 18.x & NPM >= 9.x
+- MySQL >= 8.0
+- Servidor web (Apache/Nginx) o Laravel Valet/Herd
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🚀 Instalación
 
-### Premium Partners
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/brobolo11/marketplace.git
+cd marketplace
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 2. Instalar dependencias de PHP
+```bash
+composer install
+```
 
-## Contributing
+### 3. Instalar dependencias de Node.js
+```bash
+npm install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 4. Configurar variables de entorno
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### 5. Configurar base de datos
+Edita el archivo `.env` y configura tu base de datos:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=housefixes
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 6. Ejecutar migraciones y seeders
+```bash
+php artisan migrate --seed
+```
+
+### 7. Crear enlace simbólico para storage
+```bash
+php artisan storage:link
+```
+
+### 8. Compilar assets
+```bash
+npm run build
+# O para desarrollo:
+npm run dev
+```
+
+### 9. Iniciar el servidor
+```bash
+php artisan serve
+```
+
+Accede a la aplicación en: `http://localhost:8000`
+
+## ⚙️ Configuración
+
+### Usuarios de Prueba
+Después de ejecutar los seeders, puedes usar estos usuarios:
+
+**Administrador:**
+- Email: admin@housefixes.com
+- Password: password
+
+**Profesional:**
+- Email: pro@housefixes.com  
+- Password: password
+
+**Cliente:**
+- Email: client@housefixes.com
+- Password: password
+
+### Configurar Pagos (Stripe)
+1. Obtén tus claves API de [Stripe Dashboard](https://dashboard.stripe.com)
+2. Añade a tu `.env`:
+```env
+STRIPE_KEY=pk_test_...
+STRIPE_SECRET=sk_test_...
+```
+
+## 📁 Estructura del Proyecto
+
+```
+proyecto-final/
+├── app/
+│   ├── Http/Controllers/      # Controladores
+│   ├── Models/                # Modelos Eloquent
+│   ├── Policies/              # Políticas de autorización
+│   └── Services/              # Servicios de lógica de negocio
+├── database/
+│   ├── migrations/            # Migraciones de BD (21 archivos)
+│   └── seeders/               # Seeders de datos
+├── resources/
+│   ├── views/                 # Vistas Blade
+│   │   ├── admin/            # Panel administrativo
+│   │   ├── bookings/         # Reservas
+│   │   ├── services/         # Servicios
+│   │   ├── messages/         # Mensajería
+│   │   └── components/       # Componentes reutilizables
+│   ├── css/                   # Estilos Tailwind
+│   └── js/                    # JavaScript/Alpine.js
+├── routes/
+│   ├── web.php               # Rutas web (360+ líneas)
+│   └── api.php               # Rutas API
+└── tests/                    # Tests automatizados
+```
+
+## 📖 Uso
+
+### Flujo de Trabajo Principal
+
+1. **Cliente busca servicio** → Navega por categorías o búsqueda
+2. **Selecciona servicio** → Ve detalles, fotos, reseñas
+3. **Reserva en calendario** → Elige fechas disponibles
+4. **Profesional recibe solicitud** → Notificación automática
+5. **Profesional acepta/rechaza** → Cliente es notificado
+6. **Servicio completado** → Cliente puede dejar reseña
+7. **Pago procesado** → Sistema registra transacción
+
+### Comandos Útiles
+
+```bash
+# Limpiar cache
+php artisan cache:clear
+php artisan config:clear
+php artisan view:clear
+
+# Regenerar autoload
+composer dump-autoload
+
+# Ver rutas
+php artisan route:list
+
+# Crear nuevo controlador
+php artisan make:controller NombreController
+
+# Crear nueva migración
+php artisan make:migration nombre_migracion
+```
+
+## 🧪 Testing
+
+```bash
+# Ejecutar todos los tests
+php artisan test
+
+# Ejecutar tests con coverage
+php artisan test --coverage
+
+# Ejecutar tests específicos
+php artisan test --filter NombreTest
+```
+
+## 🛠️ Tecnologías
+
+### Backend
+- **Laravel 12.x** - Framework PHP
+- **Laravel Jetstream** - Autenticación y equipos
+- **Laravel Fortify** - Backend de autenticación
+- **MySQL 8.0** - Base de datos
+- **Eloquent ORM** - Gestión de base de datos
+
+### Frontend
+- **Blade Templates** - Motor de plantillas
+- **Tailwind CSS 3.4** - Framework CSS utility-first
+- **Alpine.js** - JavaScript reactivo ligero
+- **Font Awesome** - Iconos
+- **Vite** - Build tool moderno
+
+### Integraciones
+- **Stripe** - Pasarela de pagos
+- **Laravel Storage** - Gestión de archivos
+- **Laravel Notifications** - Sistema de notificaciones
+
+## 📝 Sprints Completados
+
+- ✅ Sprint 1: Authentication & Navigation
+- ✅ Sprint 2: Booking Calendar System
+- ✅ Sprint 3: Service Management
+- ✅ Sprint 4: Pending Requests
+- ✅ Sprint 5: Payment System
+- ✅ Sprint 6: Availability Management
+- ✅ Sprint 7: Review System
+- ✅ Sprint 8: Messaging System
+- ✅ Sprint 9: Admin Dashboard
+- ✅ Sprint 10: Testing & Polish
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detalles.
+
+## 👨‍💻 Autor
+
+**brobolo11**
+- GitHub: [@brobolo11](https://github.com/brobolo11)
+
+## 🙏 Agradecimientos
+
+- Laravel Framework
+- Tailwind CSS Team
+- Alpine.js Community
+- Font Awesome
 
 ## Code of Conduct
 

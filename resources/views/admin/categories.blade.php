@@ -27,19 +27,17 @@
 <section class="py-8 bg-gray-50">
     <div class="container mx-auto px-4">
         @if(session('success'))
-        <div class="bg-green-100 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
-            {{ session('success') }}
-        </div>
+        <x-alert type="success">{{ session('success') }}</x-alert>
         @endif
 
         @if($errors->any())
-        <div class="bg-red-100 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+        <x-alert type="error">
             <ul class="list-disc list-inside">
                 @foreach($errors->all() as $error)
                 <li>{{ $error }}</li>
                 @endforeach
             </ul>
-        </div>
+        </x-alert>
         @endif
 
         {{-- Grid de Categorías --}}

@@ -21,6 +21,20 @@
 
 <section class="py-8 bg-gray-50">
     <div class="container mx-auto px-4">
+        @if(session('success'))
+        <x-alert type="success">{{ session('success') }}</x-alert>
+        @endif
+
+        @if($errors->any())
+        <x-alert type="error">
+            <ul class="list-disc list-inside">
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </x-alert>
+        @endif
+
         {{-- Filtros --}}
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
             <form method="GET" action="{{ route('admin.users.index') }}" class="grid md:grid-cols-3 gap-4">

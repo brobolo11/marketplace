@@ -47,6 +47,14 @@ class ReviewController extends Controller
             'booking_id' => 'required|exists:bookings,id',
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'nullable|string|max:1000',
+        ], [
+            'booking_id.required' => 'La reserva es requerida.',
+            'booking_id.exists' => 'La reserva seleccionada no existe.',
+            'rating.required' => 'La calificación es requerida.',
+            'rating.integer' => 'La calificación debe ser un número entero.',
+            'rating.min' => 'La calificación debe ser al menos 1 estrella.',
+            'rating.max' => 'La calificación no puede exceder 5 estrellas.',
+            'comment.max' => 'El comentario no puede exceder 1000 caracteres.',
         ]);
 
         // Obtiene la reserva

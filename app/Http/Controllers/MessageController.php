@@ -66,6 +66,13 @@ class MessageController extends Controller
             'booking_id' => 'nullable|exists:bookings,id',
             'subject' => 'nullable|string|max:200',
             'message' => 'required|string|max:1000',
+        ], [
+            'receiver_id.required' => 'El destinatario es requerido.',
+            'receiver_id.exists' => 'El destinatario seleccionado no existe.',
+            'booking_id.exists' => 'La reserva seleccionada no existe.',
+            'subject.max' => 'El asunto no puede exceder 200 caracteres.',
+            'message.required' => 'El mensaje es requerido.',
+            'message.max' => 'El mensaje no puede exceder 1000 caracteres.',
         ]);
 
         // Verifica que no se envíe un mensaje a sí mismo

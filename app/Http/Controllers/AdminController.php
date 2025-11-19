@@ -106,6 +106,9 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'role' => 'required|in:client,professional,admin',
+        ], [
+            'role.required' => 'El rol es requerido.',
+            'role.in' => 'El rol debe ser: cliente, profesional o administrador.',
         ]);
         
         $user->role = $validated['role'];
@@ -215,6 +218,13 @@ class AdminController extends Controller
             'name' => 'required|string|max:100|unique:categories,name',
             'description' => 'nullable|string|max:500',
             'icon' => 'required|string|max:50',
+        ], [
+            'name.required' => 'El nombre de la categoría es requerido.',
+            'name.max' => 'El nombre no puede exceder 100 caracteres.',
+            'name.unique' => 'Ya existe una categoría con este nombre.',
+            'description.max' => 'La descripción no puede exceder 500 caracteres.',
+            'icon.required' => 'El icono es requerido.',
+            'icon.max' => 'El icono no puede exceder 50 caracteres.',
         ]);
         
         Category::create($validated);
@@ -232,6 +242,13 @@ class AdminController extends Controller
             'name' => 'required|string|max:100|unique:categories,name,' . $category->id,
             'description' => 'nullable|string|max:500',
             'icon' => 'required|string|max:50',
+        ], [
+            'name.required' => 'El nombre de la categoría es requerido.',
+            'name.max' => 'El nombre no puede exceder 100 caracteres.',
+            'name.unique' => 'Ya existe una categoría con este nombre.',
+            'description.max' => 'La descripción no puede exceder 500 caracteres.',
+            'icon.required' => 'El icono es requerido.',
+            'icon.max' => 'El icono no puede exceder 50 caracteres.',
         ]);
         
         $category->update($validated);

@@ -102,6 +102,15 @@ class BookingController extends Controller
             'datetime' => 'required|date|after:now',
             'address' => 'required|string|max:255',
             'total_price' => 'required|numeric|min:0',
+        ], [
+            'service_id.required' => 'Debe seleccionar un servicio.',
+            'service_id.exists' => 'El servicio seleccionado no existe.',
+            'datetime.required' => 'La fecha y hora son requeridas.',
+            'datetime.after' => 'La fecha debe ser posterior a la actual.',
+            'address.required' => 'La dirección es requerida.',
+            'address.max' => 'La dirección no puede exceder 255 caracteres.',
+            'total_price.required' => 'El precio total es requerido.',
+            'total_price.min' => 'El precio debe ser mayor o igual a 0.',
         ]);
 
         // Obtiene el servicio y el profesional
