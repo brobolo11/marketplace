@@ -20,16 +20,16 @@ class AvailabilitySeeder extends Seeder
 
         // Horario estándar de lunes a viernes: 9:00 - 18:00
         $standardSchedule = [
-            ['weekday' => 1, 'start_time' => '09:00', 'end_time' => '18:00'], // Lunes
-            ['weekday' => 2, 'start_time' => '09:00', 'end_time' => '18:00'], // Martes
-            ['weekday' => 3, 'start_time' => '09:00', 'end_time' => '18:00'], // Miércoles
-            ['weekday' => 4, 'start_time' => '09:00', 'end_time' => '18:00'], // Jueves
-            ['weekday' => 5, 'start_time' => '09:00', 'end_time' => '18:00'], // Viernes
+            ['weekday' => 1, 'start_time' => '09:00', 'end_time' => '18:00', 'is_available' => true], // Lunes
+            ['weekday' => 2, 'start_time' => '09:00', 'end_time' => '18:00', 'is_available' => true], // Martes
+            ['weekday' => 3, 'start_time' => '09:00', 'end_time' => '18:00', 'is_available' => true], // Miércoles
+            ['weekday' => 4, 'start_time' => '09:00', 'end_time' => '18:00', 'is_available' => true], // Jueves
+            ['weekday' => 5, 'start_time' => '09:00', 'end_time' => '18:00', 'is_available' => true], // Viernes
         ];
 
         // Horario con sábados: 9:00 - 14:00
         $weekendSchedule = [
-            ['weekday' => 6, 'start_time' => '10:00', 'end_time' => '14:00'], // Sábado
+            ['weekday' => 6, 'start_time' => '10:00', 'end_time' => '14:00', 'is_available' => true], // Sábado
         ];
 
         // ========================================
@@ -38,10 +38,10 @@ class AvailabilitySeeder extends Seeder
         // ========================================
         
         foreach ($standardSchedule as $schedule) {
-            Availability::create(array_merge(['user_id' => 2], $schedule));
+            Availability::create(array_merge(['user_id' => 2, 'is_available' => true], $schedule));
         }
         foreach ($weekendSchedule as $schedule) {
-            Availability::create(array_merge(['user_id' => 2], $schedule));
+            Availability::create(array_merge(['user_id' => 2, 'is_available' => true], $schedule));
         }
 
         // ========================================

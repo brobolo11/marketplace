@@ -15,10 +15,13 @@ class Availability extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_id',     // ID del profesional
-        'weekday',     // Día de la semana (0 = Domingo, 1 = Lunes, ..., 6 = Sábado)
-        'start_time',  // Hora de inicio (ej: 09:00)
-        'end_time',    // Hora de fin (ej: 18:00)
+        'user_id',        // ID del profesional
+        'weekday',        // Día de la semana (0 = Domingo, 1 = Lunes, ..., 6 = Sábado)
+        'start_time',     // Hora de inicio (ej: 09:00)
+        'end_time',       // Hora de fin (ej: 18:00)
+        'specific_date',  // Fecha específica para bloqueos (vacaciones, etc.)
+        'is_available',   // true = disponible, false = bloqueado
+        'reason',         // Razón del bloqueo
     ];
 
     /**
@@ -27,7 +30,9 @@ class Availability extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'weekday' => 'integer',  // Día de la semana como entero
+        'weekday' => 'integer',
+        'specific_date' => 'date',
+        'is_available' => 'boolean',
     ];
 
     // ========================================

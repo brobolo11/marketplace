@@ -11,6 +11,7 @@ Route::get('/user', function (Request $request) {
 
 // API de disponibilidad de profesionales
 Route::get('/availability/{professional}', [AvailabilityController::class, 'show']);
+Route::get('/availability/calendar/{userId}', [\App\Http\Controllers\AvailabilityController::class, 'getAvailability']);
 Route::get('/bookings/{professional}/dates', [AvailabilityController::class, 'bookedDates']);
 
 // API de reservas

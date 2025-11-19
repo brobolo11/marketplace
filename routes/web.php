@@ -263,6 +263,18 @@ Route::middleware(['auth'])->group(function () {
      * DELETE /availability/{availability}
      */
     Route::delete('/availability/{availability}', [AvailabilityController::class, 'destroy'])->name('availability.destroy');
+    
+    /**
+     * Crear un bloqueo específico (vacaciones, día festivo)
+     * POST /availability/block
+     */
+    Route::post('/availability/block', [AvailabilityController::class, 'createBlock'])->name('availability.block');
+    
+    /**
+     * Eliminar un bloqueo específico
+     * DELETE /availability/block/{id}
+     */
+    Route::delete('/availability/block/{id}', [AvailabilityController::class, 'deleteBlock'])->name('availability.block.delete');
 
     // ========================================
     // RUTAS DE PAGOS (SIMULADOS)
