@@ -124,10 +124,22 @@
                                     <p class="text-gray-500 text-sm">Sin reseñas aún</p>
                                 @endif
 
-                                <a href="{{ route('professionals.show', $service->user) }}" 
-                                   class="inline-block mt-4 text-blue-600 hover:text-blue-700 font-semibold">
-                                    Ver perfil completo <i class="fas fa-arrow-right ml-1"></i>
-                                </a>
+                                <div class="mt-4 flex gap-3">
+                                    <a href="{{ route('professionals.show', $service->user) }}" 
+                                       class="inline-block text-blue-600 hover:text-blue-700 font-semibold">
+                                        Ver perfil completo <i class="fas fa-arrow-right ml-1"></i>
+                                    </a>
+                                    
+                                    @auth
+                                        @if(!Auth::user()->isPro() || Auth::id() !== $service->user_id)
+                                            <a href="{{ route('messages.show', $service->user) }}" 
+                                               class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition duration-200">
+                                                <i class="fas fa-comment-dots"></i>
+                                                Contactar
+                                            </a>
+                                        @endif
+                                    @endauth
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -296,6 +308,81 @@
             ->take(3)
             ->get();
     @endphp
+
+    {{-- Sección de Reseñas --}}
+    @php
+        $reviews = $service->user->reviewsReceived()->with('client')->latest()->take(10)->get();
+        $averageRating = $service->user->reviewsReceived()->avg('rating') ?? 0;
+        $totalReviews = $service->user->reviewsReceived()->count();
+    @endphp
+    
+    @if($totalReviews > 0)
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-800 mb-2">Reseñas de Clientes</h2>
+                            <div class="flex items-center gap-3">
+                                <div class="flex items-center gap-1">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <i class="fas fa-star text-xl {{ $i <= round($averageRating) ? 'text-yellow-400' : 'text-gray-300' }}"></i>
+                                    @endfor
+                                </div>
+                                <span class="text-2xl font-bold text-gray-800">{{ number_format($averageRating, 1) }}</span>
+                                <span class="text-gray-600">({{ $totalReviews }} {{ $totalReviews == 1 ? 'reseña' : 'reseñas' }})</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        @foreach($reviews as $review)
+                            <div class="bg-gray-50 rounded-xl p-6 hover:shadow-md transition">
+                                <div class="flex items-start gap-4">
+                                    <div class="flex-shrink-0">
+                                        @if($review->client->profile_photo_path)
+                                            <img src="{{ $review->client->profile_photo_path }}" alt="{{ $review->client->name }}" class="w-12 h-12 rounded-full object-cover">
+                                        @else
+                                            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                                                {{ strtoupper(substr($review->client->name, 0, 1)) }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <div>
+                                                <h4 class="font-semibold text-gray-900">{{ $review->client->name }}</h4>
+                                                <div class="flex items-center gap-2 mt-1">
+                                                    <div class="flex items-center gap-0.5">
+                                                        @for($i = 1; $i <= 5; $i++)
+                                                            <i class="fas fa-star text-sm {{ $i <= $review->rating ? 'text-yellow-400' : 'text-gray-300' }}"></i>
+                                                        @endfor
+                                                    </div>
+                                                    <span class="text-sm text-gray-500">{{ $review->created_at->diffForHumans() }}</span>
+                                                </div>
+                                            </div>
+                                            @if(Auth::check() && Auth::id() === $review->user_id)
+                                                <form action="{{ route('reviews.destroy', $review) }}" method="POST" class="inline" onsubmit="return confirm('¿Eliminar esta reseña?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 hover:text-red-700 text-sm">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                        @if($review->comment)
+                                            <p class="text-gray-700 leading-relaxed">{{ $review->comment }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
 
     @if($relatedServices->count() > 0)
         <section class="py-16 bg-gray-50">

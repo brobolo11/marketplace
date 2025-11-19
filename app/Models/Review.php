@@ -62,6 +62,15 @@ class Review extends Model
         return $this->belongsTo(User::class, 'pro_id');
     }
 
+    /**
+     * Servicio asociado a través de la reserva.
+     * Relación: Una reseña accede al servicio a través de la reserva.
+     */
+    public function service()
+    {
+        return $this->hasOneThrough(Service::class, Booking::class, 'id', 'id', 'booking_id', 'service_id');
+    }
+
     // ========================================
     // MÉTODOS AUXILIARES
     // ========================================

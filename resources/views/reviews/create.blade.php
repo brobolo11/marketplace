@@ -8,23 +8,7 @@
 @section('title', 'Dejar Reseña - HouseFixes')
 
 @section('content')
-    {{-- Breadcrumb --}}
-    <section class="bg-gray-100 py-4">
-        <div class="container mx-auto px-4">
-            <nav class="flex items-center text-sm text-gray-600">
-                <a href="{{ route('home') }}" class="hover:text-blue-600">Inicio</a>
-                <i class="fas fa-chevron-right mx-2 text-xs"></i>
-                <a href="{{ route('bookings.index') }}" class="hover:text-blue-600">Mis Reservas</a>
-                <i class="fas fa-chevron-right mx-2 text-xs"></i>
-                <a href="{{ route('bookings.show', $booking) }}" class="hover:text-blue-600">Reserva #{{ $booking->id }}</a>
-                <i class="fas fa-chevron-right mx-2 text-xs"></i>
-                <span class="text-gray-800 font-medium">Dejar Reseña</span>
-            </nav>
-        </div>
-    </section>
-
-    {{-- Contenido --}}
-    <section class="py-12 bg-gray-50">
+    <section class="py-8 bg-gray-50">
         <div class="container mx-auto px-4">
             <div class="max-w-3xl mx-auto">
                 {{-- Header --}}

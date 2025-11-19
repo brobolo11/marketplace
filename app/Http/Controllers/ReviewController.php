@@ -107,4 +107,21 @@ class ReviewController extends Controller
 
         return view('reviews.create', compact('booking'));
     }
+
+    /**
+     * Elimina una reseña (solo el autor puede eliminarla).
+     * 
+     * DELETE /reviews/{review}
+     */
+    public function destroy(Review $review)
+    {
+        // Verifica que el usuario sea el autor de la reseña
+        if ($review->user_id !== Auth::id()) {
+            abort(403, 'No tienes permiso para eliminar esta reseña.');
+        }
+
+        $review->delete();
+
+        return back()->with('success', 'Reseña eliminada correctamente.');
+    }
 }
