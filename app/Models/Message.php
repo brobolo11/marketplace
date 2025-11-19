@@ -17,8 +17,10 @@ class Message extends Model
     protected $fillable = [
         'sender_id',    // ID del usuario que envía el mensaje
         'receiver_id',  // ID del usuario que recibe el mensaje
+        'booking_id',   // ID de la reserva relacionada (opcional)
+        'subject',      // Asunto del mensaje (opcional)
         'message',      // Contenido del mensaje
-        'is_read',      // Si el mensaje ha sido leído
+        'read_at',      // Fecha y hora de lectura
     ];
 
     /**
@@ -27,8 +29,9 @@ class Message extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'is_read' => 'boolean',     // Cast a booleano
-        'created_at' => 'datetime', // Cast a Carbon
+        'read_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     // ========================================
@@ -53,6 +56,15 @@ class Message extends Model
         return $this->belongsTo(User::class, 'receiver_id');
     }
 
+    /**
+     * Reserva relacionada con el mensaje (opcional).
+     * Relación: Un mensaje puede pertenecer a una reserva.
+     */
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
+    }
+
     // ========================================
     // MÉTODOS AUXILIARES
     // ========================================
@@ -62,7 +74,7 @@ class Message extends Model
      */
     public function markAsRead(): bool
     {
-        $this->is_read = true;
+        $this->read_at = now();
         return $this->save();
     }
 
@@ -71,7 +83,7 @@ class Message extends Model
      */
     public function isRead(): bool
     {
-        return $this->is_read;
+        return !is_null($this->read_at);
     }
 
     /**
@@ -80,7 +92,7 @@ class Message extends Model
     public static function unreadForUser(int $userId)
     {
         return self::where('receiver_id', $userId)
-            ->where('is_read', false)
+            ->whereNull('read_at')
             ->get();
     }
 

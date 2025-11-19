@@ -16,10 +16,10 @@
             ->count();
     }
     
-    // TODO: Implementar contador de mensajes no leídos cuando se implemente el sistema de mensajería
-    // $unreadMessagesCount = \App\Models\Message::where('recipient_id', $user->id)
-    //     ->whereNull('read_at')
-    //     ->count();
+    // Contar mensajes no leídos
+    $unreadMessagesCount = \App\Models\Message::where('receiver_id', $user->id)
+        ->whereNull('read_at')
+        ->count();
 @endphp
 
 <div x-data="{ open: false }" class="relative">
@@ -167,7 +167,7 @@
                     <span>Gestionar Disponibilidad</span>
                 </a>
                 
-                <a href="#" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
+                <a href="{{ route('messages.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
                     <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
                     </svg>
@@ -195,7 +195,7 @@
                     <span>Mis Reservas</span>
                 </a>
                 
-                <a href="#" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
+                <a href="{{ route('messages.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
                     <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
                     </svg>

@@ -36,7 +36,7 @@
                                     // Contar mensajes no leídos de este usuario
                                     $unreadCount = App\Models\Message::where('sender_id', $otherUser->id)
                                         ->where('receiver_id', Auth::id())
-                                        ->where('is_read', false)
+                                        ->whereNull('read_at')
                                         ->count();
                                 @endphp
                                 

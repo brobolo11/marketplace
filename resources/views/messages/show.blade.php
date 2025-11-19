@@ -63,7 +63,7 @@
                                         </div>
                                         <p class="text-xs text-gray-500 mt-1 {{ $isMine ? 'text-right' : 'text-left' }} px-2">
                                             {{ $message->created_at->format('H:i') }}
-                                            @if($isMine && $message->is_read)
+                                            @if($isMine && $message->read_at)
                                                 <i class="fas fa-check-double text-blue-500 ml-1"></i>
                                             @endif
                                         </p>

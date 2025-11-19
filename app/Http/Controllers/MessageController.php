@@ -47,8 +47,8 @@ class MessageController extends Controller
         // Marca como leídos los mensajes recibidos
         Message::where('sender_id', $user->id)
             ->where('receiver_id', $currentUser->id)
-            ->where('is_read', false)
-            ->update(['is_read' => true]);
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
 
         return view('messages.show', compact('user', 'messages'));
     }
@@ -63,6 +63,8 @@ class MessageController extends Controller
         // Validación de datos
         $validated = $request->validate([
             'receiver_id' => 'required|exists:users,id',
+            'booking_id' => 'nullable|exists:bookings,id',
+            'subject' => 'nullable|string|max:200',
             'message' => 'required|string|max:1000',
         ]);
 
@@ -75,15 +77,16 @@ class MessageController extends Controller
         $message = Message::create([
             'sender_id' => Auth::id(),
             'receiver_id' => $validated['receiver_id'],
+            'booking_id' => $validated['booking_id'] ?? null,
+            'subject' => $validated['subject'] ?? null,
             'message' => $validated['message'],
-            'is_read' => false,
         ]);
 
         // Si es una petición AJAX, retorna JSON
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => $message->load(['sender', 'receiver']),
+                'message' => $message->load(['sender', 'receiver', 'booking']),
             ]);
         }
 
