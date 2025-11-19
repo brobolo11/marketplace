@@ -237,6 +237,15 @@ class BookingController extends Controller
 
         $booking->complete();
 
+        // Crear notificación para el cliente invitando a dejar reseña
+        \App\Models\Notification::create([
+            'user_id' => $booking->user_id,
+            'type' => 'review_requested',
+            'title' => '¡Deja tu reseña!',
+            'message' => "El servicio '{$booking->service->title}' ha sido completado. ¿Qué tal fue tu experiencia?",
+            'link' => route('reviews.create', $booking->id),
+        ]);
+
         return redirect()
             ->route('bookings.show', $booking)
             ->with('success', 'Reserva marcada como completada. El cliente ya puede dejar una reseña.');
