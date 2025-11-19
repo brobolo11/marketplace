@@ -323,21 +323,43 @@ Route::middleware(['auth'])->group(function () {
 // Solo accesibles por usuarios con rol 'admin'
 // ========================================
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     
     /**
      * Dashboard administrativo
      * GET /admin/dashboard
      */
-    Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard'])->name('dashboard');
     
     /**
      * Gestión de usuarios
+     * GET /admin/users
      */
-    Route::get('/users', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
-    Route::get('/users/{user}', [App\Http\Controllers\Admin\UserController::class, 'show'])->name('users.show');
-    Route::patch('/users/{user}/role', [App\Http\Controllers\Admin\UserController::class, 'updateRole'])->name('users.updateRole');
-    Route::delete('/users/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
+    Route::get('/users', [App\Http\Controllers\AdminController::class, 'users'])->name('users.index');
+    Route::patch('/users/{user}/role', [App\Http\Controllers\AdminController::class, 'updateUserRole'])->name('users.updateRole');
+    Route::delete('/users/{user}', [App\Http\Controllers\AdminController::class, 'deleteUser'])->name('users.destroy');
+    
+    /**
+     * Gestión de servicios
+     * GET /admin/services
+     */
+    Route::get('/services', [App\Http\Controllers\AdminController::class, 'services'])->name('services.index');
+    Route::delete('/services/{service}', [App\Http\Controllers\AdminController::class, 'deleteService'])->name('services.destroy');
+    
+    /**
+     * Gestión de reservas
+     * GET /admin/bookings
+     */
+    Route::get('/bookings', [App\Http\Controllers\AdminController::class, 'bookings'])->name('bookings.index');
+    
+    /**
+     * Gestión de categorías
+     * GET /admin/categories
+     */
+    Route::get('/categories', [App\Http\Controllers\AdminController::class, 'categories'])->name('categories.index');
+    Route::post('/categories', [App\Http\Controllers\AdminController::class, 'storeCategory'])->name('categories.store');
+    Route::put('/categories/{category}', [App\Http\Controllers\AdminController::class, 'updateCategory'])->name('categories.update');
+    Route::delete('/categories/{category}', [App\Http\Controllers\AdminController::class, 'deleteCategory'])->name('categories.destroy');
     
 });
 
