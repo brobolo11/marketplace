@@ -5,7 +5,7 @@
 --}}
 @extends('layouts.marketplace')
 
-@section('title', 'Crear Nuevo Servicio - Servicios Pro')
+@section('title', 'Crear Nuevo Servicio - HouseFixes')
 
 @section('content')
     <section class="py-12 bg-gray-50 min-h-screen">

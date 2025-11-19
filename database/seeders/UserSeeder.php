@@ -45,6 +45,7 @@ class UserSeeder extends Seeder
             'lat' => 40.416775,
             'lng' => -3.703790,
             'bio' => 'Fontanero profesional con más de 10 años de experiencia. Especializado en reparaciones de urgencia y instalaciones completas.',
+            'profile_photo_path' => 'https://ui-avatars.com/api/?name=Carlos+Rodriguez&background=4F46E5&color=fff&size=200',
         ]);
 
         // Electricista
@@ -58,6 +59,7 @@ class UserSeeder extends Seeder
             'lat' => 41.385064,
             'lng' => 2.173404,
             'bio' => 'Electricista certificada. Instalaciones eléctricas, domótica y energía solar. Disponible para emergencias 24/7.',
+            'profile_photo_path' => 'https://ui-avatars.com/api/?name=Maria+Garcia&background=9333EA&color=fff&size=200',
         ]);
 
         // Jardinero
@@ -71,6 +73,7 @@ class UserSeeder extends Seeder
             'lat' => 39.469907,
             'lng' => -0.376288,
             'bio' => 'Jardinero profesional. Diseño de jardines, mantenimiento y poda de árboles. Servicio de jardinería integral.',
+            'profile_photo_path' => 'https://ui-avatars.com/api/?name=Juan+Martinez&background=10B981&color=fff&size=200',
         ]);
 
         // Profesor particular
@@ -84,6 +87,7 @@ class UserSeeder extends Seeder
             'lat' => 40.420000,
             'lng' => -3.700000,
             'bio' => 'Profesora de matemáticas y física con 8 años de experiencia. Clases personalizadas para ESO y Bachillerato.',
+            'profile_photo_path' => 'https://ui-avatars.com/api/?name=Ana+Lopez&background=F59E0B&color=fff&size=200',
         ]);
 
         // Limpieza
@@ -97,6 +101,7 @@ class UserSeeder extends Seeder
             'lat' => 37.388096,
             'lng' => -5.982330,
             'bio' => 'Servicio de limpieza profesional para hogares y oficinas. Productos ecológicos y atención personalizada.',
+            'profile_photo_path' => 'https://ui-avatars.com/api/?name=Laura+Sanchez&background=EC4899&color=fff&size=200',
         ]);
 
         // Carpintero
@@ -110,6 +115,7 @@ class UserSeeder extends Seeder
             'lat' => 43.263012,
             'lng' => -2.934985,
             'bio' => 'Carpintero especializado en muebles a medida y reformas de interiores. Más de 15 años de experiencia.',
+            'profile_photo_path' => 'https://ui-avatars.com/api/?name=Pedro+Fernandez&background=0891B2&color=fff&size=200',
         ]);
 
         // Pintor
@@ -123,6 +129,7 @@ class UserSeeder extends Seeder
             'lat' => 40.425000,
             'lng' => -3.695000,
             'bio' => 'Pintor profesional con experiencia en pintura decorativa, gotelé y trabajos en altura.',
+            'profile_photo_path' => 'https://ui-avatars.com/api/?name=Miguel+Torres&background=DC2626&color=fff&size=200',
         ]);
 
         // Cuidador de mascotas
@@ -136,6 +143,7 @@ class UserSeeder extends Seeder
             'lat' => 41.390000,
             'lng' => 2.170000,
             'bio' => 'Cuidadora profesional de mascotas. Paseos, cuidados veterinarios y hospedaje. Amante de los animales.',
+            'profile_photo_path' => 'https://ui-avatars.com/api/?name=Sofia+Ramirez&background=8B5CF6&color=fff&size=200',
         ]);
 
         // ========================================

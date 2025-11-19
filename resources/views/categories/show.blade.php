@@ -5,7 +5,7 @@
 --}}
 @extends('layouts.marketplace')
 
-@section('title', $category->name . ' - Servicios Pro')
+@section('title', $category->name . ' - HouseFixes')
 
 @section('content')
     {{-- Header de Categoría --}}

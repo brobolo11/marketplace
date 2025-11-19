@@ -8,6 +8,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\ProfessionalController;
+use App\Http\Controllers\PaymentController;
 
 // ========================================
 // RUTAS PÚBLICAS
@@ -144,6 +145,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
     
     /**
+     * Ver solicitudes pendientes (solo profesionales)
+     * GET /bookings/pending-requests
+     */
+    Route::get('/bookings/pending-requests', [BookingController::class, 'pendingRequests'])->name('bookings.pendingRequests');
+    
+    /**
      * Ver detalle de una reserva
      * GET /bookings/{booking}
      */
@@ -156,16 +163,16 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
     
     /**
-     * Profesional acepta una reserva
-     * PATCH /bookings/{booking}/accept
+     * Profesional aprueba una reserva
+     * POST /bookings/{booking}/approve
      */
-    Route::patch('/bookings/{booking}/accept', [BookingController::class, 'accept'])->name('bookings.accept');
+    Route::post('/bookings/{booking}/approve', [BookingController::class, 'approve'])->name('bookings.approve');
     
     /**
      * Profesional rechaza una reserva
-     * PATCH /bookings/{booking}/reject
+     * POST /bookings/{booking}/reject
      */
-    Route::patch('/bookings/{booking}/reject', [BookingController::class, 'reject'])->name('bookings.reject');
+    Route::post('/bookings/{booking}/reject', [BookingController::class, 'reject'])->name('bookings.reject');
     
     /**
      * Cliente cancela una reserva
@@ -256,6 +263,46 @@ Route::middleware(['auth'])->group(function () {
      * DELETE /availability/{availability}
      */
     Route::delete('/availability/{availability}', [AvailabilityController::class, 'destroy'])->name('availability.destroy');
+
+    // ========================================
+    // RUTAS DE PAGOS (SIMULADOS)
+    // ========================================
+    
+    /**
+     * Historial de pagos del usuario
+     * GET /payments
+     */
+    Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
+    
+    /**
+     * Página de checkout para una reserva
+     * GET /bookings/{booking}/checkout
+     */
+    Route::get('/bookings/{booking}/checkout', [PaymentController::class, 'checkout'])->name('bookings.checkout');
+    
+    /**
+     * Procesar pago simulado
+     * POST /payments
+     */
+    Route::post('/payments', [PaymentController::class, 'process'])->name('payments.process');
+    
+    /**
+     * Confirmación de pago
+     * GET /payments/{payment}/confirmation
+     */
+    Route::get('/payments/{payment}/confirmation', [PaymentController::class, 'confirmation'])->name('payments.confirmation');
+    
+    /**
+     * Solicitar reembolso
+     * POST /payments/{payment}/refund
+     */
+    Route::post('/payments/{payment}/refund', [PaymentController::class, 'refund'])->name('payments.refund');
+    
+    /**
+     * Ver/Descargar recibo
+     * GET /payments/{payment}/receipt
+     */
+    Route::get('/payments/{payment}/receipt', [PaymentController::class, 'receipt'])->name('payments.receipt');
 
 });
 

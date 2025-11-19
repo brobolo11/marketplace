@@ -5,7 +5,7 @@
 --}}
 @extends('layouts.marketplace')
 
-@section('title', 'Mis Reservas - Servicios Pro')
+@section('title', 'Mis Reservas - HouseFixes')
 
 @section('content')
     {{-- Header --}}

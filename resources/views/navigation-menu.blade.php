@@ -102,6 +102,18 @@
                                 {{ __('Profile') }}
                             </x-dropdown-link>
 
+                            <x-dropdown-link href="{{ route('bookings.index') }}">
+                                <i class="fas fa-calendar-check mr-2"></i> Mis Reservas
+                            </x-dropdown-link>
+
+                            <x-dropdown-link href="{{ route('payments.index') }}">
+                                <i class="fas fa-wallet mr-2"></i> {{ Auth::user()->isPro() ? 'Mis Ingresos' : 'Mis Pagos' }}
+                            </x-dropdown-link>
+
+                            <x-dropdown-link href="{{ route('messages.index') }}">
+                                <i class="fas fa-envelope mr-2"></i> Mensajes
+                            </x-dropdown-link>
+
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                                 <x-dropdown-link href="{{ route('api-tokens.index') }}">
                                     {{ __('API Tokens') }}

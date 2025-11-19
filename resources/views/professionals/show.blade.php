@@ -8,39 +8,51 @@
 @section('title', $professional->name . ' - Profesionales')
 
 @section('content')
-    {{-- Header del Perfil --}}
-    <section class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-16">
+    {{-- Header del Perfil Compacto --}}
+    <section class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-12">
         <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="flex flex-col md:flex-row items-center gap-6">
                 {{-- Avatar --}}
-                <div class="w-32 h-32 rounded-full bg-white p-2 shadow-2xl">
-                    <div class="w-full h-full rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-5xl font-bold">
-                        {{ substr($professional->name, 0, 1) }}
-                    </div>
+                <div class="w-28 h-28 rounded-full bg-white p-2 shadow-2xl ring-4 ring-white/20">
+                    @if($professional->profile_photo_path)
+                        @if(str_starts_with($professional->profile_photo_path, 'http'))
+                            <img src="{{ $professional->profile_photo_path }}" 
+                                 alt="{{ $professional->name }}"
+                                 class="w-full h-full rounded-full object-cover">
+                        @else
+                            <img src="{{ Storage::url($professional->profile_photo_path) }}" 
+                                 alt="{{ $professional->name }}"
+                                 class="w-full h-full rounded-full object-cover">
+                        @endif
+                    @else
+                        <div class="w-full h-full rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-5xl font-bold">
+                            {{ substr($professional->name, 0, 1) }}
+                        </div>
+                    @endif
                 </div>
 
                 {{-- Info Principal --}}
                 <div class="flex-1 text-center md:text-left">
-                    <h1 class="text-4xl font-bold mb-2">{{ $professional->name }}</h1>
+                    <h1 class="text-4xl font-bold mb-3">{{ $professional->name }}</h1>
                     
-                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-4">
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-3 text-sm">
                         @if($professional->city)
-                            <span class="text-indigo-100">
-                                <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span class="text-indigo-100 bg-white/10 px-3 py-1 rounded-lg">
+                                <i class="fas fa-map-marker-alt mr-1"></i>
                                 {{ $professional->city }}
                             </span>
                         @endif
 
                         @if($professional->email)
-                            <span class="text-indigo-100">
-                                <i class="fas fa-envelope mr-2"></i>
+                            <span class="text-indigo-100 bg-white/10 px-3 py-1 rounded-lg">
+                                <i class="fas fa-envelope mr-1"></i>
                                 {{ $professional->email }}
                             </span>
                         @endif
 
                         @if($professional->phone)
-                            <span class="text-indigo-100">
-                                <i class="fas fa-phone mr-2"></i>
+                            <span class="text-indigo-100 bg-white/10 px-3 py-1 rounded-lg">
+                                <i class="fas fa-phone mr-1"></i>
                                 {{ $professional->phone }}
                             </span>
                         @endif
@@ -48,14 +60,14 @@
 
                     {{-- Rating --}}
                     @if($totalReviews > 0)
-                        <div class="flex items-center justify-center md:justify-start gap-3">
+                        <div class="flex items-center justify-center md:justify-start gap-2 bg-white/15 backdrop-blur-sm rounded-lg px-5 py-2.5 inline-flex">
                             <div class="flex items-center gap-1">
                                 @for($i = 1; $i <= 5; $i++)
-                                    <i class="fas fa-star {{ $i <= $averageRating ? 'text-yellow-400' : 'text-white/30' }} text-xl"></i>
+                                    <i class="fas fa-star {{ $i <= $averageRating ? 'text-yellow-400' : 'text-white/30' }} text-lg"></i>
                                 @endfor
                             </div>
                             <span class="text-2xl font-bold">{{ number_format($averageRating, 1) }}</span>
-                            <span class="text-indigo-100">({{ $totalReviews }} reseñas)</span>
+                            <span class="text-indigo-100 text-sm">({{ $totalReviews }} reseñas)</span>
                         </div>
                     @else
                         <p class="text-indigo-200">Aún no tiene reseñas</p>
@@ -63,18 +75,18 @@
                 </div>
 
                 {{-- Estadísticas --}}
-                <div class="grid grid-cols-3 gap-6 text-center">
-                    <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                        <div class="text-3xl font-bold">{{ $professional->services->count() }}</div>
-                        <div class="text-sm text-indigo-100">Servicios</div>
+                <div class="grid grid-cols-3 gap-3 text-center">
+                    <div class="bg-white/15 backdrop-blur-sm rounded-lg p-4 shadow-lg">
+                        <div class="text-3xl font-bold mb-1">{{ $professional->services->count() }}</div>
+                        <div class="text-xs text-indigo-100 font-medium">Servicios</div>
                     </div>
-                    <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                        <div class="text-3xl font-bold">{{ $totalReviews }}</div>
-                        <div class="text-sm text-indigo-100">Reseñas</div>
+                    <div class="bg-white/15 backdrop-blur-sm rounded-lg p-4 shadow-lg">
+                        <div class="text-3xl font-bold mb-1">{{ $totalReviews }}</div>
+                        <div class="text-xs text-indigo-100 font-medium">Reseñas</div>
                     </div>
-                    <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                        <div class="text-3xl font-bold">{{ $completedBookings }}</div>
-                        <div class="text-sm text-indigo-100">Trabajos</div>
+                    <div class="bg-white/15 backdrop-blur-sm rounded-lg p-4 shadow-lg">
+                        <div class="text-3xl font-bold mb-1">{{ $completedBookings }}</div>
+                        <div class="text-xs text-indigo-100 font-medium">Trabajos</div>
                     </div>
                 </div>
             </div>
@@ -132,31 +144,45 @@
                         </div>
 
                         @if($professional->services->count() > 0)
-                            <div class="grid md:grid-cols-2 gap-6">
+                            <div class="grid md:grid-cols-2 gap-5">
                                 @foreach($professional->services->take(4) as $service)
-                                    <a href="{{ route('services.show', $service) }}" 
-                                       class="group block bg-gray-50 rounded-lg overflow-hidden hover:shadow-lg transition duration-300">
-                                        <div class="relative h-40 bg-gradient-to-br from-indigo-500 to-purple-600 overflow-hidden">
+                                    <div class="group bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-indigo-300">
+                                        <div class="relative h-36 bg-gradient-to-br from-indigo-500 to-purple-600 overflow-hidden flex items-center justify-center">
                                             @if($service->photos->count() > 0)
                                                 <img src="{{ Storage::url($service->photos->first()->path) }}" 
                                                      alt="{{ $service->title }}"
                                                      class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
                                             @else
-                                                <div class="w-full h-full flex items-center justify-center text-white text-5xl">
+                                                <div class="text-white text-4xl opacity-70">
                                                     <i class="fas fa-{{ $service->category->icon }}"></i>
                                                 </div>
                                             @endif
-                                            <div class="absolute bottom-2 right-2 bg-white px-3 py-1 rounded-full shadow-lg">
-                                                <span class="font-bold text-indigo-600">{{ number_format($service->price, 2) }}€</span>
+                                            <div class="absolute top-2 left-2 bg-white px-2.5 py-1 rounded-md shadow-md">
+                                                <span class="text-xs font-bold text-gray-700">{{ $service->category->name }}</span>
+                                            </div>
+                                            <div class="absolute bottom-2 right-2 bg-indigo-600 px-3 py-1 rounded-md shadow-lg">
+                                                <span class="font-bold text-white text-sm">{{ number_format($service->price, 2) }}€</span>
                                             </div>
                                         </div>
-                                        <div class="p-4">
-                                            <h3 class="font-semibold text-gray-800 group-hover:text-indigo-600 transition duration-200 mb-1">
+                                        <div class="p-4 bg-gradient-to-b from-gray-50 to-white">
+                                            <h3 class="font-bold text-gray-800 group-hover:text-indigo-600 transition duration-200 mb-1.5 text-sm line-clamp-1">
                                                 {{ $service->title }}
                                             </h3>
-                                            <p class="text-sm text-gray-600 line-clamp-2">{{ $service->description }}</p>
+                                            <p class="text-xs text-gray-600 line-clamp-2 mb-3 leading-relaxed">{{ $service->description }}</p>
+                                            
+                                            {{-- Botones de acción --}}
+                                            <div class="flex gap-2">
+                                                <a href="{{ route('services.show', $service) }}" 
+                                                   class="flex-1 text-center bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-2 px-3 rounded-lg font-bold text-xs transition duration-200 shadow-md">
+                                                    <i class="fas fa-handshake mr-1"></i>Contratar
+                                                </a>
+                                                <a href="{{ route('services.show', $service) }}" 
+                                                   class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-3 rounded-lg font-semibold text-xs transition duration-200">
+                                                    <i class="fas fa-info-circle"></i>
+                                                </a>
+                                            </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 @endforeach
                             </div>
 

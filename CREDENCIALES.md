@@ -35,8 +35,46 @@
    - Contraseña: password
    - Ciudad: Sevilla
 
+6. **Pedro Fernández** (Carpintero)
+   - Email: pedro@profesionales.com
+   - Contraseña: password
+   - Ciudad: Bilbao
+
+7. **Miguel Torres** (Pintor)
+   - Email: miguel@profesionales.com
+   - Contraseña: password
+   - Ciudad: Madrid
+
+8. **Sofía Ramírez** (Cuidadora de mascotas)
+   - Email: sofia@profesionales.com
+   - Contraseña: password
+   - Ciudad: Barcelona
+
 ### 👤 CLIENTES
-Ver UserSeeder.php para más clientes de prueba
+1. **Roberto Díaz**
+   - Email: roberto@clientes.com
+   - Contraseña: password
+   - Ciudad: Madrid
+
+2. **Carmen Ruiz**
+   - Email: carmen@clientes.com
+   - Contraseña: password
+   - Ciudad: Barcelona
+
+3. **David Moreno**
+   - Email: david@clientes.com
+   - Contraseña: password
+   - Ciudad: Valencia
+
+4. **Elena Jiménez**
+   - Email: elena@clientes.com
+   - Contraseña: password
+   - Ciudad: Sevilla
+
+5. **Francisco Navarro**
+   - Email: francisco@clientes.com
+   - Contraseña: password
+   - Ciudad: Bilbao
 
 ---
 

@@ -5,7 +5,7 @@
 --}}
 @extends('layouts.marketplace')
 
-@section('title', 'Dejar Reseña - Servicios Pro')
+@section('title', 'Dejar Reseña - HouseFixes')
 
 @section('content')
     {{-- Breadcrumb --}}

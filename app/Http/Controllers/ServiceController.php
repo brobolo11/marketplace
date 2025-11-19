@@ -21,7 +21,7 @@ class ServiceController extends Controller
         $query = Service::with(['user', 'category', 'photos']);
 
         // Filtro por categoría
-        if ($request->has('category_id')) {
+        if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
@@ -97,18 +97,27 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        // Verifica que el usuario sea profesional
-        if (!Auth::user()->isPro()) {
-            abort(403, 'Solo los profesionales pueden crear servicios.');
-        }
+        // Autorizar con Policy
+        $this->authorize('create', Service::class);
 
         // Validación de datos
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',
-            'price_hour' => 'required|numeric|min:0|max:999999.99',
-            'photos.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'title' => 'required|string|max:100',
+            'description' => 'required|string|max:500',
+            'price' => 'required|numeric|min:0|max:999999.99',
+            'duration' => 'required|integer|in:30,60,90,120,180,240,480',
+            'photos.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB
+        ], [
+            'category_id.required' => 'La categoría es requerida',
+            'title.required' => 'El título es requerido',
+            'title.max' => 'El título no puede exceder 100 caracteres',
+            'description.required' => 'La descripción es requerida',
+            'description.max' => 'La descripción no puede exceder 500 caracteres',
+            'price.required' => 'El precio es requerido',
+            'price.min' => 'El precio debe ser mayor a 0',
+            'duration.required' => 'La duración es requerida',
+            'photos.*.max' => 'Cada imagen no puede exceder 5MB',
         ]);
 
         // Crea el servicio
@@ -116,15 +125,21 @@ class ServiceController extends Controller
 
         // Procesa las fotos si existen
         if ($request->hasFile('photos')) {
+            $photosUploaded = 0;
             foreach ($request->file('photos') as $photo) {
+                if ($photosUploaded >= 5) break; // Máximo 5 fotos
+                
                 $path = $photo->store('service_photos', 'public');
-                $service->photos()->create(['image_path' => $path]);
+                $service->photos()->create(['path' => $path]);
+                $photosUploaded++;
             }
         }
 
-        return redirect()
-            ->route('services.show', $service)
-            ->with('success', 'Servicio creado exitosamente.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Servicio creado exitosamente',
+            'service' => $service->load('category', 'photos')
+        ], 201);
     }
 
     /**
@@ -150,34 +165,54 @@ class ServiceController extends Controller
      */
     public function update(Request $request, Service $service)
     {
-        // Verifica que el usuario sea el propietario del servicio
-        if (Auth::id() !== $service->user_id) {
-            abort(403, 'No tienes permiso para actualizar este servicio.');
-        }
+        // Autorizar con Policy
+        $this->authorize('update', $service);
 
         // Validación de datos
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',
-            'price_hour' => 'required|numeric|min:0|max:999999.99',
-            'photos.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'title' => 'required|string|max:100',
+            'description' => 'required|string|max:500',
+            'price' => 'required|numeric|min:0|max:999999.99',
+            'duration' => 'required|integer|in:30,60,90,120,180,240,480',
+            'photos.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'existing_photos' => 'nullable|json',
         ]);
 
         // Actualiza el servicio
         $service->update($validated);
 
-        // Procesa nuevas fotos si existen
-        if ($request->hasFile('photos')) {
-            foreach ($request->file('photos') as $photo) {
-                $path = $photo->store('service_photos', 'public');
-                $service->photos()->create(['image_path' => $path]);
+        // Gestionar fotos existentes (eliminar las que no están en la lista)
+        if ($request->has('existing_photos')) {
+            $existingPhotoIds = json_decode($request->existing_photos, true);
+            $photosToDelete = $service->photos()->whereNotIn('id', $existingPhotoIds)->get();
+            
+            foreach ($photosToDelete as $photo) {
+                Storage::disk('public')->delete($photo->path);
+                $photo->delete();
             }
         }
 
-        return redirect()
-            ->route('services.show', $service)
-            ->with('success', 'Servicio actualizado exitosamente.');
+        // Procesa nuevas fotos si existen
+        if ($request->hasFile('photos')) {
+            $currentPhotos = $service->photos()->count();
+            $maxPhotos = 5 - $currentPhotos;
+            $photosUploaded = 0;
+            
+            foreach ($request->file('photos') as $photo) {
+                if ($photosUploaded >= $maxPhotos) break;
+                
+                $path = $photo->store('service_photos', 'public');
+                $service->photos()->create(['path' => $path]);
+                $photosUploaded++;
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Servicio actualizado exitosamente',
+            'service' => $service->load('category', 'photos')
+        ], 200);
     }
 
     /**
@@ -187,14 +222,23 @@ class ServiceController extends Controller
      */
     public function destroy(Service $service)
     {
-        // Verifica que el usuario sea el propietario del servicio
-        if (Auth::id() !== $service->user_id) {
-            abort(403, 'No tienes permiso para eliminar este servicio.');
+        // Autorizar con Policy
+        $this->authorize('delete', $service);
+
+        // Verificar si tiene reservas activas
+        $activeBookings = $service->bookings()
+            ->whereIn('status', ['pending', 'accepted'])
+            ->count();
+        
+        if ($activeBookings > 0) {
+            return redirect()
+                ->route('services.index')
+                ->with('error', 'No puedes eliminar un servicio con reservas activas.');
         }
 
         // Elimina las fotos del almacenamiento
         foreach ($service->photos as $photo) {
-            Storage::disk('public')->delete($photo->image_path);
+            Storage::disk('public')->delete($photo->path);
         }
 
         // Elimina el servicio (las fotos se eliminan en cascada)

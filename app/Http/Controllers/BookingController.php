@@ -4,11 +4,44 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Service;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
+    /**
+     * Muestra las solicitudes pendientes del profesional autenticado.
+     * 
+     * GET /bookings/pending-requests
+     */
+    public function pendingRequests()
+    {
+        $user = Auth::user();
+
+        // Verifica que el usuario sea profesional
+        if (!$user->isPro()) {
+            abort(403, 'Solo los profesionales pueden acceder a esta página.');
+        }
+
+        // Obtiene las reservas pendientes
+        $pendingBookings = Booking::where('pro_id', $user->id)
+            ->where('status', 'pending')
+            ->with(['client', 'service'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Calcula las estadísticas
+        $acceptedToday = Booking::where('pro_id', $user->id)
+            ->where('status', 'accepted')
+            ->whereDate('approved_at', today())
+            ->count();
+
+        $estimatedRevenue = $pendingBookings->sum('total_price');
+
+        return view('bookings.pending-requests', compact('pendingBookings', 'acceptedToday', 'estimatedRevenue'));
+    }
+
     /**
      * Muestra las reservas del usuario autenticado.
      * Si es cliente, muestra las reservas realizadas.
@@ -96,15 +129,15 @@ class BookingController extends Controller
     }
 
     /**
-     * El profesional acepta una reserva.
+     * El profesional aprueba una reserva.
      * 
-     * PATCH /bookings/{id}/accept
+     * POST /bookings/{booking}/approve
      */
-    public function accept(Booking $booking)
+    public function approve(Booking $booking)
     {
         // Verifica que el usuario sea el profesional de la reserva
         if ($booking->pro_id !== Auth::id()) {
-            abort(403, 'No tienes permiso para aceptar esta reserva.');
+            abort(403, 'No tienes permiso para aprobar esta reserva.');
         }
 
         // Verifica que la reserva esté pendiente
@@ -112,19 +145,25 @@ class BookingController extends Controller
             return back()->withErrors(['error' => 'Esta reserva ya no está pendiente.']);
         }
 
-        $booking->accept();
+        // Actualiza el estado y la fecha de aprobación
+        $booking->status = 'accepted';
+        $booking->approved_at = now();
+        $booking->save();
+
+        // Crea notificación para el cliente
+        NotificationService::bookingAccepted($booking);
 
         return redirect()
-            ->route('bookings.show', $booking)
-            ->with('success', 'Reserva aceptada exitosamente.');
+            ->route('bookings.pendingRequests')
+            ->with('success', 'Reserva aprobada exitosamente. El cliente ha sido notificado.');
     }
 
     /**
      * El profesional rechaza una reserva.
      * 
-     * PATCH /bookings/{id}/reject
+     * POST /bookings/{booking}/reject
      */
-    public function reject(Booking $booking)
+    public function reject(Request $request, Booking $booking)
     {
         // Verifica que el usuario sea el profesional de la reserva
         if ($booking->pro_id !== Auth::id()) {
@@ -136,11 +175,23 @@ class BookingController extends Controller
             return back()->withErrors(['error' => 'Esta reserva ya no está pendiente.']);
         }
 
-        $booking->reject();
+        // Valida el motivo de rechazo
+        $validated = $request->validate([
+            'rejection_reason' => 'required|string|max:500',
+        ]);
+
+        // Actualiza el estado, fecha de rechazo y motivo
+        $booking->status = 'rejected';
+        $booking->rejected_at = now();
+        $booking->rejection_reason = $validated['rejection_reason'];
+        $booking->save();
+
+        // Crea notificación para el cliente
+        NotificationService::bookingRejected($booking, $validated['rejection_reason']);
 
         return redirect()
-            ->route('bookings.show', $booking)
-            ->with('success', 'Reserva rechazada.');
+            ->route('bookings.pendingRequests')
+            ->with('success', 'Reserva rechazada. El cliente ha sido notificado.');
     }
 
     /**

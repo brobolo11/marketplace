@@ -5,7 +5,7 @@
 --}}
 @extends('layouts.marketplace')
 
-@section('title', $service->title . ' - Servicios Pro')
+@section('title', $service->title . ' - HouseFixes')
 
 @section('content')
     {{-- Breadcrumb --}}
@@ -206,41 +206,28 @@
                                     <p class="text-gray-600">Los profesionales no pueden reservar servicios</p>
                                 </div>
                             @else
-                                {{-- Formulario de reserva para clientes --}}
-                                <form action="{{ route('bookings.store') }}" method="POST" class="space-y-4">
-                                    @csrf
-                                    <input type="hidden" name="service_id" value="{{ $service->id }}">
-                                    <input type="hidden" name="total_price" value="{{ $service->price }}">
-
-                                    <div>
-                                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                            Fecha y hora
-                                        </label>
-                                        <input type="datetime-local" 
-                                               name="datetime" 
-                                               required
-                                               min="{{ now()->addDay()->format('Y-m-d\TH:i') }}"
-                                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                            Dirección del servicio
-                                        </label>
-                                        <input type="text" 
-                                               name="address" 
-                                               required
-                                               placeholder="Calle, número, ciudad..."
-                                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    </div>
-
+                                {{-- Sección de reserva para clientes --}}
+                                <div class="space-y-4">
                                     <div class="bg-blue-50 rounded-lg p-4">
                                         <div class="flex items-center justify-between mb-2">
-                                            <span class="text-gray-700">Precio por hora:</span>
+                                            <span class="text-gray-700">Precio:</span>
                                             <span class="font-bold text-gray-800">{{ number_format($service->price, 2) }}€</span>
                                         </div>
-                                        <p class="text-xs text-gray-500">
-                                            El precio final se calculará según la duración del servicio
+                                        <div class="flex items-center justify-between text-sm">
+                                            <span class="text-gray-600">Duración:</span>
+                                            <span class="text-gray-800">{{ $service->duration }} min</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-4 border border-green-200">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            <span class="font-semibold text-gray-800">Disponibilidad en tiempo real</span>
+                                        </div>
+                                        <p class="text-xs text-gray-600">
+                                            Selecciona las fechas que necesitas en nuestro calendario interactivo
                                         </p>
                                     </div>
 
@@ -254,16 +241,28 @@
                                         </div>
                                     @endif
 
-                                    <button type="submit" 
+                                    <div x-data="{ openModal: false }">
+                                        <button 
+                                            @click="openModal = true; $nextTick(() => { if (window.bookingCalendarInstance) window.bookingCalendarInstance.open = true; })"
+                                            type="button"
                                             class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-4 rounded-lg font-bold text-lg transition duration-200 shadow-lg hover:shadow-xl">
-                                        <i class="fas fa-calendar-check mr-2"></i>
-                                        Solicitar Reserva
-                                    </button>
+                                            <i class="fas fa-calendar-check mr-2"></i>
+                                            Seleccionar Fechas y Reservar
+                                        </button>
+
+                                        <!-- Modal de Calendario -->
+                                        <div x-show="openModal" style="display: none;">
+                                            <x-booking-calendar-modal 
+                                                :service="$service" 
+                                                :professional="$service->user" 
+                                            />
+                                        </div>
+                                    </div>
 
                                     <p class="text-xs text-gray-500 text-center">
-                                        Tu reserva estará pendiente hasta que el profesional la confirme
+                                        Tu solicitud estará pendiente hasta que el profesional la confirme
                                     </p>
-                                </form>
+                                </div>
                             @endif
                         @else
                             {{-- Usuario no autenticado --}}

@@ -22,6 +22,9 @@ class Booking extends Model
         'address',      // Dirección donde se realizará el servicio
         'status',       // Estado: pending, accepted, rejected, completed, cancelled
         'total_price',  // Precio total acordado
+        'description',  // Descripción de la reserva
+        'professional_notes', // Notas del profesional
+        'rejection_reason',   // Motivo de rechazo
     ];
 
     /**
@@ -30,8 +33,12 @@ class Booking extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'datetime' => 'datetime',        // Cast a Carbon (fecha y hora)
-        'total_price' => 'decimal:2',    // Precio con 2 decimales
+        'datetime' => 'datetime',
+        'total_price' => 'decimal:2',
+        'approved_at' => 'datetime',
+        'rejected_at' => 'datetime',
+        'completed_at' => 'datetime',
+        'paid_at' => 'datetime',
     ];
 
     // ========================================
@@ -72,6 +79,15 @@ class Booking extends Model
     public function review()
     {
         return $this->hasOne(Review::class);
+    }
+
+    /**
+     * Pago asociado a esta reserva.
+     * Relación: Una reserva tiene un pago.
+     */
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
     }
 
     // ========================================

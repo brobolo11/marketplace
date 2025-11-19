@@ -139,6 +139,38 @@ class User extends Authenticatable
         return $this->hasMany(Availability::class);
     }
 
+    /**
+     * Pagos realizados como cliente
+     */
+    public function paymentsAsClient()
+    {
+        return $this->hasMany(Payment::class, 'user_id');
+    }
+
+    /**
+     * Pagos recibidos como profesional
+     */
+    public function paymentsAsProfessional()
+    {
+        return $this->hasMany(Payment::class, 'professional_id');
+    }
+
+    /**
+     * Notificaciones del usuario
+     */
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    /**
+     * Notificaciones no leídas
+     */
+    public function unreadNotifications()
+    {
+        return $this->notifications()->unread();
+    }
+
     // ========================================
     // MÉTODOS HELPER
     // ========================================

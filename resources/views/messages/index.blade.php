@@ -5,7 +5,7 @@
 --}}
 @extends('layouts.marketplace')
 
-@section('title', 'Mensajes - Servicios Pro')
+@section('title', 'Mensajes - HouseFixes')
 
 @section('content')
     {{-- Header --}}

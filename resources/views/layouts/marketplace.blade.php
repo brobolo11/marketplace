@@ -26,11 +26,11 @@
     <nav class="bg-white shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center h-16">
-                {{-- Logo --}}
+                {{-- Logo --}} 
                 <div class="flex items-center">
-                    <a href="{{ route('home') }}" class="text-2xl font-bold text-blue-600">
-                        <i class="fas fa-handshake mr-2"></i>
-                        Servicios Pro
+                    <a href="{{ route('home') }}" class="flex items-center gap-3 group">
+                        <img src="{{ asset('logo.png') }}" alt="HouseFixes" class="h-16 w-auto object-contain group-hover:scale-105 transition-transform duration-200">
+                        <span class="text-2xl md:text-3xl font-bold text-blue-600 group-hover:text-blue-700 transition-colors">HouseFixes</span>
                     </a>
                 </div>
 
@@ -47,52 +47,8 @@
                     </a>
 
                     @auth
-                        {{-- Menú para usuarios autenticados --}}
-                        <div class="relative" x-data="{ open: false }">
-                            <button @click="open = !open" class="flex items-center text-gray-700 hover:text-blue-600">
-                                <i class="fas fa-user-circle text-2xl mr-2"></i>
-                                <span>{{ Auth::user()->name }}</span>
-                                <i class="fas fa-chevron-down ml-2 text-xs"></i>
-                            </button>
-
-                            <div x-show="open" 
-                                 @click.away="open = false"
-                                 x-transition
-                                 class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
-                                
-                                @if(Auth::user()->isPro())
-                                    <a href="{{ route('services.create') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-plus mr-2"></i> Nuevo Servicio
-                                    </a>
-                                    <a href="{{ route('professionals.services', Auth::user()) }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-briefcase mr-2"></i> Mis Servicios
-                                    </a>
-                                    <a href="{{ route('professionals.availability', Auth::user()) }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-calendar mr-2"></i> Disponibilidad
-                                    </a>
-                                @endif
-
-                                <a href="{{ route('bookings.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-calendar-check mr-2"></i> Mis Reservas
-                                </a>
-                                <a href="{{ route('messages.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-envelope mr-2"></i> Mensajes
-                                </a>
-                                
-                                <div class="border-t my-2"></div>
-                                
-                                <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-cog mr-2"></i> Configuración
-                                </a>
-                                
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
+                        {{-- Dropdown de usuario autenticado --}}
+                        <x-user-dropdown />
                     @else
                         {{-- Menú para invitados --}}
                         <a href="{{ route('login') }}" class="text-gray-700 hover:text-blue-600 transition">
@@ -190,8 +146,11 @@
             <div class="grid md:grid-cols-4 gap-8">
                 {{-- Columna 1: Sobre Nosotros --}}
                 <div>
-                    <h3 class="text-xl font-bold mb-4">Servicios Pro</h3>
-                    <p class="text-gray-400">
+                    <div class="flex items-center gap-2 mb-4">
+                        <img src="{{ asset('logo.png') }}" alt="HouseFixes" class="h-8 w-8 object-contain">
+                        <h3 class="text-lg font-bold">HouseFixes</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
                         La plataforma líder para conectar clientes con profesionales de confianza para servicios del hogar.
                     </p>
                 </div>
@@ -238,7 +197,7 @@
             </div>
 
             <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; {{ date('Y') }} Servicios Pro. Todos los derechos reservados.</p>
+                <p>&copy; {{ date('Y') }} HouseFixes. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>

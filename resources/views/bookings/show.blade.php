@@ -5,7 +5,7 @@
 --}}
 @extends('layouts.marketplace')
 
-@section('title', 'Detalle de Reserva - Servicios Pro')
+@section('title', 'Detalle de Reserva - HouseFixes')
 
 @section('content')
     @php
@@ -237,6 +237,25 @@
 
                                 {{-- Acciones del Cliente --}}
                                 @if(!$isPro)
+                                    {{-- Botón de Pago (si está aceptada y no pagada) --}}
+                                    @if($booking->isAccepted())
+                                        @php
+                                            $payment = $booking->payment;
+                                        @endphp
+                                        @if(!$payment || !$payment->isCompleted())
+                                            <a href="{{ route('bookings.checkout', $booking) }}" 
+                                               class="block w-full bg-green-600 hover:bg-green-700 text-white text-center py-3 rounded-lg font-semibold transition duration-200 shadow-lg">
+                                                <i class="fas fa-credit-card mr-2"></i>
+                                                Pagar Servicio
+                                            </a>
+                                        @else
+                                            <div class="bg-green-50 border border-green-200 rounded-lg p-3 text-center">
+                                                <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                                                <span class="text-green-800 font-semibold">Pago Completado</span>
+                                            </div>
+                                        @endif
+                                    @endif
+
                                     @if($booking->status == 'completed' && !$booking->review)
                                         <a href="{{ route('reviews.create', ['booking' => $booking->id]) }}" 
                                            class="block w-full bg-yellow-500 hover:bg-yellow-600 text-white text-center py-3 rounded-lg font-semibold transition duration-200">
@@ -255,10 +274,19 @@
                                             </button>
                                         </form>
                                     @endif
+
+                                    {{-- Ver pago si existe --}}
+                                    @if($booking->payment && $booking->payment->isCompleted())
+                                        <a href="{{ route('payments.receipt', $booking->payment) }}" 
+                                           class="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-3 rounded-lg font-semibold transition duration-200">
+                                            <i class="fas fa-file-invoice mr-2"></i>
+                                            Ver Recibo
+                                        </a>
+                                    @endif
                                 @endif
 
                                 {{-- Enviar mensaje --}}
-                                <a href="{{ route('messages.create', ['recipient' => $otherUser->id, 'booking' => $booking->id]) }}" 
+                                <a href="{{ route('messages.show', $otherUser) }}" 
                                    class="block w-full bg-gray-600 hover:bg-gray-700 text-white text-center py-3 rounded-lg font-semibold transition duration-200">
                                     <i class="fas fa-envelope mr-2"></i>
                                     Enviar Mensaje

@@ -88,6 +88,36 @@
                         </div>
                         <p class="text-gray-600">Configura tu horario</p>
                     </a>
+
+                    <a href="{{ route('payments.index') }}" class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-wallet text-yellow-600 text-xl"></i>
+                            </div>
+                            <h4 class="text-lg font-semibold">Mis Ingresos</h4>
+                        </div>
+                        <p class="text-gray-600">Ver pagos recibidos</p>
+                    </a>
+
+                    <a href="{{ route('bookings.index') }}" class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-calendar-check text-orange-600 text-xl"></i>
+                            </div>
+                            <h4 class="text-lg font-semibold">Reservas Recibidas</h4>
+                        </div>
+                        <p class="text-gray-600">Gestiona tus reservas</p>
+                    </a>
+
+                    <a href="{{ route('messages.index') }}" class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-envelope text-pink-600 text-xl"></i>
+                            </div>
+                            <h4 class="text-lg font-semibold">Mensajes</h4>
+                        </div>
+                        <p class="text-gray-600">Chat con clientes</p>
+                    </a>
                 @else
                     <a href="{{ route('services.index') }}" class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
                         <div class="flex items-center mb-4">
@@ -117,6 +147,36 @@
                             <h4 class="text-lg font-semibold">Categorías</h4>
                         </div>
                         <p class="text-gray-600">Navega por categorías</p>
+                    </a>
+
+                    <a href="{{ route('bookings.index') }}" class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-calendar-check text-yellow-600 text-xl"></i>
+                            </div>
+                            <h4 class="text-lg font-semibold">Mis Reservas</h4>
+                        </div>
+                        <p class="text-gray-600">Ver mis reservas activas</p>
+                    </a>
+
+                    <a href="{{ route('payments.index') }}" class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-wallet text-orange-600 text-xl"></i>
+                            </div>
+                            <h4 class="text-lg font-semibold">Mis Pagos</h4>
+                        </div>
+                        <p class="text-gray-600">Historial de pagos</p>
+                    </a>
+
+                    <a href="{{ route('messages.index') }}" class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-envelope text-pink-600 text-xl"></i>
+                            </div>
+                            <h4 class="text-lg font-semibold">Mensajes</h4>
+                        </div>
+                        <p class="text-gray-600">Chat con profesionales</p>
                     </a>
                 @endif
             </div>

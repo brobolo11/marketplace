@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             ServiceSeeder::class,
             AvailabilitySeeder::class,
             BookingSeeder::class,
+            PaymentSeeder::class,  // Añadido: genera pagos para reservas existentes
             ReviewSeeder::class,
             MessageSeeder::class,
         ]);
