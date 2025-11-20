@@ -262,26 +262,6 @@
                 </div>
             </div>
 
-            {{-- Profesionales Destacados --}}
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">
-                    <i class="fas fa-star mr-2 text-yellow-500"></i>
-                    Profesionales Más Activos
-                </h3>
-                <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
-                    @forelse($topProfessionals as $pro)
-                        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4 text-center">
-                            <div class="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
-                                {{ substr($pro->name, 0, 1) }}
-                            </div>
-                            <h4 class="font-semibold text-gray-800 mb-1">{{ Str::limit($pro->name, 20) }}</h4>
-                            <p class="text-sm text-gray-600">{{ $pro->services_offered_count }} servicios</p>
-                        </div>
-                    @empty
-                        <p class="text-gray-500 col-span-full text-center py-4">No hay profesionales disponibles</p>
-                    @endforelse
-                </div>
-            </div>
         </div>
     </section>
 @endsection

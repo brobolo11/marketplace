@@ -1,8 +1,8 @@
-﻿@extends(''layouts.marketplace'')
+@extends('layouts.marketplace')
 
-@section(''title'', ''Gestionar Disponibilidad - HouseFixes'')
+@section('title', 'Gestionar Disponibilidad - HouseFixes')
 
-@section(''content'')
+@section('content')
     <section class="py-8 bg-gray-50 min-h-screen">
         <div class="container mx-auto px-4">
             <div class="max-w-7xl mx-auto">
@@ -11,13 +11,13 @@
                         <i class="fas fa-calendar-alt text-blue-600 mr-3"></i>
                         Gestionar Disponibilidad
                     </h1>
-                    <p class="text-gray-600">Configura tus horarios de trabajo y días disponibles para recibir reservas</p>
+                    <p class="text-gray-600">Configura tus horarios de trabajo y d�as disponibles para recibir reservas</p>
                 </div>
 
-                @if(session(''success''))
+                @if(session('success'))
                     <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-6">
                         <i class="fas fa-check-circle mr-2"></i>
-                        {{ session(''success'') }}
+                        {{ session('success') }}
                     </div>
                 @endif
 
@@ -35,17 +35,17 @@
                                 <i class="fas fa-clock text-blue-600 mr-2"></i>
                                 Horario Semanal
                             </h2>
-                            <p class="text-sm text-gray-600 mb-6">Define tus horas de trabajo para cada día de la semana</p>
+                            <p class="text-sm text-gray-600 mb-6">Define tus horas de trabajo para cada d�a de la semana</p>
                             
                             <div class="space-y-4">
-                                @foreach([1 => ''Lunes'', 2 => ''Martes'', 3 => ''Miércoles'', 4 => ''Jueves'', 5 => ''Viernes'', 6 => ''Sábado'', 0 => ''Domingo''] as $day => $dayName)
+                                @foreach([1 => 'Lunes', 2 => 'Martes', 3 => 'Mi�rcoles', 4 => 'Jueves', 5 => 'Viernes', 6 => 'S�bado', 0 => 'Domingo'] as $day => $dayName)
                                     @php
                                         $daySlots = $weeklyAvailability->get($day, collect());
                                     @endphp
                                     <div class="border border-gray-200 rounded-lg p-4">
                                         <div class="flex items-center justify-between mb-3">
                                             <h3 class="font-semibold text-gray-900">{{ $dayName }}</h3>
-                                            <button type="button" onclick="addTimeSlot({{ $day }}, ''{{ $dayName }}'')" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                                            <button type="button" onclick="addTimeSlot({{ $day }}, '{{ $dayName }}')" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
                                                 <i class="fas fa-plus-circle mr-1"></i>
                                                 Agregar horario
                                             </button>
@@ -56,11 +56,11 @@
                                                 <div class="flex items-center gap-3 bg-gray-50 p-3 rounded-lg">
                                                     <i class="fas fa-clock text-gray-400"></i>
                                                     <span class="flex-1 text-sm text-gray-700">
-                                                        {{ \Carbon\Carbon::parse($slot->start_time)->format(''H:i'') }} - {{ \Carbon\Carbon::parse($slot->end_time)->format(''H:i'') }}
+                                                        {{ \Carbon\Carbon::parse($slot->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($slot->end_time)->format('H:i') }}
                                                     </span>
-                                                    <form action="{{ route(''availability.destroy'', $slot->id) }}" method="POST" class="inline" onsubmit="return confirm(''¿Eliminar este horario?'')">
+                                                    <form action="{{ route('availability.destroy', $slot->id) }}" method="POST" class="inline" onsubmit="return confirm('�Eliminar este horario?')">
                                                         @csrf
-                                                        @method(''DELETE'')
+                                                        @method('DELETE')
                                                         <button type="submit" class="text-red-600 hover:text-red-700 text-sm">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
@@ -80,18 +80,18 @@
                         <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
                             <h2 class="text-xl font-bold text-gray-900 mb-4">
                                 <i class="fas fa-ban text-red-600 mr-2"></i>
-                                Bloqueos Específicos
+                                Bloqueos Espec�ficos
                             </h2>
-                            <p class="text-sm text-gray-600 mb-4">Marca días específicos como no disponibles (vacaciones, festivos, etc.)</p>
+                            <p class="text-sm text-gray-600 mb-4">Marca d�as espec�ficos como no disponibles (vacaciones, festivos, etc.)</p>
                             
                             <form id="blockForm" class="mb-6">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Fecha</label>
-                                    <input type="date" id="blockDate" name="specific_date" min="{{ date(''Y-m-d'') }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
+                                    <input type="date" id="blockDate" name="specific_date" min="{{ date('Y-m-d') }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Razón (opcional)</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Raz�n (opcional)</label>
                                     <input type="text" id="blockReason" name="reason" placeholder="Ej: Vacaciones" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                                 </div>
                                 <button type="submit" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
@@ -101,13 +101,13 @@
                             </form>
 
                             <div class="space-y-2">
-                                <h3 class="font-semibold text-gray-900 text-sm mb-2">Días Bloqueados:</h3>
+                                <h3 class="font-semibold text-gray-900 text-sm mb-2">D�as Bloqueados:</h3>
                                 <div id="blocksList" class="space-y-2">
                                     @forelse($specificBlocks as $block)
                                         <div class="flex items-center justify-between bg-red-50 p-3 rounded-lg">
                                             <div>
                                                 <p class="text-sm font-medium text-gray-900">
-                                                    {{ \Carbon\Carbon::parse($block->specific_date)->isoFormat(''D MMM YYYY'') }}
+                                                    {{ \Carbon\Carbon::parse($block->specific_date)->isoFormat('D MMM YYYY') }}
                                                 </p>
                                                 @if($block->reason)
                                                     <p class="text-xs text-gray-600">{{ $block->reason }}</p>
@@ -134,7 +134,7 @@
             <h3 class="text-xl font-bold text-gray-900 mb-4">
                 Agregar Horario - <span id="modalDayName"></span>
             </h3>
-            <form id="timeSlotForm" method="POST" action="{{ route(''availability.store'') }}">
+            <form id="timeSlotForm" method="POST" action="{{ route('availability.store') }}">
                 @csrf
                 <input type="hidden" id="modalWeekday" name="weekday">
                 
@@ -162,64 +162,64 @@
 
     <script>
         function addTimeSlot(weekday, dayName) {
-            document.getElementById(''modalWeekday'').value = weekday;
-            document.getElementById(''modalDayName'').textContent = dayName;
-            document.getElementById(''timeSlotModal'').classList.remove(''hidden'');
+            document.getElementById('modalWeekday').value = weekday;
+            document.getElementById('modalDayName').textContent = dayName;
+            document.getElementById('timeSlotModal').classList.remove('hidden');
         }
 
         function closeModal() {
-            document.getElementById(''timeSlotModal'').classList.add(''hidden'');
+            document.getElementById('timeSlotModal').classList.add('hidden');
         }
 
-        document.getElementById(''blockForm'').addEventListener(''submit'', async function(e) {
+        document.getElementById('blockForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const formData = new FormData(this);
             
             try {
-                const response = await fetch(''{{ route(''availability.block'') }}'', {
-                    method: ''POST'',
+                const response = await fetch('{{ route('availability.block') }}', {
+                    method: 'POST',
                     headers: {
-                        ''X-CSRF-TOKEN'': ''{{ csrf_token() }}'',
-                        ''Accept'': ''application/json'',
-                        ''Content-Type'': ''application/json''
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        specific_date: formData.get(''specific_date''),
-                        reason: formData.get(''reason'')
+                        specific_date: formData.get('specific_date'),
+                        reason: formData.get('reason')
                     })
                 });
 
                 if (response.ok) {
                     window.location.reload();
                 } else {
-                    alert(''Error al crear el bloqueo'');
+                    alert('Error al crear el bloqueo');
                 }
             } catch (error) {
-                console.error(''Error:'', error);
-                alert(''Error al crear el bloqueo'');
+                console.error('Error:', error);
+                alert('Error al crear el bloqueo');
             }
         });
 
         async function deleteBlock(blockId) {
-            if (!confirm(''¿Eliminar este bloqueo?'')) return;
+            if (!confirm('�Eliminar este bloqueo?')) return;
             
             try {
                 const response = await fetch(`/availability/block/${blockId}`, {
-                    method: ''DELETE'',
+                    method: 'DELETE',
                     headers: {
-                        ''X-CSRF-TOKEN'': ''{{ csrf_token() }}'',
-                        ''Accept'': ''application/json''
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
                     }
                 });
 
                 if (response.ok) {
                     window.location.reload();
                 } else {
-                    alert(''Error al eliminar el bloqueo'');
+                    alert('Error al eliminar el bloqueo');
                 }
             } catch (error) {
-                console.error(''Error:'', error);
-                alert(''Error al eliminar el bloqueo'');
+                console.error('Error:', error);
+                alert('Error al eliminar el bloqueo');
             }
         }
     </script>

@@ -37,9 +37,9 @@
                    class="px-6 py-4 font-semibold whitespace-nowrap {{ request('status') == 'pending' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-blue-600' }}">
                     Pendientes
                 </a>
-                <a href="{{ route('bookings.index', ['status' => 'confirmed']) }}" 
-                   class="px-6 py-4 font-semibold whitespace-nowrap {{ request('status') == 'confirmed' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-blue-600' }}">
-                    Confirmadas
+                <a href="{{ route('bookings.index', ['status' => 'accepted']) }}" 
+                   class="px-6 py-4 font-semibold whitespace-nowrap {{ request('status') == 'accepted' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-blue-600' }}">
+                    Aceptadas
                 </a>
                 <a href="{{ route('bookings.index', ['status' => 'completed']) }}" 
                    class="px-6 py-4 font-semibold whitespace-nowrap {{ request('status') == 'completed' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-blue-600' }}">
@@ -67,16 +67,18 @@
                                 // Badges de estado
                                 $statusColors = [
                                     'pending' => 'bg-yellow-100 text-yellow-800 border-yellow-300',
-                                    'confirmed' => 'bg-blue-100 text-blue-800 border-blue-300',
+                                    'accepted' => 'bg-blue-100 text-blue-800 border-blue-300',
                                     'completed' => 'bg-green-100 text-green-800 border-green-300',
                                     'cancelled' => 'bg-red-100 text-red-800 border-red-300',
+                                    'rejected' => 'bg-red-100 text-red-800 border-red-300',
                                 ];
                                 
                                 $statusLabels = [
                                     'pending' => 'Pendiente',
-                                    'confirmed' => 'Confirmada',
+                                    'accepted' => 'Aceptada',
                                     'completed' => 'Completada',
                                     'cancelled' => 'Cancelada',
+                                    'rejected' => 'Rechazada',
                                 ];
                             @endphp
                             
@@ -140,7 +142,7 @@
                                             </a>
 
                                             @if($isPro && $booking->status == 'pending')
-                                                <form action="{{ route('bookings.accept', $booking) }}" method="POST">
+                                                <form action="{{ route('bookings.approve', $booking) }}" method="POST">
                                                     @csrf
                                                     <button type="submit" 
                                                             class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition duration-200 text-sm">
@@ -158,7 +160,7 @@
                                                 </form>
                                             @endif
 
-                                            @if($isPro && $booking->status == 'confirmed')
+                                            @if($isPro && $booking->status == 'accepted')
                                                 <form action="{{ route('bookings.complete', $booking) }}" method="POST">
                                                     @csrf
                                                     <button type="submit" 

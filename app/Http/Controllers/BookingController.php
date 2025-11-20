@@ -49,22 +49,29 @@ class BookingController extends Controller
      * 
      * GET /bookings
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $status = $request->query('status');
 
         if ($user->isPro()) {
             // Reservas recibidas como profesional
-            $bookings = $user->bookingsAsPro()
-                ->with(['client', 'service'])
-                ->orderBy('datetime', 'desc')
-                ->paginate(10);
+            $query = $user->bookingsAsPro()->with(['client', 'service']);
+            
+            if ($status) {
+                $query->where('status', $status);
+            }
+            
+            $bookings = $query->orderBy('datetime', 'desc')->paginate(10);
         } else {
             // Reservas realizadas como cliente
-            $bookings = $user->bookingsAsClient()
-                ->with(['professional', 'service'])
-                ->orderBy('datetime', 'desc')
-                ->paginate(10);
+            $query = $user->bookingsAsClient()->with(['professional', 'service']);
+            
+            if ($status) {
+                $query->where('status', $status);
+            }
+            
+            $bookings = $query->orderBy('datetime', 'desc')->paginate(10);
         }
 
         return view('bookings.index', compact('bookings'));

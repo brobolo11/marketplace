@@ -71,6 +71,15 @@ class Service extends Model
         return $this->hasMany(Booking::class);
     }
 
+    /**
+     * Reseñas del servicio a través de las reservas.
+     * Relación: Un servicio tiene muchas reseñas a través de las reservas.
+     */
+    public function reviews()
+    {
+        return $this->hasManyThrough(Review::class, Booking::class, 'service_id', 'booking_id');
+    }
+
     // ========================================
     // MÉTODOS AUXILIARES
     // ========================================

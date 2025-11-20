@@ -8,21 +8,6 @@
 @section('title', $service->title . ' - HouseFixes')
 
 @section('content')
-    {{-- Breadcrumb --}}
-    <section class="bg-gray-100 py-4">
-        <div class="container mx-auto px-4">
-            <nav class="flex items-center text-sm text-gray-600">
-                <a href="{{ route('home') }}" class="hover:text-blue-600">Inicio</a>
-                <i class="fas fa-chevron-right mx-2 text-xs"></i>
-                <a href="{{ route('services.index') }}" class="hover:text-blue-600">Servicios</a>
-                <i class="fas fa-chevron-right mx-2 text-xs"></i>
-                <a href="{{ route('categories.show', $service->category) }}" class="hover:text-blue-600">{{ $service->category->name }}</a>
-                <i class="fas fa-chevron-right mx-2 text-xs"></i>
-                <span class="text-gray-800 font-medium">{{ $service->title }}</span>
-            </nav>
-        </div>
-    </section>
-
     {{-- Contenido Principal --}}
     <section class="py-12 bg-white">
         <div class="container mx-auto px-4">
@@ -253,23 +238,10 @@
                                         </div>
                                     @endif
 
-                                    <div x-data="{ openModal: false }">
-                                        <button 
-                                            @click="openModal = true; $nextTick(() => { if (window.bookingCalendarInstance) window.bookingCalendarInstance.open = true; })"
-                                            type="button"
-                                            class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-4 rounded-lg font-bold text-lg transition duration-200 shadow-lg hover:shadow-xl">
-                                            <i class="fas fa-calendar-check mr-2"></i>
-                                            Seleccionar Fechas y Reservar
-                                        </button>
-
-                                        <!-- Modal de Calendario -->
-                                        <div x-show="openModal" style="display: none;">
-                                            <x-booking-calendar-modal 
-                                                :service="$service" 
-                                                :professional="$service->user" 
-                                            />
-                                        </div>
-                                    </div>
+                                    <x-booking-calendar-modal 
+                                        :service="$service" 
+                                        :professional="$service->user" 
+                                    />
 
                                     <p class="text-xs text-gray-500 text-center">
                                         Tu solicitud estará pendiente hasta que el profesional la confirme

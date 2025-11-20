@@ -13,6 +13,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Contracts\LoginResponse;
+use Laravel\Fortify\Contracts\RegisterResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -21,7 +23,35 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Registrar respuesta personalizada después del login
+        $this->app->singleton(LoginResponse::class, function () {
+            return new class implements LoginResponse {
+                public function toResponse($request)
+                {
+                    $user = auth()->user();
+                    
+                    // Redirigir según el rol del usuario
+                    if ($user->isAdmin()) {
+                        return redirect()->route('admin.dashboard');
+                    } elseif ($user->isPro()) {
+                        return redirect()->route('home'); // Profesionales van a inicio
+                    } else {
+                        return redirect()->route('home'); // Clientes van a inicio
+                    }
+                }
+
+            };
+        });
+
+        // Registrar respuesta personalizada después del registro
+        $this->app->singleton(RegisterResponse::class, function () {
+            return new class implements RegisterResponse {
+                public function toResponse($request)
+                {
+                    return redirect()->route('home');
+                }
+            };
+        });
     }
 
     /**

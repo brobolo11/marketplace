@@ -14,33 +14,24 @@
         
         $statusColors = [
             'pending' => 'bg-yellow-100 text-yellow-800 border-yellow-300',
-            'confirmed' => 'bg-blue-100 text-blue-800 border-blue-300',
+            'accepted' => 'bg-blue-100 text-blue-800 border-blue-300',
             'completed' => 'bg-green-100 text-green-800 border-green-300',
             'cancelled' => 'bg-red-100 text-red-800 border-red-300',
+            'rejected' => 'bg-red-100 text-red-800 border-red-300',
         ];
         
         $statusLabels = [
             'pending' => 'Pendiente',
-            'confirmed' => 'Confirmada',
+            'accepted' => 'Aceptada',
             'completed' => 'Completada',
             'cancelled' => 'Cancelada',
+            'rejected' => 'Rechazada',
         ];
     @endphp
 
-    {{-- Breadcrumb --}}
-    <section class="bg-gray-100 py-4">
-        <div class="container mx-auto px-4">
-            <nav class="flex items-center text-sm text-gray-600">
-                <a href="{{ route('home') }}" class="hover:text-blue-600">Inicio</a>
-                <i class="fas fa-chevron-right mx-2 text-xs"></i>
-                <a href="{{ route('bookings.index') }}" class="hover:text-blue-600">Mis Reservas</a>
-                <i class="fas fa-chevron-right mx-2 text-xs"></i>
-                <span class="text-gray-800 font-medium">Reserva #{{ $booking->id }}</span>
-            </nav>
-        </div>
-    </section>
+    <div x-data="{ showCancelModal: false, showRejectModal: false }">
 
-    {{-- Contenido Principal --}}
+    {{-- Mensaje de éxito --}}
     <section class="py-12 bg-gray-50">
         <div class="container mx-auto px-4">
             <div class="max-w-5xl mx-auto">
@@ -205,7 +196,7 @@
                                 {{-- Acciones del Profesional --}}
                                 @if($isPro)
                                     @if($booking->status == 'pending')
-                                        <form action="{{ route('bookings.accept', $booking) }}" method="POST">
+                                        <form action="{{ route('bookings.approve', $booking) }}" method="POST">
                                             @csrf
                                             <button type="submit" 
                                                     class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold transition duration-200">
@@ -213,17 +204,14 @@
                                                 Aceptar Reserva
                                             </button>
                                         </form>
-                                        <form action="{{ route('bookings.reject', $booking) }}" method="POST" onsubmit="return confirm('¿Seguro que quieres rechazar esta reserva?')">
-                                            @csrf
-                                            <button type="submit" 
-                                                    class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-semibold transition duration-200">
-                                                <i class="fas fa-times mr-2"></i>
-                                                Rechazar Reserva
-                                            </button>
-                                        </form>
+                                        <button @click="showRejectModal = true"
+                                                class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-semibold transition duration-200">
+                                            <i class="fas fa-times mr-2"></i>
+                                            Rechazar Reserva
+                                        </button>
                                     @endif
 
-                                    @if($booking->status == 'confirmed')
+                                    @if($booking->status == 'accepted')
                                         <form action="{{ route('bookings.complete', $booking) }}" method="POST">
                                             @csrf
                                             <button type="submit" 
@@ -265,14 +253,11 @@
                                     @endif
 
                                     @if($booking->status == 'pending')
-                                        <form action="{{ route('bookings.cancel', $booking) }}" method="POST" onsubmit="return confirm('¿Seguro que quieres cancelar esta reserva?')">
-                                            @csrf
-                                            <button type="submit" 
-                                                    class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-semibold transition duration-200">
-                                                <i class="fas fa-times mr-2"></i>
-                                                Cancelar Reserva
-                                            </button>
-                                        </form>
+                                        <button @click="showCancelModal = true"
+                                                class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-semibold transition duration-200">
+                                            <i class="fas fa-times mr-2"></i>
+                                            Cancelar Reserva
+                                        </button>
                                     @endif
 
                                     {{-- Ver pago si existe --}}
@@ -309,10 +294,10 @@
                                             <i class="fas fa-hourglass-half mr-2"></i>
                                             Esperando confirmación del profesional
                                         </p>
-                                    @elseif($booking->status == 'confirmed')
+                                    @elseif($booking->status == 'accepted')
                                         <p class="text-blue-700">
                                             <i class="fas fa-check-circle mr-2"></i>
-                                            Reserva confirmada, pendiente de realizar
+                                            Reserva aceptada, pendiente de realizar
                                         </p>
                                     @elseif($booking->status == 'completed')
                                         <p class="text-green-700">
@@ -333,4 +318,143 @@
             </div>
         </div>
     </section>
+
+    {{-- Modal de Confirmación de Cancelación (Cliente) --}}
+    <div x-show="showCancelModal" 
+         x-cloak
+         class="fixed inset-0 z-50 flex items-center justify-center p-4" 
+         aria-labelledby="modal-title" 
+         role="dialog" 
+         aria-modal="true">
+        <div class="w-full max-w-md">
+            <!-- Background overlay -->
+            <div x-show="showCancelModal" 
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+                 @click="showCancelModal = false"
+                 aria-hidden="true"></div>
+
+            <!-- Modal panel -->
+            <div x-show="showCancelModal"
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0 scale-95"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="relative bg-white rounded-lg shadow-xl w-full"
+                 @click.stop>
+                
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                Cancelar Reserva
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">
+                                    ¿Estás seguro que deseas cancelar esta reserva? Esta acción no se puede deshacer y el profesional será notificado.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <form action="{{ route('bookings.cancel', $booking) }}" method="POST" class="w-full sm:w-auto">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" 
+                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                            Sí, cancelar reserva
+                        </button>
+                    </form>
+                    <button type="button" 
+                            @click="showCancelModal = false"
+                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        No, mantener reserva
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal de Confirmación de Rechazo (Profesional) --}}
+    <div x-show="showRejectModal" 
+         x-cloak
+         class="fixed inset-0 z-50 flex items-center justify-center p-4" 
+         aria-labelledby="modal-title" 
+         role="dialog" 
+         aria-modal="true">
+        <div class="w-full max-w-md">
+            <!-- Background overlay -->
+            <div x-show="showRejectModal" 
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+                 @click="showRejectModal = false"
+                 aria-hidden="true"></div>
+
+            <!-- Modal panel -->
+            <div x-show="showRejectModal"
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0 scale-95"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="relative bg-white rounded-lg shadow-xl w-full"
+                 @click.stop>
+                
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                Rechazar Reserva
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">
+                                    ¿Estás seguro que deseas rechazar esta solicitud de reserva? El cliente será notificado y no podrá continuar con esta reserva.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <form action="{{ route('bookings.reject', $booking) }}" method="POST" class="w-full sm:w-auto">
+                        @csrf
+                        <button type="submit" 
+                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                            Sí, rechazar reserva
+                        </button>
+                    </form>
+                    <button type="button" 
+                            @click="showRejectModal = false"
+                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        No, mantener pendiente
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div> {{-- Cierre del div x-data --}}
 @endsection

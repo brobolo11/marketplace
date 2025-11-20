@@ -49,16 +49,12 @@
                         <i class="fas fa-{{ $category->icon }}"></i>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="editCategory({{ $category->id }}, '{{ $category->name }}', '{{ $category->description }}', '{{ $category->icon }}')" class="text-blue-600 hover:text-blue-900">
+                        <button type="button" onclick="editCategory({{ $category->id }}, '{{ addslashes($category->name) }}', '{{ addslashes($category->description ?? '') }}', '{{ $category->icon }}')" class="text-blue-600 hover:text-blue-900">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" onsubmit="return confirm('¿Eliminar esta categoría? Solo se puede eliminar si no tiene servicios.')" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:text-red-900">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
+                        <button type="button" onclick="confirmDelete({{ $category->id }}, '{{ addslashes($category->name) }}', {{ $category->services_count }})" class="text-red-600 hover:text-red-900">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                 </div>
                 <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ $category->name }}</h3>
@@ -157,14 +153,63 @@
     </div>
 </div>
 
+{{-- Modal Eliminar Categoría --}}
+<div id="modalDelete" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-bold text-gray-800">
+                <i class="fas fa-exclamation-triangle mr-2 text-red-600"></i>
+                Confirmar Eliminación
+            </h3>
+            <button onclick="document.getElementById('modalDelete').classList.add('hidden')" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="mb-6">
+            <p class="text-gray-700 mb-2">¿Estás seguro de eliminar la categoría <strong id="deleteCategoryName"></strong>?</p>
+            <p class="text-sm text-gray-600" id="deleteWarning"></p>
+        </div>
+        <form id="formDelete" method="POST" action="">
+            @csrf
+            @method('DELETE')
+            <div class="flex gap-3">
+                <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-semibold transition">
+                    <i class="fas fa-trash mr-2"></i> Sí, eliminar
+                </button>
+                <button type="button" onclick="document.getElementById('modalDelete').classList.add('hidden')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-semibold transition">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 @push('scripts')
 <script>
 function editCategory(id, name, description, icon) {
     document.getElementById('editName').value = name;
     document.getElementById('editDescription').value = description || '';
     document.getElementById('editIcon').value = icon;
-    document.getElementById('formEdit').action = `/admin/categories/${id}`;
+    document.getElementById('formEdit').action = `{{ url('admin/categories') }}/${id}`;
     document.getElementById('modalEdit').classList.remove('hidden');
+}
+
+function confirmDelete(id, name, servicesCount) {
+    document.getElementById('deleteCategoryName').textContent = name;
+    const warning = document.getElementById('deleteWarning');
+    
+    if (servicesCount > 0) {
+        warning.innerHTML = `<i class="fas fa-exclamation-circle text-red-600"></i> Esta categoría tiene <strong>${servicesCount} servicio(s)</strong> asociado(s) y no se puede eliminar.`;
+        document.getElementById('formDelete').querySelector('button[type="submit"]').disabled = true;
+        document.getElementById('formDelete').querySelector('button[type="submit"]').classList.add('opacity-50', 'cursor-not-allowed');
+    } else {
+        warning.innerHTML = '<i class="fas fa-check-circle text-green-600"></i> Esta categoría no tiene servicios asociados y puede eliminarse.';
+        document.getElementById('formDelete').querySelector('button[type="submit"]').disabled = false;
+        document.getElementById('formDelete').querySelector('button[type="submit"]').classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+    
+    document.getElementById('formDelete').action = `{{ url('admin/categories') }}/${id}`;
+    document.getElementById('modalDelete').classList.remove('hidden');
 }
 </script>
 @endpush

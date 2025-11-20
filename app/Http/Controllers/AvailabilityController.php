@@ -26,11 +26,22 @@ class AvailabilityController extends Controller
 
         // Obtiene toda la disponibilidad del profesional
         $availability = $user->availability()
+            ->whereNull('specific_date')
             ->orderBy('weekday')
             ->orderBy('start_time')
             ->get();
 
-        return view('availability.index', compact('availability'));
+        // Agrupa la disponibilidad por día de la semana
+        $weeklyAvailability = $availability->groupBy('weekday');
+
+        // Obtiene los días específicos bloqueados
+        $specificBlocks = $user->availability()
+            ->whereNotNull('specific_date')
+            ->where('specific_date', '>=', now()->toDateString())
+            ->orderBy('specific_date')
+            ->get();
+
+        return view('availability.index', compact('availability', 'weeklyAvailability', 'specificBlocks'));
     }
 
     /**

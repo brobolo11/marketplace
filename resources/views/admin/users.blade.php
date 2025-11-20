@@ -47,7 +47,7 @@
                     <select name="role" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                         <option value="">Todos los roles</option>
                         <option value="client" {{ $role == 'client' ? 'selected' : '' }}>Clientes</option>
-                        <option value="professional" {{ $role == 'professional' ? 'selected' : '' }}>Profesionales</option>
+                        <option value="pro" {{ $role == 'pro' ? 'selected' : '' }}>Profesionales</option>
                         <option value="admin" {{ $role == 'admin' ? 'selected' : '' }}>Administradores</option>
                     </select>
                 </div>
@@ -100,9 +100,9 @@
                                 <form method="POST" action="{{ route('admin.users.updateRole', $user) }}" class="inline">
                                     @csrf
                                     @method('PATCH')
-                                    <select name="role" onchange="this.form.submit()" class="text-xs font-semibold px-2 py-1 rounded-full {{ $user->role == 'admin' ? 'bg-red-100 text-red-700' : ($user->role == 'professional' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700') }}">
+                                    <select name="role" onchange="this.form.submit()" class="text-xs font-semibold px-2 py-1 rounded-full {{ $user->role == 'admin' ? 'bg-red-100 text-red-700' : ($user->role == 'pro' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700') }}">
                                         <option value="client" {{ $user->role == 'client' ? 'selected' : '' }}>Cliente</option>
-                                        <option value="professional" {{ $user->role == 'professional' ? 'selected' : '' }}>Profesional</option>
+                                        <option value="pro" {{ $user->role == 'pro' ? 'selected' : '' }}>Profesional</option>
                                         <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
                                     </select>
                                 </form>

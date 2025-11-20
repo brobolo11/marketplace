@@ -9,7 +9,7 @@
     $pendingBookingsCount = 0;
     $unreadMessagesCount = 0;
     
-    if ($role === 'professional') {
+    if ($role === 'pro') {
         // Contar solicitudes pendientes de reserva
         $pendingBookingsCount = \App\Models\Booking::where('pro_id', $user->id)
             ->where('status', 'pending')
@@ -46,7 +46,7 @@
             <span class="text-xs text-gray-500 capitalize">
                 @if($role === 'admin')
                     Administrador
-                @elseif($role === 'professional')
+                @elseif($role === 'pro')
                     Profesional
                 @else
                     Cliente
@@ -95,25 +95,25 @@
                     <span>Gestionar Usuarios</span>
                 </a>
                 
-                <a href="#" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
+                <a href="{{ route('admin.services.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
                     <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                     </svg>
                     <span>Gestionar Servicios</span>
                 </a>
                 
-                <a href="#" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
+                <a href="{{ route('admin.bookings.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
                     <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
                     <span>Gestionar Reservas</span>
                 </a>
                 
-                <a href="#" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
+                <a href="{{ route('admin.categories.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
                     <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
                     </svg>
-                    <span>Gestionar Pagos</span>
+                    <span>Gestionar Categorías</span>
                 </a>
                 
                 <div class="border-t border-gray-200 my-2"></div>
@@ -126,7 +126,7 @@
                 </a>
             </div>
 
-        @elseif($role === 'professional')
+        @elseif($role === 'pro')
             <!-- OPCIONES PARA PROFESIONAL -->
             <div class="py-1">
                 <a href="{{ route('profile.show') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
@@ -153,7 +153,7 @@
                     @endif
                 </a>
                 
-                <a href="#" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
+                <a href="{{ route('bookings.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
                     <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
@@ -188,7 +188,7 @@
                     <span>Gestionar Perfil</span>
                 </a>
                 
-                <a href="#" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
+                <a href="{{ route('bookings.index') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
                     <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>

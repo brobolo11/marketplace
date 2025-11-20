@@ -64,7 +64,7 @@
                     <a href="{{ route('categories.show', $category) }}" 
                        class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 text-center group border border-gray-100 hover:border-blue-200 transform hover:-translate-y-2">
                         <div class="text-5xl mb-4 group-hover:scale-110 transition-transform duration-200 text-blue-600">
-                            {!! $category->icon !!}
+                            <i class="fas fa-{{ $category->icon }}"></i>
                         </div>
                         <h3 class="font-bold text-gray-800 group-hover:text-blue-600 transition duration-200 text-base">
                             {{ $category->name }}

@@ -54,6 +54,15 @@ class Review extends Model
     }
 
     /**
+     * Usuario que escribió la reseña (alias de client).
+     * Relación: Una reseña pertenece a un usuario.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
      * Profesional que recibe la reseña.
      * Relación: Una reseña pertenece a un usuario (profesional).
      */

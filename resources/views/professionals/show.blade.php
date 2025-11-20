@@ -265,6 +265,71 @@
                             <p class="text-gray-500 text-center py-8">Este profesional aún no tiene reseñas.</p>
                         @endif
                     </div>
+
+                    {{-- Disponibilidad --}}
+                    <div id="availability" class="bg-white rounded-xl shadow-md p-8">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                            <i class="fas fa-calendar-alt text-indigo-600 mr-2"></i>
+                            Disponibilidad
+                        </h2>
+
+                        @php
+                            $weeklyAvailability = $professional->availability()
+                                ->whereNull('specific_date')
+                                ->orderBy('weekday')
+                                ->orderBy('start_time')
+                                ->get()
+                                ->groupBy('weekday');
+                            
+                            $daysOfWeek = [
+                                1 => 'Lunes',
+                                2 => 'Martes',
+                                3 => 'Miércoles',
+                                4 => 'Jueves',
+                                5 => 'Viernes',
+                                6 => 'Sábado',
+                                0 => 'Domingo'
+                            ];
+                        @endphp
+
+                        @if($weeklyAvailability->count() > 0)
+                            <div class="space-y-4">
+                                @foreach($daysOfWeek as $dayNum => $dayName)
+                                    @if($weeklyAvailability->has($dayNum))
+                                        <div class="border border-gray-200 rounded-lg p-4 bg-gradient-to-r from-indigo-50 to-purple-50">
+                                            <h3 class="font-semibold text-gray-800 mb-3 flex items-center">
+                                                <i class="fas fa-clock text-indigo-600 mr-2"></i>
+                                                {{ $dayName }}
+                                            </h3>
+                                            <div class="grid md:grid-cols-2 gap-2">
+                                                @foreach($weeklyAvailability[$dayNum] as $slot)
+                                                    <div class="flex items-center gap-2 bg-white px-3 py-2 rounded-lg border border-indigo-200">
+                                                        <i class="fas fa-check-circle text-green-500 text-sm"></i>
+                                                        <span class="text-sm text-gray-700">
+                                                            {{ \Carbon\Carbon::parse($slot->start_time)->format('H:i') }} - 
+                                                            {{ \Carbon\Carbon::parse($slot->end_time)->format('H:i') }}
+                                                        </span>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+
+                            <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                                <p class="text-sm text-blue-800">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    Los horarios mostrados son orientativos. Al reservar un servicio, podrás acordar la fecha y hora específica con el profesional.
+                                </p>
+                            </div>
+                        @else
+                            <div class="text-center py-12">
+                                <i class="fas fa-calendar-times text-gray-300 text-6xl mb-4"></i>
+                                <p class="text-gray-500 text-lg">Este profesional aún no ha configurado su disponibilidad</p>
+                            </div>
+                        @endif
+                    </div>
                 </div>
 
                 {{-- Columna Lateral --}}
@@ -309,7 +374,7 @@
                         {{-- Botón de Contacto --}}
                         @auth
                             @if(!Auth::user()->isPro() && Auth::id() !== $professional->id)
-                                <a href="{{ route('messages.create', ['recipient' => $professional->id]) }}" 
+                                <a href="{{ route('messages.show', $professional) }}" 
                                    class="block w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-center py-4 rounded-lg font-bold shadow-lg hover:shadow-xl transition duration-200">
                                     <i class="fas fa-envelope mr-2"></i>
                                     Enviar Mensaje

@@ -3,14 +3,25 @@
     'professional'
 ])
 
-<div x-data="bookingCalendar()" x-show="open" x-cloak
-     class="fixed inset-0 z-50 overflow-y-auto" 
-     aria-labelledby="modal-title" 
-     role="dialog" 
-     aria-modal="true"
-     style="display: none;">
-    
-    <!-- Overlay -->
+<div x-data="bookingCalendar()">
+    <!-- Botón para abrir el modal -->
+    <button 
+        @click="open = true"
+        type="button"
+        class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-4 rounded-lg font-bold text-lg transition duration-200 shadow-lg hover:shadow-xl">
+        <i class="fas fa-calendar-check mr-2"></i>
+        Seleccionar Fechas y Reservar
+    </button>
+
+    <!-- Modal -->
+    <div x-show="open" x-cloak
+         class="fixed inset-0 z-50 overflow-y-auto" 
+         aria-labelledby="modal-title" 
+         role="dialog" 
+         aria-modal="true"
+         style="display: none;">
+        
+        <!-- Overlay -->
     <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
          @click="open = false"
          x-show="open"
@@ -82,26 +93,61 @@
                 <!-- Calendar Container -->
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Selecciona las fechas de servicio
+                        Selecciona una fecha para el servicio
                     </label>
-                    <div id="calendar" class="border border-gray-200 rounded-lg p-4"></div>
+                    <input 
+                        type="date" 
+                        x-model="selectedDate"
+                        @change="loadAvailability()"
+                        :min="new Date().toISOString().split('T')[0]"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg">
+                    
+                    <!-- Loading availability -->
+                    <div x-show="loadingAvailability" class="mt-4 text-center py-4">
+                        <svg class="animate-spin h-6 w-6 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <p class="text-sm text-gray-600 mt-2">Cargando disponibilidad...</p>
+                    </div>
+
+                    <!-- Available Time Slots -->
+                    <div x-show="selectedDate && !loadingAvailability && availableSlots.length > 0" class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Horarios disponibles
+                        </label>
+                        <div class="grid grid-cols-3 gap-2 max-h-60 overflow-y-auto">
+                            <template x-for="slot in availableSlots" :key="slot">
+                                <button 
+                                    type="button"
+                                    @click="selectedTime = slot"
+                                    :class="{
+                                        'bg-blue-600 text-white': selectedTime === slot,
+                                        'bg-white text-gray-700 hover:bg-blue-50': selectedTime !== slot
+                                    }"
+                                    class="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium transition">
+                                    <span x-text="slot"></span>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- No availability message -->
+                    <div x-show="selectedDate && !loadingAvailability && availableSlots.length === 0" class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <p class="text-sm text-yellow-800">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            No hay horarios disponibles para esta fecha. Por favor, selecciona otra fecha.
+                        </p>
+                    </div>
                 </div>
 
-                <!-- Selected Dates Display -->
-                <div x-show="selectedDates.length > 0" class="mb-4 p-4 bg-blue-50 rounded-lg">
-                    <p class="text-sm font-medium text-blue-900 mb-2">Fechas seleccionadas:</p>
-                    <div class="flex flex-wrap gap-2">
-                        <template x-for="date in selectedDates" :key="date">
-                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-blue-600 text-white text-sm rounded-full">
-                                <span x-text="formatDate(date)"></span>
-                                <button @click="removeDate(date)" type="button" class="hover:bg-blue-700 rounded-full p-0.5">
-                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                                    </svg>
-                                </button>
-                            </span>
-                        </template>
-                    </div>
+                <!-- Selected Date Display -->
+                <div x-show="selectedDate" class="mb-4 p-4 bg-blue-50 rounded-lg">
+                    <p class="text-sm font-medium text-blue-900 mb-1">Fecha seleccionada:</p>
+                    <p class="text-lg font-semibold text-blue-700" x-text="selectedDate"></p>
+                    <p x-show="selectedTime" class="text-sm text-blue-600 mt-1">
+                        Hora preferida: <span x-text="selectedTime"></span>
+                    </p>
                 </div>
 
                 <!-- Description Field -->
@@ -138,8 +184,8 @@
                 </button>
                 <button 
                     @click="submitBooking()"
-                    :disabled="loading || selectedDates.length === 0"
-                    :class="{'opacity-50 cursor-not-allowed': loading || selectedDates.length === 0}"
+                    :disabled="loading || !selectedDate"
+                    :class="{'opacity-50 cursor-not-allowed': loading || !selectedDate}"
                     type="button"
                     class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2">
                     <svg x-show="loading" class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -151,119 +197,111 @@
             </div>
         </div>
     </div>
+    <!-- Fin del Modal -->
 </div>
+<!-- Fin del contenedor x-data -->
 
-@push('scripts')
 <script>
-function bookingCalendar() {
-    return {
+document.addEventListener('alpine:init', () => {
+    Alpine.data('bookingCalendar', () => ({
         open: false,
-        calendar: null,
-        selectedDates: [],
+        selectedDate: '',
+        selectedTime: '',
         description: '',
         loading: false,
+        loadingAvailability: false,
         errorMessage: '',
         successMessage: '',
         serviceId: {{ $service->id }},
         professionalId: {{ $professional->id }},
+        availableSlots: [],
 
-        init() {
-            // Escuchar evento para abrir modal
-            this.$watch('open', (value) => {
-                if (value) {
-                    this.$nextTick(() => {
-                        this.initCalendar();
-                    });
+        async loadAvailability() {
+            if (!this.selectedDate) return;
+
+            this.loadingAvailability = true;
+            this.availableSlots = [];
+            this.selectedTime = '';
+            this.errorMessage = '';
+
+            try {
+                // Obtener día de la semana (0 = domingo, 1 = lunes, etc.)
+                const dateObj = new Date(this.selectedDate + 'T12:00:00');
+                const dayOfWeek = dateObj.getDay();
+
+                console.log('Fecha seleccionada:', this.selectedDate);
+                console.log('Día de la semana:', dayOfWeek);
+
+                // Cargar disponibilidad del profesional para ese día
+                const availResponse = await fetch(`/json/professional/${this.professionalId}/availability?day=${dayOfWeek}`);
+                
+                if (!availResponse.ok) {
+                    throw new Error('Error al obtener disponibilidad');
                 }
-            });
-        },
+                
+                const availData = await availResponse.json();
+                console.log('Disponibilidad recibida:', availData);
 
-        initCalendar() {
-            if (this.calendar) {
-                this.calendar.destroy();
-            }
+                if (!availData.schedules || availData.schedules.length === 0) {
+                    console.log('No hay horarios para este día');
+                    this.loadingAvailability = false;
+                    return;
+                }
 
-            const { Calendar } = window.FullCalendar;
-            const calendarEl = document.getElementById('calendar');
+                // Obtener reservas existentes para esa fecha
+                const bookingsResponse = await fetch(`/json/professional/${this.professionalId}/bookings?date=${this.selectedDate}`);
+                const bookingsData = await bookingsResponse.json();
+                const bookedTimes = bookingsData.booked_times || [];
+                
+                console.log('Horas ocupadas:', bookedTimes);
 
-            this.calendar = new Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'es',
-                selectable: true,
-                selectMirror: true,
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth'
-                },
-                validRange: {
-                    start: new Date()
-                },
-                dateClick: (info) => {
-                    this.toggleDate(info.dateStr);
-                },
-                events: async (fetchInfo, successCallback, failureCallback) => {
-                    try {
-                        // Aquí se cargarán los días ocupados desde la API
-                        const response = await fetch(`/api/availability/{{ $professional->id }}`);
-                        const data = await response.json();
-                        successCallback(data.events || []);
-                    } catch (error) {
-                        console.error('Error loading availability:', error);
-                        failureCallback(error);
+                // Generar slots de 30 minutos para cada bloque de disponibilidad
+                const allSlots = [];
+                
+                availData.schedules.forEach(schedule => {
+                    const startTime = schedule.start_time.substring(0, 5); // HH:MM
+                    const endTime = schedule.end_time.substring(0, 5);
+                    
+                    console.log(`Procesando horario: ${startTime} - ${endTime}`);
+                    
+                    const start = this.parseTime(startTime);
+                    const end = this.parseTime(endTime);
+                    
+                    // Generar slots cada 30 minutos
+                    for (let time = start; time < end; time += 30) {
+                        const slotTime = this.formatTime(time);
+                        // Verificar que el slot no esté ocupado
+                        if (!bookedTimes.includes(slotTime)) {
+                            allSlots.push(slotTime);
+                        }
                     }
-                }
-            });
+                });
 
-            this.calendar.render();
-        },
-
-        toggleDate(dateStr) {
-            const index = this.selectedDates.indexOf(dateStr);
-            if (index > -1) {
-                this.selectedDates.splice(index, 1);
-            } else {
-                this.selectedDates.push(dateStr);
+                this.availableSlots = allSlots.sort();
+                console.log('Slots disponibles:', this.availableSlots);
+                
+            } catch (error) {
+                console.error('Error completo:', error);
+                this.errorMessage = 'Error al cargar la disponibilidad: ' + error.message;
+            } finally {
+                this.loadingAvailability = false;
             }
-            this.updateCalendarHighlights();
         },
 
-        removeDate(date) {
-            const index = this.selectedDates.indexOf(date);
-            if (index > -1) {
-                this.selectedDates.splice(index, 1);
-            }
-            this.updateCalendarHighlights();
+        parseTime(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            return hours * 60 + minutes;
         },
 
-        updateCalendarHighlights() {
-            if (!this.calendar) return;
-            
-            // Remover highlights anteriores
-            const highlighted = document.querySelectorAll('.fc-day.selected-date');
-            highlighted.forEach(el => el.classList.remove('selected-date', 'bg-blue-100'));
-
-            // Agregar nuevos highlights
-            this.selectedDates.forEach(date => {
-                const dayEl = document.querySelector(`[data-date="${date}"]`);
-                if (dayEl) {
-                    dayEl.classList.add('selected-date', 'bg-blue-100');
-                }
-            });
-        },
-
-        formatDate(dateStr) {
-            const date = new Date(dateStr + 'T00:00:00');
-            return date.toLocaleDateString('es-ES', { 
-                day: 'numeric', 
-                month: 'short',
-                year: 'numeric'
-            });
+        formatTime(minutes) {
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
         },
 
         async submitBooking() {
-            if (this.selectedDates.length === 0) {
-                this.errorMessage = 'Por favor selecciona al menos una fecha';
+            if (!this.selectedDate) {
+                this.errorMessage = 'Por favor selecciona una fecha';
                 return;
             }
 
@@ -272,54 +310,55 @@ function bookingCalendar() {
             this.successMessage = '';
 
             try {
-                const response = await fetch('/api/bookings', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify({
-                        service_id: this.serviceId,
-                        professional_id: this.professionalId,
-                        dates: this.selectedDates,
-                        description: this.description
-                    })
-                });
+                // Crear un formulario y enviarlo
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/bookings';
 
-                const data = await response.json();
+                // CSRF Token
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = document.querySelector('meta[name="csrf-token"]').content;
+                form.appendChild(csrfInput);
 
-                if (response.ok) {
-                    this.successMessage = '¡Solicitud enviada! El profesional revisará tu petición.';
-                    setTimeout(() => {
-                        window.location.href = '/bookings';
-                    }, 2000);
-                } else {
-                    this.errorMessage = data.message || 'Error al crear la reserva';
-                }
+                // Service ID
+                const serviceInput = document.createElement('input');
+                serviceInput.type = 'hidden';
+                serviceInput.name = 'service_id';
+                serviceInput.value = this.serviceId;
+                form.appendChild(serviceInput);
+
+                // DateTime
+                const datetimeInput = document.createElement('input');
+                datetimeInput.type = 'hidden';
+                datetimeInput.name = 'datetime';
+                datetimeInput.value = this.selectedDate + (this.selectedTime ? ' ' + this.selectedTime + ':00' : ' 09:00:00');
+                form.appendChild(datetimeInput);
+
+                // Address (from description or default)
+                const addressInput = document.createElement('input');
+                addressInput.type = 'hidden';
+                addressInput.name = 'address';
+                addressInput.value = this.description || 'Dirección a confirmar';
+                form.appendChild(addressInput);
+
+                // Total Price (from service price)
+                const priceInput = document.createElement('input');
+                priceInput.type = 'hidden';
+                priceInput.name = 'total_price';
+                priceInput.value = {{ $service->price ?? 0 }};
+                form.appendChild(priceInput);
+
+                document.body.appendChild(form);
+                form.submit();
+
             } catch (error) {
                 console.error('Error:', error);
                 this.errorMessage = 'Error al procesar la solicitud. Inténtalo de nuevo.';
-            } finally {
                 this.loading = false;
             }
         }
-    }
-}
+    }));
+});
 </script>
-@endpush
-
-<style>
-.fc-day.selected-date {
-    background-color: rgba(59, 130, 246, 0.1) !important;
-}
-.fc-day.selected-date .fc-daygrid-day-number {
-    background-color: #3b82f6;
-    color: white;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-</style>

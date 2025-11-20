@@ -13,16 +13,13 @@ use Illuminate\Support\Facades\DB;
 class AdminController extends Controller
 {
     /**
-     * Middleware para verificar que el usuario sea admin
+     * Verifica que el usuario autenticado sea admin
      */
-    public function __construct()
+    private function checkAdmin()
     {
-        $this->middleware(function ($request, $next) {
-            if (auth()->user()->role !== 'admin') {
-                abort(403, 'Acceso denegado. Solo administradores.');
-            }
-            return $next($request);
-        });
+        if (!auth()->check() || auth()->user()->role !== 'admin') {
+            abort(403, 'Acceso denegado. Solo administradores.');
+        }
     }
 
     /**
@@ -31,6 +28,7 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
+        $this->checkAdmin();
         // Estadísticas generales
         $totalUsers = User::count();
         $totalProfessionals = User::where('role', 'professional')->count();
@@ -57,18 +55,11 @@ class AdminController extends Controller
             ->take(10)
             ->get();
         
-        // Profesionales más activos
-        $topProfessionals = User::where('role', 'professional')
-            ->withCount('servicesOffered')
-            ->orderBy('services_offered_count', 'desc')
-            ->take(5)
-            ->get();
-        
         return view('admin.dashboard', compact(
             'totalUsers', 'totalProfessionals', 'totalClients',
             'totalServices', 'totalBookings', 'totalRevenue',
             'pendingBookings', 'acceptedBookings', 'completedBookings', 'cancelledBookings',
-            'servicesByCategory', 'recentBookings', 'topProfessionals'
+            'servicesByCategory', 'recentBookings'
         ));
     }
 
@@ -78,6 +69,8 @@ class AdminController extends Controller
      */
     public function users(Request $request)
     {
+        $this->checkAdmin();
+        
         $search = $request->get('search');
         $role = $request->get('role');
         
@@ -91,7 +84,7 @@ class AdminController extends Controller
             ->when($role, function ($query, $role) {
                 return $query->where('role', $role);
             })
-            ->withCount(['servicesOffered', 'bookingsAsClient', 'bookingsAsPro'])
+            ->withCount(['services', 'bookingsAsClient', 'bookingsAsPro'])
             ->orderBy('created_at', 'desc')
             ->paginate(20);
         
@@ -99,11 +92,13 @@ class AdminController extends Controller
     }
 
     /**
-     * Cambiar rol de usuario
+     * Actualizar rol de un usuario
      * PATCH /admin/users/{user}/role
      */
     public function updateUserRole(Request $request, User $user)
     {
+        $this->checkAdmin();
+        
         $validated = $request->validate([
             'role' => 'required|in:client,professional,admin',
         ], [
@@ -123,6 +118,8 @@ class AdminController extends Controller
      */
     public function deleteUser(User $user)
     {
+        $this->checkAdmin();
+        
         // No permitir eliminar al propio admin
         if ($user->id === auth()->id()) {
             return back()->withErrors(['error' => 'No puedes eliminarte a ti mismo.']);
@@ -139,6 +136,8 @@ class AdminController extends Controller
      */
     public function services(Request $request)
     {
+        $this->checkAdmin();
+        
         $search = $request->get('search');
         $category = $request->get('category');
         
@@ -165,6 +164,8 @@ class AdminController extends Controller
      */
     public function deleteService(Service $service)
     {
+        $this->checkAdmin();
+        
         $service->delete();
         
         return back()->with('success', 'Servicio eliminado correctamente.');
@@ -176,6 +177,8 @@ class AdminController extends Controller
      */
     public function bookings(Request $request)
     {
+        $this->checkAdmin();
+        
         $status = $request->get('status');
         $search = $request->get('search');
         
@@ -203,6 +206,8 @@ class AdminController extends Controller
      */
     public function categories()
     {
+        $this->checkAdmin();
+        
         $categories = Category::withCount('services')->get();
         
         return view('admin.categories', compact('categories'));
@@ -214,6 +219,8 @@ class AdminController extends Controller
      */
     public function storeCategory(Request $request)
     {
+        $this->checkAdmin();
+        
         $validated = $request->validate([
             'name' => 'required|string|max:100|unique:categories,name',
             'description' => 'nullable|string|max:500',
@@ -238,6 +245,8 @@ class AdminController extends Controller
      */
     public function updateCategory(Request $request, Category $category)
     {
+        $this->checkAdmin();
+        
         $validated = $request->validate([
             'name' => 'required|string|max:100|unique:categories,name,' . $category->id,
             'description' => 'nullable|string|max:500',
@@ -262,6 +271,8 @@ class AdminController extends Controller
      */
     public function deleteCategory(Category $category)
     {
+        $this->checkAdmin();
+        
         // Verificar que no tenga servicios asociados
         if ($category->services()->count() > 0) {
             return back()->withErrors(['error' => 'No se puede eliminar una categoría con servicios asociados.']);

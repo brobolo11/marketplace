@@ -95,6 +95,47 @@ Route::get('/professionals/{professional}/availability', [ProfessionalController
 Route::get('/professionals/{professional}/reviews', [ProfessionalController::class, 'reviews'])->name('professionals.reviews');
 
 // ========================================
+// RUTAS JSON PARA DISPONIBILIDAD (públicas)
+// ========================================
+
+/**
+ * Obtener disponibilidad del profesional por día
+ */
+Route::get('/json/professional/{professional}/availability', function($professionalId, Illuminate\Http\Request $request) {
+    $day = $request->query('day');
+    
+    $schedules = \App\Models\Availability::where('user_id', $professionalId)
+        ->where('weekday', $day)
+        ->whereNull('specific_date')
+        ->orderBy('start_time')
+        ->get(['start_time', 'end_time']);
+    
+    return response()->json([
+        'schedules' => $schedules
+    ]);
+});
+
+/**
+ * Obtener reservas del profesional en una fecha
+ */
+Route::get('/json/professional/{professional}/bookings', function($professionalId, Illuminate\Http\Request $request) {
+    $date = $request->query('date');
+    
+    $bookings = \App\Models\Booking::where('pro_id', $professionalId)
+        ->whereDate('datetime', $date)
+        ->whereIn('status', ['pending', 'accepted'])
+        ->get();
+    
+    $bookedTimes = $bookings->map(function($booking) {
+        return \Carbon\Carbon::parse($booking->datetime)->format('H:i');
+    })->toArray();
+    
+    return response()->json([
+        'booked_times' => $bookedTimes
+    ]);
+});
+
+// ========================================
 // RUTAS PROTEGIDAS (requieren autenticación)
 // ========================================
 
@@ -201,6 +242,12 @@ Route::middleware(['auth'])->group(function () {
      * POST /reviews
      */
     Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    
+    /**
+     * Eliminar una reseña
+     * DELETE /reviews/{review}
+     */
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
 
     // ========================================
     // RUTAS DE MENSAJES (CHAT)
@@ -369,13 +416,20 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 // ========================================
 // require __DIR__.'/auth.php';
 
-
+// Redirección después del login según el rol del usuario
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        // Redirigir según el rol del usuario
+        if (auth()->user()->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        } elseif (auth()->user()->isPro()) {
+            return redirect()->route('profile.show'); // Dashboard profesional
+        } else {
+            return redirect()->route('home'); // Cliente va a inicio
+        }
     })->name('dashboard');
 });
