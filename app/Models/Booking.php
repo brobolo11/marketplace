@@ -90,6 +90,15 @@ class Booking extends Model
         return $this->hasOne(Payment::class);
     }
 
+    /**
+     * Factura asociada a esta reserva.
+     * Relación: Una reserva tiene una factura.
+     */
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class);
+    }
+
     // ========================================
     // MÉTODOS AUXILIARES
     // ========================================

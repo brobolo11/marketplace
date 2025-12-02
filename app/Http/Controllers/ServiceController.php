@@ -81,12 +81,40 @@ class ServiceController extends Controller
      */
     public function create()
     {
+        $user = Auth::user();
+        
+        // DEBUG: Mostrar información del usuario
+        if (!$user) {
+            abort(403, 'Usuario no autenticado');
+        }
+        
+        \Log::info('ServiceController@create - Verificando usuario', [
+            'user_id' => $user->id,
+            'user_name' => $user->name,
+            'user_email' => $user->email,
+            'user_role' => $user->role,
+            'isPro' => $user->isPro()
+        ]);
+        
         // Verifica que el usuario sea profesional
-        if (!Auth::user()->isPro()) {
-            abort(403, 'Solo los profesionales pueden crear servicios.');
+        if (!$user->isPro()) {
+            \Log::warning('ServiceController@create - Usuario NO es profesional', [
+                'user_role' => $user->role,
+                'expected' => 'pro'
+            ]);
+            
+            return redirect()->route('services.index')
+                ->with('error', 'Solo los profesionales pueden crear servicios. Tu rol actual es: ' . $user->role . '. Por favor, actualiza tu perfil a cuenta profesional desde Configuración.')
+                ->with('info', 'Si eres un profesional, asegúrate de que tu cuenta esté configurada como "Profesional" en tu perfil.');
         }
 
         $categories = Category::all();
+        
+        if ($categories->isEmpty()) {
+            return redirect()->route('services.index')
+                ->with('error', 'No hay categorías disponibles. Por favor contacta al administrador.');
+        }
+        
         return view('services.create', compact('categories'));
     }
 
@@ -97,26 +125,25 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        // Autorizar con Policy
-        $this->authorize('create', Service::class);
+        // Verificar que el usuario sea profesional
+        if (!Auth::user()->isPro()) {
+            return back()->withErrors(['error' => 'Solo los profesionales pueden crear servicios.'])->withInput();
+        }
 
         // Validación de datos
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'title' => 'required|string|max:100',
-            'description' => 'required|string|max:500',
-            'price' => 'required|numeric|min:0|max:999999.99',
-            'duration' => 'required|integer|in:30,60,90,120,180,240,480',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'price_hour' => 'required|numeric|min:0|max:999999.99',
             'photos.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB
         ], [
             'category_id.required' => 'La categoría es requerida',
             'title.required' => 'El título es requerido',
-            'title.max' => 'El título no puede exceder 100 caracteres',
-            'description.required' => 'La descripción es requerida',
-            'description.max' => 'La descripción no puede exceder 500 caracteres',
-            'price.required' => 'El precio es requerido',
-            'price.min' => 'El precio debe ser mayor a 0',
-            'duration.required' => 'La duración es requerida',
+            'title.max' => 'El título no puede exceder 255 caracteres',
+            'description.max' => 'La descripción no puede exceder 1000 caracteres',
+            'price_hour.required' => 'El precio es requerido',
+            'price_hour.min' => 'El precio debe ser mayor a 0',
             'photos.*.max' => 'Cada imagen no puede exceder 5MB',
         ]);
 
@@ -135,11 +162,18 @@ class ServiceController extends Controller
             }
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Servicio creado exitosamente',
-            'service' => $service->load('category', 'photos')
-        ], 201);
+        // Si es una petición AJAX, devolver JSON
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Servicio creado exitosamente',
+                'service' => $service->load('category', 'photos')
+            ], 201);
+        }
+
+        // Si es una petición web normal, redirigir
+        return redirect()->route('services.show', $service->id)
+            ->with('success', '¡Servicio creado exitosamente! Ya está visible para los clientes.');
     }
 
     /**
@@ -165,16 +199,17 @@ class ServiceController extends Controller
      */
     public function update(Request $request, Service $service)
     {
-        // Autorizar con Policy
-        $this->authorize('update', $service);
+        // Verificar que el usuario sea el propietario del servicio
+        if (Auth::id() !== $service->user_id) {
+            return back()->withErrors(['error' => 'No tienes permiso para editar este servicio.'])->withInput();
+        }
 
         // Validación de datos
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'title' => 'required|string|max:100',
-            'description' => 'required|string|max:500',
-            'price' => 'required|numeric|min:0|max:999999.99',
-            'duration' => 'required|integer|in:30,60,90,120,180,240,480',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'price_hour' => 'required|numeric|min:0|max:999999.99',
             'photos.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'existing_photos' => 'nullable|json',
         ]);
@@ -208,11 +243,18 @@ class ServiceController extends Controller
             }
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Servicio actualizado exitosamente',
-            'service' => $service->load('category', 'photos')
-        ], 200);
+        // Si es una petición AJAX, devolver JSON
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Servicio actualizado exitosamente',
+                'service' => $service->load('category', 'photos')
+            ], 200);
+        }
+
+        // Si es una petición web normal, redirigir
+        return redirect()->route('services.show', $service->id)
+            ->with('success', 'Servicio actualizado exitosamente.');
     }
 
     /**
@@ -222,8 +264,12 @@ class ServiceController extends Controller
      */
     public function destroy(Service $service)
     {
-        // Autorizar con Policy
-        $this->authorize('delete', $service);
+        // Verificar que el usuario sea el propietario del servicio o admin
+        if (Auth::id() !== $service->user_id && !Auth::user()->isAdmin()) {
+            return redirect()
+                ->route('services.index')
+                ->with('error', 'No tienes permiso para eliminar este servicio.');
+        }
 
         // Verificar si tiene reservas activas
         $activeBookings = $service->bookings()

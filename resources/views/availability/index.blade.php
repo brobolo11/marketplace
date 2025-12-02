@@ -11,7 +11,7 @@
                         <i class="fas fa-calendar-alt text-blue-600 mr-3"></i>
                         Gestionar Disponibilidad
                     </h1>
-                    <p class="text-gray-600">Configura tus horarios de trabajo y d�as disponibles para recibir reservas</p>
+                    <p class="text-gray-600">Configura tus horarios de trabajo y días disponibles para recibir reservas</p>
                 </div>
 
                 @if(session('success'))
@@ -35,10 +35,10 @@
                                 <i class="fas fa-clock text-blue-600 mr-2"></i>
                                 Horario Semanal
                             </h2>
-                            <p class="text-sm text-gray-600 mb-6">Define tus horas de trabajo para cada d�a de la semana</p>
+                            <p class="text-sm text-gray-600 mb-6">Define tus horas de trabajo para cada día de la semana</p>
                             
                             <div class="space-y-4">
-                                @foreach([1 => 'Lunes', 2 => 'Martes', 3 => 'Mi�rcoles', 4 => 'Jueves', 5 => 'Viernes', 6 => 'S�bado', 0 => 'Domingo'] as $day => $dayName)
+                                @foreach([1 => 'Lunes', 2 => 'Martes', 3 => 'Miércoles', 4 => 'Jueves', 5 => 'Viernes', 6 => 'Sábado', 0 => 'Domingo'] as $day => $dayName)
                                     @php
                                         $daySlots = $weeklyAvailability->get($day, collect());
                                     @endphp
@@ -58,7 +58,7 @@
                                                     <span class="flex-1 text-sm text-gray-700">
                                                         {{ \Carbon\Carbon::parse($slot->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($slot->end_time)->format('H:i') }}
                                                     </span>
-                                                    <form action="{{ route('availability.destroy', $slot->id) }}" method="POST" class="inline" onsubmit="return confirm('�Eliminar este horario?')">
+                                                    <form action="{{ route('availability.destroy', $slot->id) }}" method="POST" class="inline" onsubmit="return confirm('¿Eliminar este horario?')">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="text-red-600 hover:text-red-700 text-sm">
@@ -80,9 +80,9 @@
                         <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
                             <h2 class="text-xl font-bold text-gray-900 mb-4">
                                 <i class="fas fa-ban text-red-600 mr-2"></i>
-                                Bloqueos Espec�ficos
+                                Bloqueos Específicos
                             </h2>
-                            <p class="text-sm text-gray-600 mb-4">Marca d�as espec�ficos como no disponibles (vacaciones, festivos, etc.)</p>
+                            <p class="text-sm text-gray-600 mb-4">Marca días específicos como no disponibles (vacaciones, festivos, etc.)</p>
                             
                             <form id="blockForm" class="mb-6">
                                 @csrf
@@ -91,7 +91,7 @@
                                     <input type="date" id="blockDate" name="specific_date" min="{{ date('Y-m-d') }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Raz�n (opcional)</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Razón (opcional)</label>
                                     <input type="text" id="blockReason" name="reason" placeholder="Ej: Vacaciones" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                                 </div>
                                 <button type="submit" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
@@ -101,7 +101,7 @@
                             </form>
 
                             <div class="space-y-2">
-                                <h3 class="font-semibold text-gray-900 text-sm mb-2">D�as Bloqueados:</h3>
+                                <h3 class="font-semibold text-gray-900 text-sm mb-2">Días Bloqueados:</h3>
                                 <div id="blocksList" class="space-y-2">
                                     @forelse($specificBlocks as $block)
                                         <div class="flex items-center justify-between bg-red-50 p-3 rounded-lg">
@@ -201,7 +201,7 @@
         });
 
         async function deleteBlock(blockId) {
-            if (!confirm('�Eliminar este bloqueo?')) return;
+            if (!confirm('¿Eliminar este bloqueo?')) return;
             
             try {
                 const response = await fetch(`/availability/block/${blockId}`, {

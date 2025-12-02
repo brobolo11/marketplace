@@ -83,22 +83,15 @@
                 {{-- Botón Añadir Servicio (solo para profesionales) --}}
                 @auth
                     @if(auth()->user()->isPro())
-                        <div x-data="{ openModal: false }">
-                            <button 
-                                @click="openModal = true; $nextTick(() => { if (window.serviceModalInstance) window.serviceModalInstance.open = true; })"
-                                type="button"
-                                class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition duration-200 shadow-lg hover:shadow-xl flex items-center gap-2">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                </svg>
-                                Añadir Servicio
-                            </button>
-
-                            <!-- Modal de Crear Servicio -->
-                            <div x-show="openModal" style="display: none;">
-                                <x-service-modal mode="create" />
-                            </div>
-                        </div>
+                        <button 
+                            onclick="document.getElementById('service-modal').classList.remove('hidden')"
+                            type="button"
+                            class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition duration-200 shadow-lg hover:shadow-xl flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            Añadir Servicio
+                        </button>
                     @endif
                 @endauth
             </div>
@@ -192,15 +185,13 @@
                             {{-- Botones de acción para servicios propios --}}
                             @if($isOwnService)
                                 <div class="px-4 pb-4 flex gap-2 bg-purple-50 border-t border-purple-200">
-                                    <button 
-                                        @click="$dispatch('edit-service-{{ $service->id }}')"
-                                        type="button"
-                                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-lg font-semibold text-xs transition duration-200 flex items-center justify-center gap-1">
+                                    <a href="{{ route('services.edit', $service) }}"
+                                       class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-lg font-semibold text-xs transition duration-200 flex items-center justify-center gap-1">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                         </svg>
                                         Editar
-                                    </button>
+                                    </a>
                                     <form action="{{ route('services.destroy', $service) }}" method="POST" 
                                           onsubmit="return confirm('¿Estás seguro de eliminar este servicio?')"
                                           class="flex-1">
@@ -215,14 +206,6 @@
                                             Eliminar
                                         </button>
                                     </form>
-                                </div>
-
-                                {{-- Modal de Edición (uno por servicio) --}}
-                                <div x-data="{ openEdit: false }" 
-                                     @edit-service-{{ $service->id }}.window="openEdit = true; $nextTick(() => { if (window.editServiceModal{{ $service->id }}) window.editServiceModal{{ $service->id }}.open = true; })">
-                                    <div x-show="openEdit" style="display: none;">
-                                        <x-service-modal :service="$service" mode="edit" />
-                                    </div>
                                 </div>
                             @endif
                         </div>
@@ -251,4 +234,132 @@
             @endif
         </div>
     </section>
+
+    {{-- Modal de Crear Servicio --}}
+    @auth
+        @if(auth()->user()->isPro())
+            <div id="service-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50">
+                
+                <!-- Modal -->
+                <div class="flex min-h-screen items-center justify-center p-4">
+                    <div class="relative bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                        
+                        <!-- Header -->
+                        <div class="sticky top-0 bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-4 flex justify-between items-center rounded-t-xl z-10">
+                            <h3 class="text-xl font-bold text-white">Crear Nuevo Servicio</h3>
+                            <button onclick="document.getElementById('service-modal').classList.add('hidden')" 
+                                    type="button"
+                                    class="text-white hover:text-gray-200">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Body -->
+                        <form action="{{ route('services.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-4">
+                            @csrf
+
+                            <!-- Categoría -->
+                            <div>
+                                <label for="category_id_modal" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Categoría <span class="text-red-500">*</span>
+                                </label>
+                                <select name="category_id" id="category_id_modal" required
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    <option value="">Selecciona una categoría</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Título -->
+                            <div>
+                                <label for="title_modal" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Título del servicio <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" name="title" id="title_modal" required maxlength="255"
+                                       placeholder="Ej: Reparación de tuberías a domicilio"
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+
+                            <!-- Descripción -->
+                            <div>
+                                <label for="description_modal" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Descripción
+                                </label>
+                                <textarea name="description" id="description_modal" rows="4" maxlength="1000"
+                                          placeholder="Describe tu servicio, experiencia, materiales..."
+                                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"></textarea>
+                                <p class="text-xs text-gray-500 mt-1">Máximo 1000 caracteres</p>
+                            </div>
+
+                            <!-- Precio -->
+                            <div>
+                                <label for="price_hour_modal" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Precio por hora (€) <span class="text-red-500">*</span>
+                                </label>
+                                <div class="relative">
+                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">€</span>
+                                    <input type="number" name="price_hour" id="price_hour_modal" required
+                                           min="0" max="999999.99" step="0.01" placeholder="25.00"
+                                           class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </div>
+                            </div>
+
+                            <!-- Fotos -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Fotos del servicio <span class="text-gray-500 font-normal">(Opcional)</span>
+                                </label>
+                                <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-purple-400 transition">
+                                    <input type="file" name="photos[]" id="photos_modal" accept="image/*" multiple class="hidden">
+                                    <label for="photos_modal" class="cursor-pointer">
+                                        <svg class="mx-auto h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                        <p class="mt-2 text-sm text-gray-600">
+                                            <span class="font-semibold text-purple-600">Subir fotos</span> (máx. 5, 2MB cada una)
+                                        </p>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Botones -->
+                            <div class="flex justify-between items-center gap-4 pt-6 border-t mt-4">
+                                <button type="button" 
+                                        onclick="document.getElementById('service-modal').classList.add('hidden')"
+                                        class="px-8 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition">
+                                    Cancelar
+                                </button>
+                                <button type="submit"
+                                        class="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 font-semibold transition shadow-lg">
+                                    Crear Servicio
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endauth
+
+    {{-- Script para cerrar modal al hacer clic fuera --}}
+    @auth
+        @if(auth()->user()->isPro())
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const modal = document.getElementById('service-modal');
+                    if (modal) {
+                        modal.addEventListener('click', function(e) {
+                            if (e.target === modal) {
+                                modal.classList.add('hidden');
+                            }
+                        });
+                    }
+                });
+            </script>
+        @endif
+    @endauth
 @endsection

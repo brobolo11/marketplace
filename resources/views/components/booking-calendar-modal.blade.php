@@ -85,8 +85,7 @@
                         </div>
                     </div>
                     <div class="text-right">
-                        <p class="text-2xl font-bold text-blue-600">{{ number_format($service->price, 2) }}€</p>
-                        <p class="text-xs text-gray-500">{{ $service->duration }} min</p>
+                        <p class="text-2xl font-bold text-blue-600">{{ number_format($service->price_hour, 2) }}€/h</p>
                     </div>
                 </div>
 
@@ -343,11 +342,11 @@ document.addEventListener('alpine:init', () => {
                 addressInput.value = this.description || 'Dirección a confirmar';
                 form.appendChild(addressInput);
 
-                // Total Price (from service price)
+                // Total Price (from service price_hour)
                 const priceInput = document.createElement('input');
                 priceInput.type = 'hidden';
                 priceInput.name = 'total_price';
-                priceInput.value = {{ $service->price ?? 0 }};
+                priceInput.value = {{ $service->price_hour ?? 0 }};
                 form.appendChild(priceInput);
 
                 document.body.appendChild(form);

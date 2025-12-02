@@ -13,13 +13,19 @@
             <div class="max-w-3xl mx-auto">
                 {{-- Header --}}
                 <div class="mb-8">
-                    <a href="{{ route('services.show', $service) }}" 
-                       class="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold mb-4">
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Volver al servicio
-                    </a>
-                    <h1 class="text-4xl font-bold text-gray-800 mb-2">Editar Servicio</h1>
-                    <p class="text-gray-600">Actualiza la información de tu servicio</p>
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h1 class="text-4xl font-bold text-gray-800 mb-2">Editar Servicio</h1>
+                            <p class="text-gray-600">Actualiza la información de tu servicio</p>
+                        </div>
+                        <a href="{{ route('services.show', $service) }}" 
+                           class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition duration-200 shadow-lg hover:shadow-xl">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                            Volver
+                        </a>
+                    </div>
                 </div>
 
                 {{-- Formulario --}}
@@ -99,7 +105,7 @@
                                        min="0"
                                        max="999999.99"
                                        step="0.01"
-                                       value="{{ old('price_hour', $service->price) }}"
+                                       value="{{ old('price_hour', $service->price_hour) }}"
                                        placeholder="25.00"
                                        class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('price_hour') border-red-500 @enderror">
                             </div>

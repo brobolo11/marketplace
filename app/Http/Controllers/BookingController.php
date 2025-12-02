@@ -128,6 +128,12 @@ class BookingController extends Controller
             return back()->withErrors(['error' => 'No puedes reservar tu propio servicio.']);
         }
 
+        // Si el precio viene en 0 o vacío, usar el precio del servicio
+        $totalPrice = $validated['total_price'] ?? 0;
+        if ($totalPrice <= 0) {
+            $totalPrice = $service->price_hour;
+        }
+
         // Crea la reserva
         $booking = Booking::create([
             'user_id' => Auth::id(),
@@ -135,7 +141,7 @@ class BookingController extends Controller
             'service_id' => $service->id,
             'datetime' => $validated['datetime'],
             'address' => $validated['address'],
-            'total_price' => $validated['total_price'],
+            'total_price' => $totalPrice,
             'status' => 'pending',
         ]);
 

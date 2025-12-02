@@ -54,11 +54,7 @@ Route::get('/categories/{category}', [CategoryController::class, 'show'])->name(
  */
 Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
 
-/**
- * Ver detalle de un servicio
- * GET /services/{service}
- */
-Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
+// NOTA: La ruta /services/{service} se movió al final para evitar conflictos con /services/create
 
 // ========================================
 // RUTAS DE PROFESIONALES
@@ -223,9 +219,9 @@ Route::middleware(['auth'])->group(function () {
     
     /**
      * Profesional marca una reserva como completada
-     * PATCH /bookings/{booking}/complete
+     * POST /bookings/{booking}/complete
      */
-    Route::patch('/bookings/{booking}/complete', [BookingController::class, 'complete'])->name('bookings.complete');
+    Route::post('/bookings/{booking}/complete', [BookingController::class, 'complete'])->name('bookings.complete');
 
     // ========================================
     // RUTAS DE RESEÑAS (REVIEWS)
@@ -350,6 +346,40 @@ Route::middleware(['auth'])->group(function () {
      * GET /payments/{payment}/confirmation
      */
     Route::get('/payments/{payment}/confirmation', [PaymentController::class, 'confirmation'])->name('payments.confirmation');
+
+    // ========================================
+    // RUTAS DE FACTURAS (INVOICES)
+    // ========================================
+    
+    /**
+     * Listar todas las facturas del profesional
+     * GET /invoices
+     */
+    Route::get('/invoices', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoices.index');
+    
+    /**
+     * Ver una factura específica
+     * GET /invoices/{invoice}
+     */
+    Route::get('/invoices/{invoice}', [App\Http\Controllers\InvoiceController::class, 'show'])->name('invoices.show');
+    
+    /**
+     * Generar factura para una reserva completada
+     * POST /bookings/{booking}/generate-invoice
+     */
+    Route::post('/bookings/{booking}/generate-invoice', [App\Http\Controllers\InvoiceController::class, 'generate'])->name('bookings.generate-invoice');
+    
+    /**
+     * Descargar PDF de una factura
+     * GET /invoices/{invoice}/download
+     */
+    Route::get('/invoices/{invoice}/download', [App\Http\Controllers\InvoiceController::class, 'download'])->name('invoices.download');
+    
+    /**
+     * Marcar factura como pagada
+     * POST /invoices/{invoice}/mark-paid
+     */
+    Route::post('/invoices/{invoice}/mark-paid', [App\Http\Controllers\InvoiceController::class, 'markAsPaid'])->name('invoices.mark-paid');
     
     /**
      * Solicitar reembolso
@@ -433,3 +463,17 @@ Route::middleware([
         }
     })->name('dashboard');
 });
+
+// ========================================
+// RUTAS DE SERVICIOS - PÚBLICAS (al final para evitar conflictos)
+// ========================================
+
+/**
+ * Ver detalle de un servicio
+ * GET /services/{service}
+ * IMPORTANTE: Esta ruta debe estar al final para no capturar /services/create
+ */
+Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
+
+// Debug temporal
+Route::get('/debug-user', function() { if(auth()->check()) { return 'Usuario: ' . auth()->user()->name . ' - Email: ' . auth()->user()->email . ' - Rol: ' . auth()->user()->role . ' - isPro: ' . (auth()->user()->isPro() ? 'SI' : 'NO'); } else { return 'No autenticado'; } })->middleware('auth');

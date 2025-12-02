@@ -268,6 +268,26 @@
                                             Ver Recibo
                                         </a>
                                     @endif
+                                @else
+                                    {{-- Profesional: Generar factura si está completado --}}
+                                    @if($booking->status == 'completed')
+                                        @if($booking->invoice)
+                                            <a href="{{ route('invoices.show', $booking->invoice) }}" 
+                                               class="block w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-center py-3 rounded-lg font-semibold transition duration-200 shadow-lg hover:shadow-xl">
+                                                <i class="fas fa-file-invoice mr-2"></i>
+                                                Ver Factura
+                                            </a>
+                                        @else
+                                            <form action="{{ route('bookings.generate-invoice', $booking) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" 
+                                                        class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-3 rounded-lg font-semibold transition duration-200 shadow-lg hover:shadow-xl">
+                                                    <i class="fas fa-file-plus mr-2"></i>
+                                                    Generar Factura
+                                                </button>
+                                            </form>
+                                        @endif
+                                    @endif
                                 @endif
 
                                 {{-- Enviar mensaje --}}

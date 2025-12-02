@@ -24,7 +24,7 @@
                         </div>
                         <h1 class="text-4xl font-bold text-gray-800 mb-2">{{ $service->title }}</h1>
                         <div class="flex items-center gap-4 text-gray-600">
-                            <span class="text-3xl font-bold text-blue-600">{{ number_format($service->price, 2) }}€</span>
+                            <span class="text-3xl font-bold text-blue-600">{{ number_format($service->price_hour, 2) }}€</span>
                             <span class="text-sm">por hora</span>
                         </div>
                     </div>
@@ -43,7 +43,7 @@
                             </div>
                         </div>
                     @else
-                        <div class="mb-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl h-64 flex items-center justify-center text-white text-8xl">
+                        <div class="mb-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl h-48 flex items-center justify-center text-white text-6xl">
                             <i class="fas fa-{{ $service->category->icon }}"></i>
                         </div>
                     @endif
@@ -184,17 +184,13 @@
                                             <i class="fas fa-edit mr-2"></i>
                                             Editar servicio
                                         </a>
-                                        <form action="{{ route('services.destroy', $service) }}" 
-                                              method="POST" 
-                                              onsubmit="return confirm('¿Estás seguro de eliminar este servicio?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" 
-                                                    class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-semibold transition duration-200">
-                                                <i class="fas fa-trash mr-2"></i>
-                                                Eliminar servicio
-                                            </button>
-                                        </form>
+                                        <button 
+                                            onclick="document.getElementById('delete-modal').classList.remove('hidden')"
+                                            type="button"
+                                            class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-semibold transition duration-200">
+                                            <i class="fas fa-trash mr-2"></i>
+                                            Eliminar servicio
+                                        </button>
                                     </div>
                                 </div>
                             @elseif(Auth::user()->isPro())
@@ -207,12 +203,8 @@
                                 <div class="space-y-4">
                                     <div class="bg-blue-50 rounded-lg p-4">
                                         <div class="flex items-center justify-between mb-2">
-                                            <span class="text-gray-700">Precio:</span>
-                                            <span class="font-bold text-gray-800">{{ number_format($service->price, 2) }}€</span>
-                                        </div>
-                                        <div class="flex items-center justify-between text-sm">
-                                            <span class="text-gray-600">Duración:</span>
-                                            <span class="text-gray-800">{{ $service->duration }} min</span>
+                                            <span class="text-gray-700">Precio por hora:</span>
+                                            <span class="font-bold text-gray-800">{{ number_format($service->price_hour, 2) }}€</span>
                                         </div>
                                     </div>
 
@@ -270,6 +262,41 @@
             </div>
         </div>
     </section>
+
+    {{-- Modal de Confirmación de Eliminación --}}
+    @auth
+        @if(Auth::user()->isPro() && $service->user_id === Auth::id())
+            <div id="delete-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
+                <div class="relative bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
+                    <div class="text-center">
+                        <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4">
+                            <svg class="h-8 w-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">¿Estás seguro?</h3>
+                        <p class="text-gray-600 mb-6">Esta acción no se puede deshacer. El servicio será eliminado permanentemente.</p>
+                        
+                        <div class="flex gap-3">
+                            <button 
+                                onclick="document.getElementById('delete-modal').classList.add('hidden')"
+                                type="button"
+                                class="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold transition">
+                                Cancelar
+                            </button>
+                            <form action="{{ route('services.destroy', $service) }}" method="POST" class="flex-1">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-full px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endauth
 
     {{-- Servicios Relacionados --}}
     @php
@@ -375,7 +402,7 @@
                                     </div>
                                 @endif
                                 <div class="absolute top-4 right-4 bg-white px-3 py-1 rounded-full shadow-lg">
-                                    <span class="font-bold text-blue-600">{{ number_format($related->price, 2) }}€</span>
+                                    <span class="font-bold text-blue-600">{{ number_format($related->price_hour, 2) }}€</span>
                                 </div>
                             </div>
                             <div class="p-6">
