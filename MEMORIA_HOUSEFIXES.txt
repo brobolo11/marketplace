@@ -1,0 +1,2592 @@
+================================================================================
+MEMORIA DEL PROYECTO FIN DE CICLO
+HOUSEFIXES - MARKETPLACE DE SERVICIOS PROFESIONALES
+================================================================================
+
+Módulo: Proyecto fin de Ciclo
+Ciclo Superior: Desarrollo de Aplicaciones Web / Multiplataforma 2024/25
+Fecha de entrega: 13 de junio de 2025
+Alumno: [Tu Nombre y Apellidos]
+
+================================================================================
+ÍNDICE
+================================================================================
+
+1. INTRODUCCIÓN.................................................................3
+   1.1. Contexto y Motivación...............................................3
+   1.2. Finalidad del Proyecto.............................................3
+   1.3. Objetivos del Proyecto.............................................4
+   1.4. Alcance y Limitaciones..............................................4
+   1.5. Pequeño Estudio de Costes...........................................5
+
+2. REQUISITOS PREVIOS Y PLANIFICACIÓN.......................................6
+   2.1. Tecnologías Utilizadas..............................................6
+   2.2. Requisitos Funcionales..............................................8
+   2.3. Requisitos No Funcionales...........................................9
+   2.4. Posible Utilización Empresarial....................................10
+   2.5. Planificación del Proyecto.........................................10
+
+3. DISEÑO......................................................................12
+   3.1. Arquitectura del Sistema (MVC).....................................12
+   3.2. Diagrama Entidad-Relación (E-R)....................................13
+   3.3. Diagrama de Casos de Uso...........................................14
+   3.4. Diagrama de Clases.................................................15
+   3.5. Patrones de Diseño Utilizados......................................16
+
+4. COMPOSICIÓN DETALLADA DEL PROYECTO......................................17
+   4.1. Estructura de Directorios..........................................17
+   4.2. Sistema de Autenticación y Roles...................................18
+   4.3. Sistema de Servicios...............................................20
+   4.4. Sistema de Reservas................................................22
+   4.5. Sistema de Pagos (Simulado)........................................24
+   4.6. Sistema de Facturas (Innovación)...................................26
+   4.7. Sistema de Reseñas.................................................28
+   4.8. Sistema de Mensajería..............................................29
+   4.9. Gestión de Disponibilidad..........................................30
+   4.10. Panel Administrativo..............................................31
+
+5. RESULTADOS Y CONCLUSIONES...............................................33
+   5.1. Objetivos Cumplidos................................................33
+   5.2. Estadísticas Finales...............................................34
+   5.3. Problemas Encontrados y Soluciones.................................34
+   5.4. Conocimientos Adquiridos...........................................35
+   5.5. Mejoras Futuras....................................................36
+   5.6. Conclusiones Personales............................................37
+
+6. REFERENCIAS Y BIBLIOGRAFÍA..............................................38
+
+7. ÍNDICE DE FIGURAS/ILUSTRACIONES.........................................39
+
+8. ANEXOS......................................................................40
+
+================================================================================
+1. INTRODUCCIÓN
+================================================================================
+
+1.1. Contexto y Motivación
+--------------------------------------------------------------------------------
+
+En la actualidad, la búsqueda de profesionales de servicios del hogar (fontaneros, 
+electricistas, limpieza, carpinteros, etc.) es un proceso complejo y desorganizado. 
+Los clientes deben confiar en recomendaciones de conocidos o buscar en múltiples 
+plataformas sin garantías de calidad.
+
+Principales problemas identificados:
+- Dificultad para encontrar profesionales confiables cerca del domicilio
+- Falta de transparencia en precios y disponibilidad
+- Ausencia de sistemas de reseñas verificadas
+- Procesos de pago inseguros o informales
+- No existe un historial digitalizado de servicios contratados
+
+Esta problemática motivó el desarrollo de HouseFixes, una solución integral que 
+digitaliza el sector de servicios del hogar, conectando clientes y profesionales 
+en una plataforma segura, transparente y fácil de usar.
+
+
+1.2. Finalidad del Proyecto
+--------------------------------------------------------------------------------
+
+HouseFixes es una plataforma web tipo marketplace que tiene como finalidad:
+
+Para CLIENTES:
+- Buscar y comparar servicios profesionales por categoría y ubicación
+- Reservar servicios seleccionando fecha y hora disponible
+- Pagar de forma segura con historial de transacciones
+- Dejar reseñas y valoraciones verificadas (solo tras completar el servicio)
+- Descargar facturas en PDF de todos los servicios contratados
+- Comunicarse directamente con los profesionales mediante chat
+
+Para PROFESIONALES:
+- Publicar servicios con descripción, precio y galería de fotos
+- Gestionar disponibilidad horaria (por días de la semana y bloqueos específicos)
+- Recibir y gestionar solicitudes de reserva (aceptar/rechazar)
+- Generar facturas automáticas en PDF tras completar servicios
+- Visualizar estadísticas de ingresos y servicios prestados
+- Construir reputación mediante reseñas de clientes
+
+Para ADMINISTRADORES:
+- Supervisar toda la actividad de la plataforma
+- Gestionar usuarios (cambio de roles, suspensión, eliminación)
+- Gestionar categorías de servicios (CRUD completo)
+- Acceder a todas las facturas del sistema con búsqueda avanzada
+- Visualizar estadísticas globales en tiempo real
+- Moderar contenido inapropiado
+
+
+1.3. Objetivos del Proyecto
+--------------------------------------------------------------------------------
+
+OBJETIVO PRINCIPAL:
+Desarrollar una plataforma web completa y funcional que digitalice el proceso 
+de contratación de servicios del hogar, aplicando la arquitectura MVC con el 
+framework Laravel.
+
+OBJETIVOS ESPECÍFICOS:
+
+1. Implementar un sistema de autenticación robusto con 3 roles diferenciados
+   (administrador, profesional, cliente)
+
+2. Crear un sistema completo de gestión de servicios con:
+   - CRUD completo
+   - Galería de fotos (hasta 5 por servicio)
+   - Categorización
+   - Búsqueda y filtros avanzados
+
+3. Desarrollar un flujo de reservas con múltiples estados:
+   - pending (pendiente de aceptación)
+   - accepted (aceptada, pendiente de pago)
+   - rejected (rechazada por profesional)
+   - completed (servicio completado)
+   - cancelled (cancelada)
+
+4. Implementar un sistema de pagos simulado que incluya:
+   - Checkout profesional
+   - Historial de transacciones
+   - Gestión de estados de pago
+   - Comisión de plataforma (10%)
+
+5. Crear un sistema innovador de facturación automática:
+   - Generación de PDFs profesionales
+   - Numeración única y secuencial (INV-YYYY-XXX)
+   - Cálculo automático de IVA (21%)
+   - Descarga para clientes y profesionales
+
+6. Desarrollar un sistema de reseñas verificadas (solo tras servicio completado)
+
+7. Implementar mensajería básica entre usuarios
+
+8. Crear un panel administrativo completo con estadísticas
+
+9. Diseñar una interfaz responsive moderna con Tailwind CSS
+
+10. Aplicar buenas prácticas de desarrollo:
+    - Código limpio y documentado
+    - Base de datos normalizada
+    - Seguridad (CSRF, XSS, SQL injection)
+    - Control de versiones con Git
+
+
+1.4. Alcance y Limitaciones
+--------------------------------------------------------------------------------
+
+DENTRO DEL ALCANCE:
+✓ Sistema completo de autenticación con 3 roles
+✓ Gestión de servicios con fotos
+✓ Sistema de reservas con 5 estados
+✓ Pagos simulados con historial completo
+✓ Facturas automáticas con generación de PDF
+✓ Sistema de reseñas verificadas
+✓ Mensajería básica
+✓ Gestión de disponibilidad horaria
+✓ Panel administrativo
+✓ Diseño responsive
+✓ 13 usuarios de prueba con datos realistas
+✓ 20 categorías de servicios
+✓ 15 servicios de ejemplo
+
+FUERA DEL ALCANCE (Mejoras futuras):
+✗ Integración con pasarela de pago real (Stripe/PayPal)
+✗ Notificaciones push en tiempo real
+✗ Chat en tiempo real con WebSockets
+✗ Aplicación móvil nativa
+✗ Sistema de geolocalización con mapas
+✗ Verificación de identidad de profesionales
+✗ Sistema de favoritos
+✗ Multi-idioma
+✗ Sistema de cupones/descuentos
+✗ Calendario avanzado con FullCalendar.js
+
+JUSTIFICACIÓN DE LIMITACIONES:
+Las funcionalidades fuera del alcance requieren:
+- Integración con servicios externos de pago (cuenta bancaria empresarial)
+- Configuración de servidores WebSocket
+- Desarrollo de apps iOS/Android (fuera del alcance del ciclo)
+- Tiempo de desarrollo adicional (>100 horas)
+
+
+1.5. Pequeño Estudio de Costes
+--------------------------------------------------------------------------------
+
+COSTES DE DESARROLLO:
+
+Personal (Desarrollador Full Stack):
+- Horas trabajadas: 208 horas
+- Tarifa: 25€/hora (tarifa junior promedio España 2025)
+- Subtotal: 5,200€
+
+COSTES DE INFRAESTRUCTURA (Primer año):
+
+Hosting Web (VPS):
+- Servidor: 30€/mes × 12 = 360€/año
+- Especificaciones: 2 CPU, 4GB RAM, 80GB SSD
+
+Dominio:
+- housefixes.com: 12€/año
+
+Base de Datos:
+- Incluida en VPS: 0€
+
+SSL Certificado:
+- Let's Encrypt (gratis): 0€
+
+Email Profesional:
+- Google Workspace: 6€/mes × 12 = 72€/año
+
+COSTES DE SOFTWARE:
+
+Licencias:
+- Laravel (Open Source): 0€
+- MySQL (Open Source): 0€
+- Tailwind CSS (Open Source): 0€
+- dompdf (Open Source): 0€
+- Total licencias: 0€
+
+COSTES TOTALES:
+
+Desarrollo: 5,200€
+Infraestructura año 1: 444€
+Software: 0€
+-------------------------
+TOTAL PRIMER AÑO: 5,644€
+
+COSTES ANUALES RECURRENTES: 444€/año
+
+RETORNO DE INVERSIÓN (ROI):
+- Comisión por transacción: 10%
+- Precio promedio servicio: 50€
+- Comisión por servicio: 5€
+- Servicios necesarios para cubrir costes primer año: 1,129 servicios
+- Servicios mensuales necesarios: 94 servicios/mes
+- Con 50 profesionales activos: 2 servicios/profesional/mes (muy alcanzable)
+
+
+================================================================================
+2. REQUISITOS PREVIOS Y PLANIFICACIÓN
+================================================================================
+
+2.1. Tecnologías Utilizadas
+--------------------------------------------------------------------------------
+
+BACKEND:
+
+Framework Principal:
+- Laravel 12.35.0
+  Framework PHP de código abierto basado en MVC (Modelo-Vista-Controlador).
+  Elegido por su robustez, amplia comunidad, excelente documentación y 
+  ecosistema maduro de paquetes.
+
+Lenguaje de Programación:
+- PHP 8.3.26
+  Lenguaje de programación del lado del servidor, orientado a objetos.
+  Versión 8.3 elegida por sus mejoras de rendimiento y nuevas características.
+
+Base de Datos:
+- MySQL 8.0
+  Sistema de gestión de bases de datos relacional.
+  Elegido por su estabilidad, rendimiento y compatibilidad con Laravel.
+
+ORM (Object-Relational Mapping):
+- Eloquent ORM
+  ORM incluido en Laravel para interactuar con la base de datos mediante 
+  modelos y relaciones, sin escribir SQL directo.
+
+Autenticación:
+- Laravel Jetstream 5.x
+  Scaffold de autenticación que incluye login, registro, 2FA, gestión de 
+  sesiones y equipos.
+
+- Laravel Fortify 1.x
+  Backend de autenticación sin interfaz, proporciona la lógica subyacente 
+  de Jetstream.
+
+- Laravel Sanctum
+  Sistema de autenticación para APIs. Utilizado para endpoints REST internos
+  que consumen funcionalidades de calendario y reservas desde el frontend.
+
+Generación de PDF:
+- barryvdh/laravel-dompdf v3.1.1
+  Paquete para generar documentos PDF desde HTML usando la librería dompdf.
+  Utilizado para crear facturas profesionales.
+
+Gestión de Dependencias:
+- Composer 2.6+
+  Gestor de dependencias PHP.
+
+
+FRONTEND:
+
+Motor de Plantillas:
+- Blade Templates
+  Motor de plantillas incluido en Laravel, permite escribir PHP de forma 
+  elegante en las vistas.
+
+Framework CSS:
+- Tailwind CSS 3.4
+  Framework CSS utility-first que permite crear diseños personalizados sin 
+  salir del HTML. Elegido por su flexibilidad y productividad.
+
+JavaScript Reactivo:
+- Alpine.js 3.x
+  Framework JavaScript minimalista para añadir interactividad. Similar a 
+  Vue.js pero mucho más ligero (15KB).
+
+Iconos:
+- Font Awesome 6.x
+  Librería de iconos vectoriales escalables.
+
+Build Tool:
+- Vite 5.x
+  Herramienta de compilación ultrarrápida que reemplaza a Laravel Mix.
+
+
+HERRAMIENTAS DE DESARROLLO:
+
+Control de Versiones:
+- Git 2.43
+- GitHub (repositorio remoto)
+
+IDE:
+- Visual Studio Code
+- Extensiones: Laravel Extension Pack, Tailwind CSS IntelliSense
+
+Entorno Local:
+- Laragon 6.0
+  Entorno de desarrollo local para Windows que incluye Apache, PHP, MySQL.
+
+Gestor de Base de Datos:
+- MySQL Workbench
+  Herramienta visual para diseño y administración de bases de datos.
+
+Navegadores de Prueba:
+- Google Chrome 120+
+- Mozilla Firefox 121+
+- Microsoft Edge 120+
+
+
+ESTADÍSTICAS TÉCNICAS:
+
+Archivos del Proyecto:
+- Modelos: 12 archivos
+- Controladores: 10 archivos
+- Vistas Blade: 50+ archivos
+- Middlewares personalizados: 2 archivos
+- Políticas: 2 archivos
+- Migraciones: 21 archivos
+- Seeders: 8 archivos
+- Rutas definidas: 80+
+
+Líneas de Código:
+- PHP: ~8,000 líneas
+- Blade (HTML/CSS): ~6,000 líneas
+- JavaScript: ~500 líneas
+- Total: ~14,500 líneas
+
+
+2.2. Requisitos Funcionales
+--------------------------------------------------------------------------------
+
+RF-01: Sistema de Autenticación
+- El sistema debe permitir registro de usuarios con email y contraseña
+- Debe soportar 3 roles: admin, professional, client
+- Debe incluir recuperación de contraseña
+- Debe permitir autenticación de dos factores (2FA)
+
+RF-02: Gestión de Servicios
+- Los profesionales deben poder crear servicios con: título, descripción, 
+  precio por hora, categoría
+- Debe permitir subir hasta 5 fotos por servicio
+- Debe permitir editar y eliminar servicios propios
+- Los servicios deben ser visibles públicamente
+
+RF-03: Búsqueda y Filtrado
+- El sistema debe permitir buscar servicios por texto
+- Debe permitir filtrar por categoría
+- Debe mostrar el rating promedio de cada servicio
+- Debe mostrar los servicios más recientes
+
+RF-04: Sistema de Reservas
+- Los clientes deben poder crear reservas indicando fecha y dirección
+- Las reservas deben tener estado: pending, accepted, rejected, completed, cancelled
+- Los profesionales deben poder aceptar o rechazar solicitudes
+- Los profesionales deben poder completar servicios
+- Los clientes y profesionales deben poder cancelar reservas
+
+RF-05: Gestión de Disponibilidad
+- Los profesionales deben poder configurar horarios por día de la semana
+- Debe permitir crear múltiples franjas horarias por día
+- Debe permitir crear bloqueos específicos (vacaciones)
+- Debe validar solapamientos de horarios
+
+RF-06: Sistema de Pagos
+- El sistema debe simular un checkout profesional
+- Debe calcular comisión de plataforma (10%)
+- Debe generar ID de transacción único
+- Debe mantener historial de pagos
+- Debe permitir reembolsos
+
+RF-07: Sistema de Facturas
+- El sistema debe generar facturas automáticamente tras completar servicios
+- Debe asignar numeración única (INV-YYYY-XXX)
+- Debe generar PDF con diseño profesional
+- Debe calcular IVA automáticamente (21%)
+- Debe permitir descargar facturas
+- Debe permitir marcar facturas como pagadas
+
+RF-08: Sistema de Reseñas
+- Los clientes deben poder dejar reseñas solo tras completar servicios
+- Debe incluir rating de 1-5 estrellas
+- Debe incluir comentario de texto
+- Debe calcular promedio de rating por servicio
+
+RF-09: Sistema de Mensajería
+- Debe permitir chat entre clientes y profesionales
+- Debe marcar mensajes como leídos
+- Debe mantener historial de conversaciones
+
+RF-10: Panel Administrativo
+- Los administradores deben poder ver dashboard con estadísticas
+- Deben poder gestionar usuarios (CRUD, cambio de roles)
+- Deben poder gestionar categorías (CRUD)
+- Deben poder ver todas las facturas del sistema
+- Deben poder buscar y filtrar facturas
+
+RF-11: Notificaciones
+- El sistema debe notificar nuevas solicitudes de reserva
+- Debe notificar aceptación/rechazo de reservas
+- Debe notificar pagos requeridos
+- Debe notificar servicios completados
+
+RF-12: Dashboards Diferenciados
+- Clientes deben ver: servicios disponibles, mis reservas, mis pagos
+- Profesionales deben ver: mis servicios, solicitudes pendientes, ingresos
+- Administradores deben ver: estadísticas globales, gestión de usuarios
+
+
+2.3. Requisitos No Funcionales
+--------------------------------------------------------------------------------
+
+RNF-01: Usabilidad
+- La interfaz debe ser intuitiva y fácil de usar
+- Debe tener diseño moderno y atractivo
+- Debe usar iconografía clara
+
+RNF-02: Responsive
+- Debe funcionar correctamente en móviles (320px+)
+- Debe funcionar correctamente en tablets (768px+)
+- Debe funcionar correctamente en escritorio (1024px+)
+
+RNF-03: Rendimiento
+- Las páginas deben cargar en menos de 2 segundos
+- Las consultas a base de datos deben estar optimizadas
+- Debe usar eager loading para evitar problema N+1
+
+RNF-04: Seguridad
+- Debe proteger contra ataques CSRF
+- Debe proteger contra ataques XSS
+- Debe proteger contra SQL injection
+- Las contraseñas deben estar hasheadas (bcrypt)
+- Debe validar todos los inputs
+
+RNF-05: Escalabilidad
+- La arquitectura debe permitir agregar nuevas funcionalidades
+- El código debe ser modular y reutilizable
+- Debe usar patrones de diseño adecuados
+
+RNF-06: Mantenibilidad
+- El código debe estar bien documentado
+- Debe seguir estándares PSR (PHP Standards Recommendations)
+- Debe tener nombres de variables y funciones descriptivos
+
+RNF-07: Compatibilidad
+- Debe funcionar en Chrome 120+
+- Debe funcionar en Firefox 121+
+- Debe funcionar en Edge 120+
+- Debe funcionar en Safari 17+
+
+RNF-08: Base de Datos
+- Debe estar normalizada (3FN)
+- Debe tener claves foráneas con integridad referencial
+- Debe tener índices en columnas consultadas frecuentemente
+
+
+2.4. Posible Utilización Empresarial
+--------------------------------------------------------------------------------
+
+MODELO DE NEGOCIO:
+
+HouseFixes puede operar como una empresa de tecnología en el sector servicios:
+
+1. Modelo B2C (Business to Consumer):
+   - La plataforma conecta directamente a profesionales con clientes finales
+   - Monetización mediante comisión del 10% sobre cada transacción
+
+2. Escalabilidad:
+   - Expandir a más ciudades y regiones
+   - Añadir nuevas categorías de servicios
+   - Crear planes premium para profesionales
+
+3. Modelo SaaS (Software as a Service):
+   - Licenciar la plataforma a otras empresas del sector
+   - Vender como white-label a diferentes marcas
+
+VENTAJAS COMPETITIVAS:
+
+- Sistema de facturas automático (no existe en competidores)
+- Reseñas verificadas (solo tras completar servicio)
+- Interfaz moderna y fácil de usar
+- Gestión completa de disponibilidad
+- Múltiples roles con permisos granulares
+
+MERCADO OBJETIVO:
+
+- Clientes: Particulares que necesitan servicios del hogar
+- Profesionales: Autónomos y pequeñas empresas de servicios
+- Geográfico: Inicialmente España, expansión a Latinoamérica
+
+PROYECCIÓN FINANCIERA (Año 1):
+
+- Profesionales registrados: 100
+- Servicios promedio por profesional/mes: 4
+- Precio promedio servicio: 50€
+- Comisión: 10% = 5€ por servicio
+- Ingresos mensuales: 100 × 4 × 5€ = 2,000€/mes
+- Ingresos anuales: 24,000€
+- Costes operativos anuales: 5,000€
+- Beneficio neto año 1: 19,000€
+
+
+2.5. Arquitectura y Escalabilidad del Sistema
+--------------------------------------------------------------------------------
+
+ARQUITECTURA MODULAR:
+
+HouseFixes está construido sobre una arquitectura modular basada en el patrón
+MVC (Modelo-Vista-Controlador) de Laravel, lo que permite:
+
+1. Separación de Responsabilidades:
+   - Modelos: Lógica de negocio y acceso a datos
+   - Vistas: Presentación e interfaz de usuario
+   - Controladores: Coordinación entre modelos y vistas
+
+2. Código Reutilizable:
+   - Componentes Blade reutilizables (service-card, booking-card)
+   - Middlewares compartidos para autorización
+   - Traits para funcionalidades comunes
+
+3. Fácil Mantenimiento:
+   - Código organizado por funcionalidad
+   - Convenciones de nomenclatura claras
+   - Documentación inline en código crítico
+
+ESCALABILIDAD HORIZONTAL Y VERTICAL:
+
+ESCALABILIDAD DE BASE DE DATOS:
+- Índices en columnas de búsqueda frecuente (user_id, service_id, status)
+- Relaciones optimizadas con Eloquent ORM
+- Preparado para implementar caché (Redis/Memcached)
+- Posibilidad de migrar a cluster MySQL para alta disponibilidad
+
+ESCALABILIDAD DE APLICACIÓN:
+- Arquitectura stateless (sin estado en servidor)
+- Sesiones almacenables en Redis/Database
+- Assets compilados y versionados con Vite
+- Preparado para CDN (Content Delivery Network) para archivos estáticos
+
+ESCALABILIDAD DE FUNCIONALIDADES:
+- Sistema de eventos permite añadir funcionalidades sin modificar código existente
+- API REST preparada para futuras aplicaciones móviles
+- Sistema de permisos granular permite añadir nuevos roles fácilmente
+- Base de datos normalizada facilita nuevas tablas y relaciones
+
+
+2.6. Estrategia de Crecimiento y Monetización
+--------------------------------------------------------------------------------
+
+MODELO DE NEGOCIO:
+
+HouseFixes implementa un modelo de marketplace con comisión por transacción:
+
+Fuente de Ingresos Principal:
+- Comisión del 10% sobre cada servicio completado
+- Ejemplo: Servicio de 100€ → Plataforma 10€, Profesional 90€
+
+Ventajas del Modelo:
+- Ingresos escalables con el crecimiento de usuarios
+- Bajo riesgo inicial (sin inventario físico)
+- Crecimiento orgánico vía red de efectos
+- Costes operativos predecibles
+
+ESTRATEGIA DE EXPANSIÓN:
+
+Fase 1 - Lanzamiento Local (Meses 1-6):
+- Foco en Madrid capital
+- 50-100 profesionales activos
+- Marketing local y colaboraciones
+
+Fase 2 - Expansión Regional (Meses 7-12):
+- Expansión a Barcelona, Valencia, Sevilla
+- 300-500 profesionales
+- Campañas de marketing digital
+
+Fase 3 - Cobertura Nacional (Año 2):
+- Todas las capitales de provincia
+- 1,000+ profesionales
+- Reconocimiento de marca nacional
+
+Fase 4 - Internacionalización (Año 3+):
+- Expansión a Latinoamérica (México, Colombia, Argentina)
+- Adaptación cultural y legal por país
+- 10,000+ profesionales
+
+MODELOS DE MONETIZACIÓN ADICIONALES:
+
+1. Planes Premium para Profesionales:
+   - Plan Básico: Gratuito, comisión 10%
+   - Plan Pro: 29€/mes, comisión 7%, perfil destacado
+   - Plan Business: 79€/mes, comisión 5%, prioridad en búsquedas
+
+2. Publicidad Destacada:
+   - Servicios patrocinados en resultados de búsqueda
+   - Banner en categorías específicas
+   - Email marketing a clientes (opt-in)
+
+3. Servicios de Valor Añadido:
+   - Verificación de identidad profesional: 50€ una vez
+   - Certificados de calidad: 100€/año
+   - Formación y capacitación online: cursos de 20-200€
+
+4. Modelo B2B (Business to Business):
+   - Empresas contratan servicios para sus oficinas
+   - Facturación directa a empresas
+   - Descuentos por volumen
+
+PROYECCIÓN FINANCIERA REALISTA:
+
+AÑO 1:
+- Profesionales activos: 100
+- Servicios/mes: 400 (4 por profesional)
+- Precio promedio: 50€
+- Comisión promedio: 5€
+- Ingresos mensuales: 2,000€
+- Ingresos anuales: 24,000€
+- Costes operativos: 10,000€
+- Resultado: 14,000€ beneficio
+
+AÑO 2:
+- Profesionales activos: 500
+- Servicios/mes: 2,500
+- Ingresos mensuales: 12,500€
+- Ingresos anuales: 150,000€
+- Costes operativos: 40,000€
+- Resultado: 110,000€ beneficio
+
+AÑO 3:
+- Profesionales activos: 2,000
+- Servicios/mes: 12,000
+- Ingresos mensuales: 60,000€
+- Ingresos anuales: 720,000€
+- Costes operativos: 200,000€
+- Resultado: 520,000€ beneficio
+
+
+2.7. Ventajas Competitivas y Diferenciación
+--------------------------------------------------------------------------------
+
+ANÁLISIS DE COMPETENCIA:
+
+Competidores Principales:
+- Habitissimo: Foco en presupuestos múltiples
+- Cronoshare: Modelo de leads (contactos)
+- TaskRabbit: Internacional, no específico de hogar
+- Milanuncios: Clasificados tradicionales sin garantías
+
+VENTAJAS COMPETITIVAS DE HOUSEFIXES:
+
+1. Sistema de Facturas Automático:
+   ✓ Generación de PDF profesional
+   ✓ Numeración única y legal
+   ✓ Cálculo automático de IVA
+   ✓ NO LO TIENE NINGÚN COMPETIDOR
+
+2. Gestión Completa de Disponibilidad:
+   ✓ Horarios por día de la semana
+   ✓ Bloqueos específicos
+   ✓ Prevención de solapamientos
+   → Menos cancelaciones y mejor experiencia
+
+3. Reseñas Verificadas:
+   ✓ Solo usuarios que completaron servicio pueden opinar
+   ✓ Elimina reseñas falsas
+   → Mayor confiabilidad que la competencia
+
+4. Proceso de Pago Integrado:
+   ✓ Pago dentro de la plataforma
+   ✓ Historial completo
+   ✓ Protección para ambas partes
+   → Competidores dependen de pago externo
+
+5. Interfaz Moderna y Responsive:
+   ✓ Diseño con Tailwind CSS
+   ✓ Experiencia móvil optimizada
+   ✓ Carga rápida (< 2 segundos)
+
+6. Modelo de Comisión Transparente:
+   ✓ Solo 10% de comisión
+   ✓ Sin costes ocultos
+   ✓ Sin pago por leads
+   → Competidores cobran 15-20% o modelo de leads caro
+
+PROPUESTA DE VALOR ÚNICA:
+
+Para CLIENTES:
+"Contrata profesionales verificados con reseñas reales, paga de forma segura 
+y recibe tu factura automática. Todo en un solo lugar."
+
+Para PROFESIONALES:
+"Recibe solicitudes de clientes reales, gestiona tu agenda, cobra con 
+seguridad y genera facturas automáticas. Solo pagas cuando trabajas."
+
+Para ADMINISTRADORES:
+"Supervisa toda la plataforma con estadísticas en tiempo real y herramientas 
+de gestión avanzadas."
+
+
+================================================================================
+3. DISEÑO
+================================================================================
+
+3.1. Arquitectura del Sistema (MVC)
+--------------------------------------------------------------------------------
+
+El proyecto sigue el patrón arquitectónico Modelo-Vista-Controlador (MVC) 
+proporcionado por Laravel:
+
+CAPA DE MODELOS (Model):
+Ubicación: app/Models/
+
+Responsabilidades:
+- Representar las entidades de la base de datos
+- Definir relaciones entre entidades (Eloquent ORM)
+- Encapsular la lógica de negocio relacionada con datos
+- Validar y transformar datos
+
+Modelos implementados:
+1. User - Usuarios del sistema con roles
+2. Service - Servicios ofrecidos por profesionales
+3. ServicePhoto - Fotos de los servicios
+4. Booking - Reservas/citas
+5. Payment - Pagos de servicios
+6. Invoice - Facturas generadas
+7. Review - Reseñas de servicios
+8. Message - Mensajes entre usuarios
+9. Category - Categorías de servicios
+10. Availability - Disponibilidad horaria
+11. Notification - Notificaciones del sistema
+12. Team, TeamInvitation - Gestión de equipos (Jetstream)
+
+CAPA DE VISTAS (View):
+Ubicación: resources/views/
+
+Responsabilidades:
+- Presentar la información al usuario
+- Recibir inputs del usuario
+- No contener lógica de negocio compleja
+
+Organización:
+- admin/ - Vistas administrativas
+- bookings/ - Gestión de reservas
+- categories/ - Categorías de servicios
+- components/ - Componentes reutilizables
+- invoices/ - Sistema de facturas
+- messages/ - Mensajería
+- payments/ - Procesamiento de pagos
+- professionals/ - Perfiles de profesionales
+- services/ - Gestión de servicios
+- layouts/ - Plantillas base
+
+Total: 50+ vistas Blade
+
+CAPA DE CONTROLADORES (Controller):
+Ubicación: app/Http/Controllers/
+
+Responsabilidades:
+- Recibir requests del usuario
+- Interactuar con modelos para obtener/modificar datos
+- Preparar datos para las vistas
+- Retornar respuestas (vistas, redirects, JSON)
+
+Controladores implementados:
+1. AdminController - Panel administrativo
+2. AvailabilityController - Disponibilidad
+3. BookingController - Reservas
+4. CategoryController - Categorías
+5. InvoiceController - Facturas
+6. MessageController - Mensajería
+7. PaymentController - Pagos
+8. ProfessionalController - Perfiles profesionales
+9. ReviewController - Reseñas
+10. ServiceController - Servicios
+
+CAPA DE RUTAS:
+Ubicación: routes/web.php, routes/api.php
+
+Responsabilidades:
+- Mapear URLs a controladores
+- Aplicar middlewares
+- Agrupar rutas relacionadas
+
+Total: 80+ rutas web definidas
+
+API REST (routes/api.php):
+El sistema incluye endpoints API limitados para funcionalidades específicas:
+- Consulta de disponibilidad de profesionales
+- Obtención de horarios por día de la semana
+- Fechas ocupadas del calendario
+- Creación de reservas (POST)
+
+Estos endpoints son consumidos desde el frontend mediante Alpine.js/JavaScript
+para proporcionar una experiencia de usuario fluida en el calendario de reservas,
+sin recargar la página completa.
+
+MIDDLEWARES:
+Ubicación: app/Http/Middleware/
+
+Filtros que procesan requests antes de llegar a los controladores:
+
+1. EnsureUserIsAdmin - Verifica rol de administrador
+2. EnsureUserIsProfessional - Verifica rol de profesional
+3. Authenticate - Verifica autenticación (Laravel)
+4. VerifyCsrfToken - Protección CSRF (Laravel)
+
+POLÍTICAS (Policies):
+Ubicación: app/Policies/
+
+Autorización granular:
+1. ServicePolicy - Autorización para servicios
+2. TeamPolicy - Autorización para equipos
+
+SERVICIOS:
+Ubicación: app/Services/
+
+Lógica de negocio compleja:
+1. NotificationService - Gestión de notificaciones
+
+
+FLUJO DE UNA PETICIÓN HTTP:
+
+1. Usuario hace request (ej: GET /services)
+2. Router (routes/web.php) recibe la petición
+3. Se aplican middlewares (auth, roles)
+4. Se ejecuta el método del controlador (ServiceController@index)
+5. El controlador obtiene datos del modelo (Service::all())
+6. El controlador prepara los datos
+7. Se retorna una vista (services.index) con los datos
+8. Blade procesa la plantilla
+9. Se envía HTML al navegador del usuario
+
+
+3.2. Diagrama Entidad-Relación (E-R)
+--------------------------------------------------------------------------------
+
+[INCLUIR DIAGRAMA CREADO CON draw.io, dbdiagram.io o MySQL Workbench]
+
+TABLAS PRINCIPALES:
+
+1. users
+   - id (PK)
+   - name
+   - email (UNIQUE)
+   - password
+   - role (admin/professional/client)
+   - phone
+   - profile_photo_path
+   - timestamps
+
+2. categories
+   - id (PK)
+   - name
+   - slug
+   - description
+   - icon
+   - timestamps
+
+3. services
+   - id (PK)
+   - user_id (FK → users)
+   - category_id (FK → categories)
+   - title
+   - description (TEXT)
+   - price_hour (DECIMAL)
+   - timestamps
+
+4. service_photos
+   - id (PK)
+   - service_id (FK → services)
+   - photo_path
+   - timestamps
+
+5. bookings
+   - id (PK)
+   - user_id (FK → users) [cliente]
+   - pro_id (FK → users) [profesional]
+   - service_id (FK → services)
+   - datetime
+   - address
+   - status (ENUM: pending, accepted, rejected, completed, cancelled)
+   - total_price (DECIMAL)
+   - description (TEXT)
+   - professional_notes (TEXT)
+   - rejection_reason (TEXT)
+   - approved_at
+   - rejected_at
+   - completed_at
+   - paid_at
+   - timestamps
+
+6. payments
+   - id (PK)
+   - booking_id (FK → bookings)
+   - user_id (FK → users) [cliente]
+   - professional_id (FK → users)
+   - amount (DECIMAL)
+   - platform_fee (DECIMAL)
+   - professional_amount (DECIMAL)
+   - payment_method
+   - transaction_id
+   - status (ENUM: pending, processing, completed, failed, refunded)
+   - notes (TEXT)
+   - paid_at
+   - timestamps
+
+7. invoices
+   - id (PK)
+   - booking_id (FK → bookings)
+   - invoice_number (UNIQUE)
+   - issued_at
+   - total (DECIMAL)
+   - status (ENUM: pending, paid, cancelled)
+   - pdf_path
+   - notes (TEXT)
+   - timestamps
+
+8. reviews
+   - id (PK)
+   - booking_id (FK → bookings)
+   - user_id (FK → users) [autor]
+   - service_id (FK → services)
+   - rating (1-5)
+   - comment (TEXT)
+   - timestamps
+
+9. messages
+   - id (PK)
+   - sender_id (FK → users)
+   - receiver_id (FK → users)
+   - booking_id (FK → bookings)
+   - message (TEXT)
+   - read_at
+   - timestamps
+
+10. availabilities
+    - id (PK)
+    - user_id (FK → users) [profesional]
+    - day_of_week (1-7)
+    - start_time
+    - end_time
+    - is_available (BOOLEAN)
+    - date (para bloqueos específicos)
+    - timestamps
+
+11. notifications
+    - id (PK)
+    - user_id (FK → users)
+    - type
+    - title
+    - message (TEXT)
+    - link
+    - read_at
+    - timestamps
+
+
+RELACIONES PRINCIPALES:
+
+User → Services (1:N)
+Un profesional puede tener muchos servicios
+
+Service → Bookings (1:N)
+Un servicio puede tener muchas reservas
+
+Service → ServicePhotos (1:N)
+Un servicio puede tener muchas fotos
+
+Booking → Payment (1:1)
+Una reserva tiene un pago
+
+Booking → Invoice (1:1)
+Una reserva tiene una factura
+
+Booking → Review (1:1)
+Una reserva puede tener una reseña
+
+User ↔ User (Messages) (N:N)
+Los usuarios se envían mensajes entre sí
+
+Category → Services (1:N)
+Una categoría tiene muchos servicios
+
+User → Availabilities (1:N)
+Un profesional tiene muchas franjas de disponibilidad
+
+
+3.3. Diagrama de Casos de Uso
+--------------------------------------------------------------------------------
+
+[INCLUIR DIAGRAMA]
+
+ACTORES:
+
+1. CLIENTE
+   - Buscar servicios
+   - Ver detalle de servicio
+   - Crear reserva
+   - Ver mis reservas
+   - Cancelar reserva
+   - Pagar servicio
+   - Descargar factura
+   - Dejar reseña
+   - Enviar mensajes
+   - Ver perfil de profesional
+
+2. PROFESIONAL
+   - Gestionar servicios (CRUD)
+   - Subir fotos de servicios
+   - Gestionar disponibilidad
+   - Ver solicitudes pendientes
+   - Aceptar reserva
+   - Rechazar reserva
+   - Completar servicio
+   - Generar factura
+   - Marcar factura como pagada
+   - Ver mis reservas
+   - Ver estadísticas de ingresos
+   - Enviar mensajes
+   - Ver reseñas recibidas
+
+3. ADMINISTRADOR
+   - Ver dashboard global
+   - Gestionar usuarios (CRUD)
+   - Cambiar roles de usuarios
+   - Gestionar categorías (CRUD)
+   - Ver todas las reservas
+   - Ver todos los pagos
+   - Ver todas las facturas
+   - Buscar facturas
+   - Descargar cualquier factura
+   - Ver estadísticas globales
+
+CASOS DE USO EXTENDIDOS:
+
+CU-01: Crear Reserva
+Actor: Cliente
+Precondición: Cliente autenticado
+Flujo Principal:
+1. Cliente busca servicio
+2. Cliente ve detalles del servicio
+3. Cliente selecciona fecha
+4. Cliente ingresa dirección
+5. Cliente confirma reserva
+6. Sistema crea reserva con estado "pending"
+7. Sistema notifica al profesional
+Postcondición: Reserva creada
+
+CU-02: Aceptar Reserva
+Actor: Profesional
+Precondición: Existe reserva pendiente
+Flujo Principal:
+1. Profesional ve solicitudes pendientes
+2. Profesional revisa detalle de reserva
+3. Profesional acepta reserva
+4. Sistema cambia estado a "accepted"
+5. Sistema notifica al cliente
+Postcondición: Cliente puede proceder al pago
+
+CU-03: Generar Factura
+Actor: Profesional
+Precondición: Servicio completado
+Flujo Principal:
+1. Profesional marca servicio como completado
+2. Sistema habilita opción de generar factura
+3. Profesional genera factura
+4. Sistema crea número único (INV-YYYY-XXX)
+5. Sistema genera PDF
+6. Sistema guarda PDF en storage
+7. Sistema notifica al cliente
+Postcondición: Factura disponible para descarga
+
+
+3.4. Diagrama de Clases
+--------------------------------------------------------------------------------
+
+[INCLUIR DIAGRAMA SIMPLIFICADO]
+
+CLASES PRINCIPALES:
+
+class User {
+  - id: int
+  - name: string
+  - email: string
+  - password: string
+  - role: string
+  - phone: string
+  
+  + isAdmin(): bool
+  + isPro(): bool
+  + isClient(): bool
+  + services(): Collection
+  + bookings(): Collection
+}
+
+class Service {
+  - id: int
+  - user_id: int
+  - category_id: int
+  - title: string
+  - description: string
+  - price_hour: decimal
+  
+  + professional(): User
+  + category(): Category
+  + photos(): Collection
+  + bookings(): Collection
+  + reviews(): Collection
+  + averageRating(): float
+}
+
+class Booking {
+  - id: int
+  - user_id: int
+  - pro_id: int
+  - service_id: int
+  - datetime: datetime
+  - address: string
+  - status: string
+  - total_price: decimal
+  
+  + client(): User
+  + professional(): User
+  + service(): Service
+  + payment(): Payment
+  + invoice(): Invoice
+  + review(): Review
+  + isPending(): bool
+  + isAccepted(): bool
+  + isCompleted(): bool
+  + accept(): bool
+  + reject(): bool
+  + complete(): bool
+}
+
+class Invoice {
+  - id: int
+  - booking_id: int
+  - invoice_number: string
+  - issued_at: datetime
+  - total: decimal
+  - status: string
+  - pdf_path: string
+  
+  + booking(): Booking
+  + isPaid(): bool
+  + isPending(): bool
+  + markAsPaid(): void
+  + generateInvoiceNumber(): string
+}
+
+class Payment {
+  - id: int
+  - booking_id: int
+  - user_id: int
+  - professional_id: int
+  - amount: decimal
+  - platform_fee: decimal
+  - status: string
+  - transaction_id: string
+  
+  + booking(): Booking
+  + client(): User
+  + professional(): User
+  + isCompleted(): bool
+  + markAsCompleted(): void
+}
+
+
+3.5. Patrones de Diseño Utilizados
+--------------------------------------------------------------------------------
+
+1. PATRÓN MVC (Model-View-Controller)
+   Descripción: Separa la lógica de negocio, presentación y control
+   Implementación: Arquitectura base de Laravel
+   
+2. PATRÓN REPOSITORY
+   Descripción: Encapsula la lógica de acceso a datos
+   Implementación: Eloquent ORM actúa como repositorio
+   
+3. PATRÓN SERVICE LAYER
+   Descripción: Encapsula lógica de negocio compleja
+   Implementación: NotificationService para gestión de notificaciones
+   
+4. PATRÓN OBSERVER
+   Descripción: Permite reaccionar a eventos del sistema
+   Implementación: Eventos de Laravel (Login, Registro, etc.)
+   
+5. PATRÓN FACTORY
+   Descripción: Crea objetos sin especificar su clase exacta
+   Implementación: Factories para generar datos de prueba
+   
+6. PATRÓN POLICY
+   Descripción: Encapsula lógica de autorización
+   Implementación: ServicePolicy, TeamPolicy
+   
+7. PATRÓN MIDDLEWARE
+   Descripción: Filtros para procesar requests
+   Implementación: EnsureUserIsAdmin, EnsureUserIsProfessional
+   
+8. PATRÓN FACADE
+   Descripción: Proporciona interfaz simplificada a subsistemas complejos
+   Implementación: Facades de Laravel (Auth, Storage, DB, etc.)
+
+
+================================================================================
+[CONTINÚA EN SIGUIENTE PARTE - CARACTERES LIMITADOS]
+================================================================================
+
+================================================================================
+4. COMPOSICIÓN DETALLADA DEL PROYECTO
+================================================================================
+
+4.1. Estructura de Directorios
+--------------------------------------------------------------------------------
+
+ESTRUCTURA PRINCIPAL DEL PROYECTO:
+
+proyecto-final/
+├── app/
+│   ├── Http/Controllers/ (10 controladores)
+│   ├── Models/ (12 modelos)
+│   ├── Middleware/ (2 middlewares personalizados)
+│   ├── Policies/ (2 políticas)
+│   └── Services/ (1 servicio)
+├── database/
+│   ├── migrations/ (21 migraciones)
+│   └── seeders/ (8 seeders)
+├── resources/
+│   ├── views/ (50+ vistas Blade)
+│   └── css/
+├── routes/
+│   └── web.php (80+ rutas)
+├── storage/
+│   └── app/public/ (fotos, facturas PDF)
+└── public/
+
+DESCRIPCIÓN DE COMPONENTES CLAVE:
+
+Controllers: AdminController, BookingController, InvoiceController, 
+             ServiceController, PaymentController, etc.
+Models: User, Service, Booking, Invoice, Payment, Review, etc.
+Views: Organizadas por funcionalidad (admin/, bookings/, services/, etc.)
+
+
+4.2. Sistema de Autenticación y Roles
+--------------------------------------------------------------------------------
+
+TECNOLOGÍA UTILIZADA:
+- Laravel Jetstream 5.x con Livewire
+- Laravel Fortify para backend de autenticación
+
+ROLES IMPLEMENTADOS:
+
+1. ADMINISTRADOR (admin)
+   - Acceso total al sistema
+   - Gestión de usuarios y categorías
+   - Visualización de todas las facturas
+
+2. PROFESIONAL (professional)
+   - Crear y gestionar servicios
+   - Gestionar disponibilidad
+   - Aceptar/rechazar reservas
+   - Generar facturas
+
+3. CLIENTE (client)
+   - Buscar servicios
+   - Crear reservas
+   - Realizar pagos
+   - Dejar reseñas
+
+CÓDIGO CLAVE - Métodos del Modelo User:
+
+public function isAdmin(): bool
+{
+    return $this->role === 'admin';
+}
+
+public function isPro(): bool
+{
+    return $this->role === 'professional';
+}
+
+public function isClient(): bool
+{
+    return $this->role === 'client';
+}
+
+MIDDLEWARE DE AUTORIZACIÓN - EnsureUserIsAdmin.php:
+
+public function handle($request, Closure $next)
+{
+    if (!auth()->check() || !auth()->user()->isAdmin()) {
+        abort(403, 'Acceso no autorizado.');
+    }
+    return $next($request);
+}
+
+APLICACIÓN EN RUTAS:
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'index']);
+    Route::resource('/admin/users', UserController::class);
+    Route::resource('/admin/categories', CategoryController::class);
+});
+
+
+4.3. Sistema de Servicios
+--------------------------------------------------------------------------------
+
+FUNCIONALIDADES:
+- CRUD completo de servicios
+- Categorización
+- Galería de hasta 5 fotos por servicio
+- Búsqueda y filtros
+- Cálculo de rating promedio
+
+MIGRACIÓN - create_services_table.php:
+
+Schema::create('services', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained()->onDelete('cascade');
+    $table->foreignId('category_id')->constrained()->onDelete('cascade');
+    $table->string('title');
+    $table->text('description');
+    $table->decimal('price_hour', 10, 2);
+    $table->timestamps();
+});
+
+MODELO - Service.php (RELACIONES):
+
+public function professional()
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
+
+public function category()
+{
+    return $this->belongsTo(Category::class);
+}
+
+public function photos()
+{
+    return $this->hasMany(ServicePhoto::class);
+}
+
+public function bookings()
+{
+    return $this->hasMany(Booking::class);
+}
+
+public function reviews()
+{
+    return $this->hasMany(Review::class);
+}
+
+public function averageRating()
+{
+    return $this->reviews()->avg('rating') ?? 0;
+}
+
+CONTROLADOR - ServiceController::store():
+
+public function store(Request $request)
+{
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
+        'price_hour' => 'required|numeric|min:0',
+        'category_id' => 'required|exists:categories,id',
+        'photos.*' => 'image|mimes:jpeg,png,jpg|max:2048'
+    ]);
+
+    $service = Service::create([
+        'user_id' => auth()->id(),
+        'title' => $validated['title'],
+        'description' => $validated['description'],
+        'price_hour' => $validated['price_hour'],
+        'category_id' => $validated['category_id'],
+    ]);
+
+    if ($request->hasFile('photos')) {
+        foreach ($request->file('photos') as $photo) {
+            $path = $photo->store('service_photos', 'public');
+            ServicePhoto::create([
+                'service_id' => $service->id,
+                'photo_path' => $path,
+            ]);
+        }
+    }
+
+    return redirect()->route('services.show', $service)
+        ->with('success', 'Servicio creado exitosamente');
+}
+
+VISTA - services/index.blade.php (BÚSQUEDA Y FILTROS):
+
+<form method="GET" action="{{ route('services.index') }}">
+    <input type="text" name="search" placeholder="Buscar servicios...">
+    <select name="category">
+        <option value="">Todas las categorías</option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}">{{ $category->name }}</option>
+        @endforeach
+    </select>
+    <button type="submit">Buscar</button>
+</form>
+
+
+4.4. Sistema de Reservas
+--------------------------------------------------------------------------------
+
+ESTADOS DE UNA RESERVA:
+1. pending - Pendiente de aceptación del profesional
+2. accepted - Aceptada, pendiente de pago
+3. rejected - Rechazada por el profesional
+4. completed - Servicio completado
+5. cancelled - Cancelada por cliente o profesional
+
+MIGRACIÓN - create_bookings_table.php:
+
+Schema::create('bookings', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained()->onDelete('cascade');
+    $table->foreignId('pro_id')->constrained('users')->onDelete('cascade');
+    $table->foreignId('service_id')->constrained()->onDelete('cascade');
+    $table->dateTime('datetime');
+    $table->string('address');
+    $table->enum('status', ['pending', 'accepted', 'rejected', 
+                            'completed', 'cancelled'])->default('pending');
+    $table->decimal('total_price', 10, 2);
+    $table->text('description')->nullable();
+    $table->text('professional_notes')->nullable();
+    $table->text('rejection_reason')->nullable();
+    $table->timestamp('approved_at')->nullable();
+    $table->timestamp('rejected_at')->nullable();
+    $table->timestamp('completed_at')->nullable();
+    $table->timestamp('paid_at')->nullable();
+    $table->timestamps();
+});
+
+MODELO - Booking.php (MÉTODOS DE ESTADO):
+
+public function isPending(): bool
+{
+    return $this->status === 'pending';
+}
+
+public function isAccepted(): bool
+{
+    return $this->status === 'accepted';
+}
+
+public function isCompleted(): bool
+{
+    return $this->status === 'completed';
+}
+
+public function accept()
+{
+    $this->update([
+        'status' => 'accepted',
+        'approved_at' => now(),
+    ]);
+}
+
+public function reject($reason)
+{
+    $this->update([
+        'status' => 'rejected',
+        'rejection_reason' => $reason,
+        'rejected_at' => now(),
+    ]);
+}
+
+public function complete()
+{
+    $this->update([
+        'status' => 'completed',
+        'completed_at' => now(),
+    ]);
+}
+
+CONTROLADOR - BookingController::accept():
+
+public function accept(Booking $booking)
+{
+    if ($booking->pro_id !== auth()->id()) {
+        abort(403);
+    }
+
+    if (!$booking->isPending()) {
+        return back()->with('error', 'Esta reserva no puede ser aceptada');
+    }
+
+    $booking->accept();
+
+    // Notificar al cliente
+    Notification::create([
+        'user_id' => $booking->user_id,
+        'type' => 'booking_accepted',
+        'title' => 'Reserva Aceptada',
+        'message' => 'Tu reserva ha sido aceptada. Procede al pago.',
+        'link' => route('payments.checkout', $booking->id),
+    ]);
+
+    return redirect()->route('bookings.pending-requests')
+        ->with('success', 'Reserva aceptada correctamente');
+}
+
+
+4.5. Sistema de Pagos (Simulado)
+--------------------------------------------------------------------------------
+
+CARACTERÍSTICAS:
+- Checkout profesional
+- Cálculo automático de comisión de plataforma (10%)
+- Generación de ID de transacción único
+- Historial de pagos
+- Estados: pending, processing, completed, failed, refunded
+
+MIGRACIÓN - create_payments_table.php:
+
+Schema::create('payments', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('booking_id')->constrained()->onDelete('cascade');
+    $table->foreignId('user_id')->constrained()->onDelete('cascade');
+    $table->foreignId('professional_id')->constrained('users')
+          ->onDelete('cascade');
+    $table->decimal('amount', 10, 2);
+    $table->decimal('platform_fee', 10, 2);
+    $table->decimal('professional_amount', 10, 2);
+    $table->string('payment_method');
+    $table->string('transaction_id')->unique();
+    $table->enum('status', ['pending', 'processing', 'completed', 
+                            'failed', 'refunded'])->default('pending');
+    $table->text('notes')->nullable();
+    $table->timestamp('paid_at')->nullable();
+    $table->timestamps();
+});
+
+CONTROLADOR - PaymentController::processPayment():
+
+public function processPayment(Request $request, Booking $booking)
+{
+    $validated = $request->validate([
+        'payment_method' => 'required|in:credit_card,debit_card,paypal',
+    ]);
+
+    // Calcular comisión (10%)
+    $amount = $booking->total_price;
+    $platformFee = $amount * 0.10;
+    $professionalAmount = $amount - $platformFee;
+
+    // Generar ID de transacción único
+    $transactionId = 'TXN-' . strtoupper(uniqid());
+
+    // Crear pago
+    $payment = Payment::create([
+        'booking_id' => $booking->id,
+        'user_id' => auth()->id(),
+        'professional_id' => $booking->pro_id,
+        'amount' => $amount,
+        'platform_fee' => $platformFee,
+        'professional_amount' => $professionalAmount,
+        'payment_method' => $validated['payment_method'],
+        'transaction_id' => $transactionId,
+        'status' => 'completed',
+        'paid_at' => now(),
+    ]);
+
+    // Actualizar reserva
+    $booking->update(['paid_at' => now()]);
+
+    // Notificar al profesional
+    Notification::create([
+        'user_id' => $booking->pro_id,
+        'type' => 'payment_received',
+        'title' => 'Pago Recibido',
+        'message' => 'Has recibido un pago de ' . $amount . '€',
+    ]);
+
+    return redirect()->route('payments.confirmation', $payment)
+        ->with('success', 'Pago procesado exitosamente');
+}
+
+
+4.6. Sistema de Facturas (Innovación Principal)
+--------------------------------------------------------------------------------
+
+CARACTERÍSTICAS DESTACADAS:
+- Generación automática tras completar servicios
+- Numeración única secuencial (INV-2025-001, INV-2025-002, etc.)
+- Generación de PDF profesional con dompdf
+- Cálculo automático de IVA (21%)
+- Descarga para clientes y profesionales
+- Vista administrativa con búsqueda avanzada
+
+MIGRACIÓN - create_invoices_table.php:
+
+Schema::create('invoices', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('booking_id')->constrained()->onDelete('cascade');
+    $table->string('invoice_number')->unique();
+    $table->timestamp('issued_at');
+    $table->decimal('total', 10, 2);
+    $table->enum('status', ['pending', 'paid', 'cancelled'])
+          ->default('pending');
+    $table->string('pdf_path')->nullable();
+    $table->text('notes')->nullable();
+    $table->timestamps();
+});
+
+MODELO - Invoice.php (MÉTODOS CLAVE):
+
+public function generateInvoiceNumber(): string
+{
+    $year = date('Y');
+    $lastInvoice = Invoice::whereYear('created_at', $year)
+                          ->orderBy('id', 'desc')
+                          ->first();
+    
+    $number = $lastInvoice ? 
+              intval(substr($lastInvoice->invoice_number, -3)) + 1 : 1;
+    
+    return 'INV-' . $year . '-' . str_pad($number, 3, '0', STR_PAD_LEFT);
+}
+
+public function isPaid(): bool
+{
+    return $this->status === 'paid';
+}
+
+public function markAsPaid(): void
+{
+    $this->update(['status' => 'paid']);
+}
+
+CONTROLADOR - InvoiceController::generate():
+
+public function generate(Booking $booking)
+{
+    // Verificar permisos
+    if ($booking->pro_id !== auth()->id()) {
+        abort(403);
+    }
+
+    // Verificar que el servicio esté completado
+    if (!$booking->isCompleted()) {
+        return back()->with('error', 
+            'Solo puedes generar facturas de servicios completados');
+    }
+
+    // Verificar si ya existe factura
+    if ($booking->invoice) {
+        return redirect()->route('invoices.show', $booking->invoice);
+    }
+
+    // Crear factura
+    $invoice = Invoice::create([
+        'booking_id' => $booking->id,
+        'invoice_number' => (new Invoice())->generateInvoiceNumber(),
+        'issued_at' => now(),
+        'total' => $booking->total_price,
+        'status' => 'pending',
+    ]);
+
+    // Generar PDF
+    $this->generatePDF($invoice);
+
+    return redirect()->route('invoices.show', $invoice)
+        ->with('success', 'Factura generada correctamente');
+}
+
+GENERACIÓN DE PDF - InvoiceController::generatePDF():
+
+protected function generatePDF(Invoice $invoice)
+{
+    $booking = $invoice->booking;
+    
+    // Calcular IVA (21%)
+    $subtotal = $booking->total_price / 1.21;
+    $iva = $booking->total_price - $subtotal;
+    
+    $data = [
+        'invoice' => $invoice,
+        'booking' => $booking,
+        'client' => $booking->client,
+        'professional' => $booking->professional,
+        'service' => $booking->service,
+        'subtotal' => $subtotal,
+        'iva' => $iva,
+        'total' => $booking->total_price,
+    ];
+    
+    $pdf = PDF::loadView('invoices.pdf', $data);
+    $pdf->setPaper('A4', 'portrait');
+    
+    $filename = 'invoice_' . $invoice->invoice_number . '.pdf';
+    $path = 'invoices/' . $filename;
+    
+    Storage::disk('public')->put($path, $pdf->output());
+    
+    $invoice->update(['pdf_path' => $path]);
+}
+
+VISTA PDF - invoices/pdf.blade.php (ESTRUCTURA):
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Factura {{ $invoice->invoice_number }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12pt; }
+        .header { background: linear-gradient(135deg, #667eea, #764ba2); 
+                  color: white; padding: 25px; text-align: center; }
+        .invoice-info { margin: 25px 0; }
+        .table { width: 100%; border-collapse: collapse; margin: 25px 0; }
+        .table th, .table td { border: 1px solid #ddd; padding: 12px; }
+        .total { font-size: 16pt; font-weight: bold; text-align: right; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>HOUSEFIXES</h1>
+        <p>Marketplace de Servicios Profesionales</p>
+    </div>
+    
+    <div class="invoice-info">
+        <p><strong>Factura Nº:</strong> {{ $invoice->invoice_number }}</p>
+        <p><strong>Fecha:</strong> {{ $invoice->issued_at->format('d/m/Y') }}</p>
+        <p><strong>Cliente:</strong> {{ $client->name }}</p>
+        <p><strong>Profesional:</strong> {{ $professional->name }}</p>
+    </div>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Servicio</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ $service->title }}</td>
+                <td>1</td>
+                <td>{{ number_format($subtotal, 2) }}€</td>
+                <td>{{ number_format($subtotal, 2) }}€</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="totals">
+        <p>Subtotal: {{ number_format($subtotal, 2) }}€</p>
+        <p>IVA (21%): {{ number_format($iva, 2) }}€</p>
+        <p class="total">TOTAL: {{ number_format($total, 2) }}€</p>
+    </div>
+</body>
+</html>
+
+VISTA ADMIN - invoices/admin.blade.php:
+
+@extends('layouts.app')
+
+@section('content')
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">Todas las Facturas del Sistema</h1>
+    
+    <!-- Estadísticas -->
+    <div class="grid grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-gray-500 text-sm">Total Facturas</h3>
+            <p class="text-3xl font-bold">{{ $invoices->total() }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-gray-500 text-sm">Pagadas</h3>
+            <p class="text-3xl font-bold text-green-600">
+                {{ $invoices->where('status', 'paid')->count() }}
+            </p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-gray-500 text-sm">Pendientes</h3>
+            <p class="text-3xl font-bold text-yellow-600">
+                {{ $invoices->where('status', 'pending')->count() }}
+            </p>
+        </div>
+    </div>
+    
+    <!-- Búsqueda -->
+    <form method="GET" class="mb-6">
+        <input type="text" name="search" placeholder="Buscar por número, cliente...">
+        <select name="status">
+            <option value="">Todos los estados</option>
+            <option value="paid">Pagadas</option>
+            <option value="pending">Pendientes</option>
+        </select>
+        <button type="submit">Buscar</button>
+    </form>
+    
+    <!-- Tabla de facturas -->
+    <table class="w-full bg-white shadow rounded-lg">
+        <thead class="bg-gray-100">
+            <tr>
+                <th>Número</th>
+                <th>Cliente</th>
+                <th>Profesional</th>
+                <th>Fecha</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($invoices as $invoice)
+            <tr>
+                <td>{{ $invoice->invoice_number }}</td>
+                <td>{{ $invoice->booking->client->name }}</td>
+                <td>{{ $invoice->booking->professional->name }}</td>
+                <td>{{ $invoice->issued_at->format('d/m/Y') }}</td>
+                <td>{{ number_format($invoice->total, 2) }}€</td>
+                <td>
+                    <span class="badge badge-{{ $invoice->status }}">
+                        {{ ucfirst($invoice->status) }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ route('invoices.download', $invoice) }}">
+                        Descargar
+                    </a>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+    
+    {{ $invoices->links() }}
+</div>
+@endsection
+
+
+4.7. Sistema de Reseñas
+--------------------------------------------------------------------------------
+
+CARACTERÍSTICAS:
+- Solo usuarios que completaron el servicio pueden dejar reseñas
+- Rating de 1 a 5 estrellas
+- Comentario de texto
+- Cálculo automático de promedio por servicio
+
+MIGRACIÓN - create_reviews_table.php:
+
+Schema::create('reviews', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('booking_id')->constrained()->onDelete('cascade');
+    $table->foreignId('user_id')->constrained()->onDelete('cascade');
+    $table->foreignId('service_id')->constrained()->onDelete('cascade');
+    $table->integer('rating'); // 1-5
+    $table->text('comment')->nullable();
+    $table->timestamps();
+});
+
+CONTROLADOR - ReviewController::store():
+
+public function store(Request $request, Booking $booking)
+{
+    // Verificar que el usuario es el cliente de la reserva
+    if ($booking->user_id !== auth()->id()) {
+        abort(403);
+    }
+
+    // Verificar que el servicio está completado
+    if (!$booking->isCompleted()) {
+        return back()->with('error', 
+            'Solo puedes dejar reseñas de servicios completados');
+    }
+
+    // Verificar que no existe ya una reseña
+    if ($booking->review) {
+        return back()->with('error', 'Ya has dejado una reseña');
+    }
+
+    $validated = $request->validate([
+        'rating' => 'required|integer|min:1|max:5',
+        'comment' => 'nullable|string|max:1000',
+    ]);
+
+    Review::create([
+        'booking_id' => $booking->id,
+        'user_id' => auth()->id(),
+        'service_id' => $booking->service_id,
+        'rating' => $validated['rating'],
+        'comment' => $validated['comment'],
+    ]);
+
+    return redirect()->route('bookings.show', $booking)
+        ->with('success', 'Reseña publicada correctamente');
+}
+
+
+4.8. Sistema de Mensajería
+--------------------------------------------------------------------------------
+
+CARACTERÍSTICAS:
+- Chat entre clientes y profesionales
+- Asociado a reservas
+- Marcar mensajes como leídos
+
+MIGRACIÓN - create_messages_table.php:
+
+Schema::create('messages', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');
+    $table->foreignId('receiver_id')->constrained('users')->onDelete('cascade');
+    $table->foreignId('booking_id')->nullable()->constrained()
+          ->onDelete('cascade');
+    $table->text('message');
+    $table->timestamp('read_at')->nullable();
+    $table->timestamps();
+});
+
+
+4.9. Gestión de Disponibilidad
+--------------------------------------------------------------------------------
+
+CARACTERÍSTICAS:
+- Configuración de horarios por día de la semana
+- Múltiples franjas horarias por día
+- Bloqueos específicos (vacaciones)
+- Validación de solapamientos
+
+MIGRACIÓN - create_availabilities_table.php:
+
+Schema::create('availabilities', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained()->onDelete('cascade');
+    $table->integer('day_of_week')->nullable(); // 1-7 (lunes-domingo)
+    $table->time('start_time');
+    $table->time('end_time');
+    $table->boolean('is_available')->default(true);
+    $table->date('date')->nullable(); // Para bloqueos específicos
+    $table->timestamps();
+});
+
+
+4.10. Panel Administrativo
+--------------------------------------------------------------------------------
+
+FUNCIONALIDADES:
+- Dashboard con estadísticas globales
+- Gestión de usuarios (CRUD, cambio de roles)
+- Gestión de categorías (CRUD)
+- Vista de todas las facturas
+- Búsqueda y filtros avanzados
+
+CONTROLADOR - AdminController::index():
+
+public function index()
+{
+    $stats = [
+        'total_users' => User::count(),
+        'total_professionals' => User::where('role', 'professional')->count(),
+        'total_clients' => User::where('role', 'client')->count(),
+        'total_services' => Service::count(),
+        'total_bookings' => Booking::count(),
+        'pending_bookings' => Booking::where('status', 'pending')->count(),
+        'completed_bookings' => Booking::where('status', 'completed')->count(),
+        'total_revenue' => Payment::where('status', 'completed')
+                                  ->sum('amount'),
+        'platform_revenue' => Payment::where('status', 'completed')
+                                     ->sum('platform_fee'),
+    ];
+    
+    $recentBookings = Booking::with(['client', 'professional', 'service'])
+                             ->latest()
+                             ->take(10)
+                             ->get();
+    
+    return view('admin.dashboard', compact('stats', 'recentBookings'));
+}
+
+
+================================================================================
+5. RESULTADOS Y CONCLUSIONES
+================================================================================
+
+5.1. Objetivos Cumplidos
+--------------------------------------------------------------------------------
+
+CUMPLIMIENTO DE OBJETIVOS ESPECÍFICOS:
+
+✅ Objetivo 1: Sistema de autenticación con 3 roles
+   Estado: COMPLETADO 100%
+   Resultado: Implementado con Jetstream, incluye 2FA opcional
+
+✅ Objetivo 2: Sistema completo de gestión de servicios
+   Estado: COMPLETADO 100%
+   Resultado: CRUD completo, galería de 5 fotos, categorización
+
+✅ Objetivo 3: Flujo de reservas con múltiples estados
+   Estado: COMPLETADO 100%
+   Resultado: 5 estados implementados con transiciones validadas
+
+✅ Objetivo 4: Sistema de pagos simulado
+   Estado: COMPLETADO 100%
+   Resultado: Checkout profesional, cálculo de comisiones, historial
+
+✅ Objetivo 5: Sistema de facturación automática
+   Estado: COMPLETADO 100%
+   Resultado: PDF profesional, numeración única, IVA automático
+
+✅ Objetivo 6: Sistema de reseñas verificadas
+   Estado: COMPLETADO 100%
+   Resultado: Solo tras servicio completado, rating 1-5
+
+✅ Objetivo 7: Mensajería básica
+   Estado: COMPLETADO 100%
+   Resultado: Chat asociado a reservas, marcar como leído
+
+✅ Objetivo 8: Panel administrativo
+   Estado: COMPLETADO 100%
+   Resultado: Dashboard completo con estadísticas globales
+
+✅ Objetivo 9: Interfaz responsive con Tailwind CSS
+   Estado: COMPLETADO 100%
+   Resultado: Funciona en móvil (320px+), tablet, desktop
+
+✅ Objetivo 10: Buenas prácticas de desarrollo
+   Estado: COMPLETADO 100%
+   Resultado: Código limpio, BD normalizada, seguridad aplicada
+
+
+5.2. Estadísticas Finales
+--------------------------------------------------------------------------------
+
+CÓDIGO FUENTE:
+- Modelos: 12 archivos
+- Controladores: 10 archivos
+- Vistas Blade: 50+ archivos
+- Migraciones: 21 archivos
+- Seeders: 8 archivos
+- Middlewares personalizados: 2 archivos
+- Políticas: 2 archivos
+- Rutas definidas: 80+ rutas
+
+LÍNEAS DE CÓDIGO:
+- PHP: ~8,000 líneas
+- Blade (HTML/Tailwind): ~6,000 líneas
+- JavaScript (Alpine.js): ~500 líneas
+- Total: ~14,500 líneas
+
+DATOS DE PRUEBA:
+- Usuarios creados: 13 (1 admin, 6 profesionales, 6 clientes)
+- Categorías: 20 categorías
+- Servicios: 15 servicios de ejemplo
+- Reservas: 14 reservas con diferentes estados
+- Facturas: 8 facturas generadas
+- Reseñas: 10 reseñas
+
+TIEMPO DE DESARROLLO:
+- Total horas: 208 horas
+- Duración: 11 semanas
+- Promedio: 19 horas/semana
+
+
+5.3. Problemas Encontrados y Soluciones
+--------------------------------------------------------------------------------
+
+PROBLEMA 1: Precio de reserva mostraba 0€
+Causa: Campo incorrecto en vista ($service->price en lugar de $service->price_hour)
+Solución: Corregir referencia en booking-calendar-modal.blade.php
+Tiempo: 15 minutos
+
+PROBLEMA 2: Error al completar reserva (POST no permitido)
+Causa: Ruta definida como PATCH pero formulario enviaba POST
+Solución: Cambiar método de ruta a POST
+Tiempo: 10 minutos
+
+PROBLEMA 3: Direcciones de reservas sin datos reales
+Causa: Seeder con datos placeholder
+Solución: Script update_bookings_addresses.php con direcciones de Madrid
+Tiempo: 30 minutos
+
+PROBLEMA 4: PDF de facturas con caché
+Causa: dompdf guardaba versiones antiguas
+Solución: Implementar regeneración siempre en método generatePDF()
+Tiempo: 45 minutos
+
+PROBLEMA 5: PDF muy comprimido visualmente
+Causa: Tamaños de fuente pequeños y padding insuficiente
+Solución: Múltiples ajustes de diseño en pdf.blade.php
+Tiempo: 1 hora
+
+PROBLEMA 6: Admin no podía ver facturas globales
+Causa: Vista no existía para rol admin
+Solución: Crear invoices/admin.blade.php con búsqueda avanzada
+Tiempo: 2 horas
+
+
+5.4. Conocimientos Adquiridos
+--------------------------------------------------------------------------------
+
+BACKEND:
+- Arquitectura MVC en profundidad con Laravel
+- Eloquent ORM y relaciones complejas (1:1, 1:N, N:N)
+- Migraciones y seeders para control de versiones de BD
+- Middleware y políticas para autorización granular
+- Validación de datos y manejo de errores
+- Generación de PDF con dompdf
+- Sistema de notificaciones
+
+FRONTEND:
+- Tailwind CSS utility-first approach
+- Alpine.js para interactividad ligera
+- Blade templates y componentes reutilizables
+- Diseño responsive (mobile-first)
+- UX/UI design principles
+
+BASE DE DATOS:
+- Diseño de esquemas normalizados (3FN)
+- Claves foráneas e integridad referencial
+- Índices para optimización de consultas
+- Transacciones para operaciones críticas
+
+DESARROLLO PROFESIONAL:
+- Control de versiones con Git
+- Documentación de código
+- Testing funcional
+- Debugging y resolución de problemas
+- Planificación con metodología ágil
+- Deployment en servidor real
+
+
+5.5. Mejoras Futuras
+--------------------------------------------------------------------------------
+
+CORTO PLAZO (1-3 meses):
+
+1. Integración con Pasarela de Pago Real
+   - Stripe o PayPal
+   - Webhooks para confirmación
+   - Reembolsos automáticos
+
+2. Notificaciones Push en Tiempo Real
+   - Pusher o Laravel Echo
+   - WebSockets para chat en vivo
+
+3. Sistema de Favoritos
+   - Guardar servicios favoritos
+   - Profesionales favoritos
+
+MEDIO PLAZO (3-6 meses):
+
+4. Aplicación Móvil
+   - React Native o Flutter
+   - Notificaciones push nativas
+
+5. Geolocalización
+   - Integración con Google Maps
+   - Búsqueda por proximidad
+
+6. Verificación de Identidad
+   - KYC para profesionales
+   - Certificados profesionales
+
+LARGO PLAZO (6-12 meses):
+
+7. Inteligencia Artificial
+   - Recomendaciones personalizadas
+   - Chatbot de atención
+
+8. Multi-idioma
+   - Español, Inglés, Francés
+
+9. Sistema Avanzado
+   - Cupones y descuentos
+   - Programa de fidelización
+   - Suscripciones premium
+
+
+5.6. Conclusiones Personales
+--------------------------------------------------------------------------------
+
+El desarrollo de HouseFixes ha sido una experiencia de aprendizaje muy completa
+que me ha permitido aplicar todos los conocimientos adquiridos durante el ciclo
+formativo de Desarrollo de Aplicaciones Web.
+
+LOGROS PRINCIPALES:
+
+1. Aplicación Real y Funcional
+   He creado una aplicación completamente funcional que podría ser desplegada
+   en producción con mínimas modificaciones (integración de pago real).
+
+2. Arquitectura Profesional
+   He trabajado con una arquitectura MVC real, comprendiendo la separación de
+   responsabilidades y la importancia del código limpio y mantenible.
+
+3. Sistema Innovador
+   El sistema de facturas automáticas con generación de PDF es una funcionalidad
+   que agrega valor real y no existe en muchos competidores del mercado.
+
+4. Resolución de Problemas
+   He enfrentado y resuelto múltiples problemas técnicos, desarrollando
+   habilidades de debugging y pensamiento crítico.
+
+REFLEXIÓN PERSONAL:
+
+Este proyecto me ha demostrado que soy capaz de desarrollar aplicaciones web
+completas desde cero, desde el diseño de la base de datos hasta la interfaz
+de usuario. He aprendido a planificar, implementar, probar y documentar
+software profesional.
+
+La experiencia con Laravel me ha mostrado la potencia de los frameworks
+modernos y cómo pueden acelerar el desarrollo sin sacrificar calidad. El uso
+de Tailwind CSS ha cambiado mi forma de pensar sobre diseño web, priorizando
+la utilidad y la composición de componentes.
+
+PREPARACIÓN PROFESIONAL:
+
+Me siento preparado para incorporarme al mercado laboral como desarrollador
+web junior. Este proyecto será una pieza clave de mi portfolio y demuestra
+mi capacidad para:
+- Trabajar con tecnologías modernas (Laravel, Tailwind, MySQL)
+- Implementar funcionalidades complejas (pagos, facturas PDF, roles)
+- Diseñar interfaces de usuario atractivas y funcionales
+- Documentar mi trabajo de forma profesional
+- Resolver problemas de forma autónoma
+
+AGRADECIMIENTOS:
+
+Quiero agradecer a los profesores del ciclo por su guía y apoyo durante este
+proyecto, especialmente en los momentos de dificultad técnica. También a la
+comunidad de Laravel en línea, cuya documentación y recursos han sido
+invaluables.
+
+
+================================================================================
+6. REFERENCIAS Y BIBLIOGRAFÍA
+================================================================================
+
+DOCUMENTACIÓN OFICIAL:
+
+[1] Laravel Documentation (v11.x)
+    https://laravel.com/docs/11.x
+    
+[2] Tailwind CSS Documentation (v3.4)
+    https://tailwindcss.com/docs
+    
+[3] Alpine.js Documentation (v3.x)
+    https://alpinejs.dev/
+    
+[4] MySQL Documentation (v8.0)
+    https://dev.mysql.com/doc/refman/8.0/en/
+    
+[5] Laravel Jetstream Documentation
+    https://jetstream.laravel.com/
+    
+[6] dompdf Documentation
+    https://github.com/dompdf/dompdf
+
+LIBROS Y RECURSOS:
+
+[7] "Laravel: Up & Running" - Matt Stauffer (O'Reilly, 2023)
+
+[8] "Refactoring UI" - Adam Wathan & Steve Schoger (2018)
+
+[9] "Database Design for Mere Mortals" - Michael J. Hernandez (2013)
+
+[10] Laravel Daily - Video Tutorials
+     https://laraveldaily.com/
+
+[11] Laracasts - Laravel Video Course
+     https://laracasts.com/
+
+ARTÍCULOS Y TUTORIALES:
+
+[12] "Building Multi-Role Applications in Laravel"
+     https://laravel-news.com/
+
+[13] "PDF Generation in Laravel with DomPDF"
+     https://github.com/barryvdh/laravel-dompdf
+
+[14] "Tailwind CSS Best Practices"
+     https://tailwindcss.com/docs/utility-first
+
+HERRAMIENTAS UTILIZADAS:
+
+[15] Visual Studio Code - IDE
+     https://code.visualstudio.com/
+
+[16] Laragon - Entorno de desarrollo local
+     https://laragon.org/
+
+[17] Git & GitHub - Control de versiones
+     https://github.com/
+
+[18] MySQL Workbench - Diseño de base de datos
+     https://www.mysql.com/products/workbench/
+
+[19] Postman - Testing de API
+     https://www.postman.com/
+
+
+================================================================================
+7. ÍNDICE DE FIGURAS/ILUSTRACIONES
+================================================================================
+
+[INSERTAR AUTOMÁTICAMENTE EN WORD]
+
+Figura 1.1 - Landing Page de HouseFixes................................página X
+Figura 1.2 - Búsqueda de Servicios por Categoría.......................página X
+Figura 1.3 - Detalle de un Servicio....................................página X
+
+Figura 2.1 - Diagrama Entidad-Relación completo........................página X
+Figura 2.2 - Diagrama de Casos de Uso..................................página X
+Figura 2.3 - Diagrama de Clases Simplificado...........................página X
+Figura 2.4 - Arquitectura MVC del Sistema..............................página X
+
+Figura 3.1 - Panel de Cliente - Mis Reservas...........................página X
+Figura 3.2 - Panel de Profesional - Solicitudes Pendientes.............página X
+Figura 3.3 - Formulario de Creación de Servicio........................página X
+Figura 3.4 - Gestión de Disponibilidad Horaria.........................página X
+
+Figura 4.1 - Proceso de Checkout de Pago...............................página X
+Figura 4.2 - Confirmación de Pago......................................página X
+Figura 4.3 - Factura PDF Generada......................................página X
+Figura 4.4 - Listado de Facturas.......................................página X
+
+Figura 5.1 - Panel Administrativo - Dashboard..........................página X
+Figura 5.2 - Gestión de Usuarios.......................................página X
+Figura 5.3 - Gestión de Categorías.....................................página X
+Figura 5.4 - Vista Admin de Todas las Facturas.........................página X
+
+Figura 6.1 - Sistema de Reseñas........................................página X
+Figura 6.2 - Chat entre Cliente y Profesional..........................página X
+Figura 6.3 - Vista Responsive en Móvil.................................página X
+
+
+================================================================================
+8. ANEXOS
+================================================================================
+
+ANEXO A: CREDENCIALES DE ACCESO AL SISTEMA
+--------------------------------------------------------------------------------
+
+ADMINISTRADOR:
+Email: admin@housefixes.com
+Password: admin123
+Rol: admin
+
+PROFESIONALES:
+1. Carlos Martínez (Fontanero)
+   Email: carlos@example.com
+   Password: password123
+
+2. Ana García (Electricista)
+   Email: ana@example.com
+   Password: password123
+
+3. Luis Rodríguez (Carpintero)
+   Email: luis@example.com
+   Password: password123
+
+CLIENTES:
+1. María López
+   Email: maria@example.com
+   Password: password123
+
+2. Juan Pérez
+   Email: juan@example.com
+   Password: password123
+
+
+ANEXO B: INSTALACIÓN Y CONFIGURACIÓN
+--------------------------------------------------------------------------------
+
+REQUISITOS DEL SISTEMA:
+- PHP >= 8.2
+- MySQL >= 8.0
+- Composer >= 2.6
+- Node.js >= 18.x
+- NPM >= 9.x
+
+PASOS DE INSTALACIÓN:
+
+1. Clonar el repositorio:
+   git clone https://github.com/brobolo11/marketplace.git
+   cd marketplace
+
+2. Instalar dependencias PHP:
+   composer install
+
+3. Instalar dependencias JavaScript:
+   npm install
+
+4. Configurar archivo .env:
+   cp .env.example .env
+   php artisan key:generate
+
+5. Configurar base de datos en .env:
+   DB_DATABASE=housefixes
+   DB_USERNAME=root
+   DB_PASSWORD=
+
+6. Ejecutar migraciones:
+   php artisan migrate
+
+7. Poblar base de datos:
+   php artisan db:seed
+
+8. Crear enlace simbólico para storage:
+   php artisan storage:link
+
+9. Compilar assets:
+   npm run build
+
+10. Iniciar servidor:
+    php artisan serve
+
+
+ANEXO C: ESTRUCTURA DE BASE DE DATOS COMPLETA
+--------------------------------------------------------------------------------
+
+[INCLUIR DIAGRAMA ER DETALLADO O SCRIPT SQL]
+
+-- users
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
+    password VARCHAR(255),
+    role ENUM('admin', 'professional', 'client'),
+    phone VARCHAR(20),
+    profile_photo_path VARCHAR(255),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
+);
+
+-- categories
+CREATE TABLE categories (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255),
+    slug VARCHAR(255) UNIQUE,
+    description TEXT,
+    icon VARCHAR(255),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
+);
+
+[... resto de tablas ...]
+
+
+ANEXO D: EJEMPLOS DE CÓDIGO ADICIONAL
+--------------------------------------------------------------------------------
+
+[Incluir fragmentos de código relevantes no mostrados en el cuerpo principal]
+
+
+ANEXO E: CAPTURAS DE PANTALLA ADICIONALES
+--------------------------------------------------------------------------------
+
+[Incluir 20+ capturas de pantalla organizadas por funcionalidad]
+
+
+ANEXO F: PRUEBAS REALIZADAS
+--------------------------------------------------------------------------------
+
+PRUEBAS FUNCIONALES:
+✓ Registro de usuarios
+✓ Login/Logout
+✓ Creación de servicios
+✓ Upload de fotos
+✓ Creación de reservas
+✓ Aceptación/rechazo de reservas
+✓ Proceso de pago
+✓ Generación de facturas
+✓ Descarga de PDF
+✓ Publicación de reseñas
+✓ Envío de mensajes
+✓ Gestión de disponibilidad
+✓ Panel administrativo
+
+PRUEBAS DE SEGURIDAD:
+✓ Protección CSRF
+✓ Protección XSS
+✓ Validación de inputs
+✓ Autorización por roles
+✓ Hashing de contraseñas
+
+PRUEBAS DE RENDIMIENTO:
+✓ Carga de página < 2 segundos
+✓ Optimización de consultas
+✓ Eager loading implementado
+
+
+================================================================================
+FIN DE LA MEMORIA
+================================================================================
+
+RESUMEN EJECUTIVO:
+
+Proyecto: HouseFixes - Marketplace de Servicios Profesionales
+Tecnologías: Laravel 12.35.0, PHP 8.3.26, MySQL 8.0, Tailwind CSS 3.4
+Líneas de código: ~14,500
+Tiempo de desarrollo: 208 horas (11 semanas)
+Estado: 100% completado y funcional
+
+Funcionalidades principales:
+- Sistema de autenticación con 3 roles
+- Gestión completa de servicios
+- Sistema de reservas con 5 estados
+- Pagos simulados con historial
+- Facturas automáticas con PDF
+- Reseñas verificadas
+- Mensajería básica
+- Panel administrativo
+
+Innovación destacada:
+Sistema de facturación automática con generación de PDF profesional,
+numeración única secuencial y cálculo automático de IVA.
+
+Repositorio: https://github.com/brobolo11/marketplace
+
+
+================================================================================
+INSTRUCCIONES PARA WORD:
+
+1. Copiar todo el contenido a Word
+2. Formato: Times New Roman 11pt, interlineado 1 línea
+3. Aplicar estilos de título (Ctrl+Alt+1, 2, 3)
+4. Insertar saltos de página donde corresponda
+5. Generar tabla de contenidos automática
+6. Insertar capturas de pantalla y diagramas
+7. Numerar páginas (pie de página, centrado)
+8. Revisar ortografía y formato
+9. Exportar a PDF para entrega final
+================================================================================

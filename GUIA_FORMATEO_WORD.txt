@@ -1,0 +1,579 @@
+================================================================================
+GUÍA COMPLETA DE FORMATEO EN MICROSOFT WORD
+MEMORIA HOUSEFIXES - PASO A PASO
+================================================================================
+
+PARTE 1: PREPARACIÓN DEL DOCUMENTO
+================================================================================
+
+PASO 1: Abrir Word y Crear Documento Nuevo
+-------------------------------------------
+1. Abre Microsoft Word
+2. Crea un documento en blanco (Archivo > Nuevo > Documento en blanco)
+3. Guárdalo como: "Memoria_HouseFixes_TuNombre.docx"
+
+
+PASO 2: Configurar Formato Base del Documento
+----------------------------------------------
+1. Selecciona TODO el documento futuro haciendo Ctrl+A (o espera a pegar el texto)
+
+2. CONFIGURAR FUENTE:
+   - Ve a Inicio > Fuente
+   - Fuente: Times New Roman
+   - Tamaño: 11 puntos
+   - Color: Negro automático
+
+3. CONFIGURAR INTERLINEADO:
+   - Ve a Inicio > Párrafo (ícono con flechas arriba/abajo)
+   - O clic derecho > Párrafo
+   - En "Espaciado":
+     * Antes: 0 pt
+     * Después: 0 pt
+   - En "Interlineado":
+     * Selecciona "Sencillo" (esto es 1 línea en español)
+   - Alineación: Justificada
+   - Clic en "Aceptar"
+
+4. CONFIGURAR MÁRGENES:
+   - Ve a Diseño de página > Márgenes
+   - Selecciona "Normal":
+     * Superior: 2.5 cm
+     * Inferior: 2.5 cm
+     * Izquierdo: 2.5 cm
+     * Derecho: 2.5 cm
+
+
+PASO 3: Copiar el Contenido
+----------------------------
+1. Abre el archivo MEMORIA_HOUSEFIXES.txt
+2. Selecciona TODO el contenido (Ctrl+A)
+3. Copia (Ctrl+C)
+4. Vuelve a Word
+5. Pega con formato de texto sin formato:
+   - IMPORTANTE: Usa Ctrl+Shift+V 
+   - O haz clic en Pegar > Mantener solo texto
+   (Esto evita que se peguen formatos extraños)
+
+
+================================================================================
+PARTE 2: APLICAR ESTILOS DE TÍTULOS (CRÍTICO PARA ÍNDICE)
+================================================================================
+
+¿POR QUÉ APLICAR ESTILOS?
+Los estilos de Word (Título 1, Título 2, etc.) son NECESARIOS para:
+- Generar la tabla de contenidos automática
+- Mantener formato consistente
+- Poder numerar secciones automáticamente
+
+CÓMO APLICAR ESTILOS:
+
+PASO 4: Aplicar Estilo "Título 1" a los Capítulos Principales
+--------------------------------------------------------------
+Busca estas líneas y aplícales "Título 1":
+
+1. INTRODUCCIÓN
+2. REQUISITOS PREVIOS Y PLANIFICACIÓN
+3. DISEÑO
+4. COMPOSICIÓN DETALLADA DEL PROYECTO
+5. RESULTADOS Y CONCLUSIONES
+6. REFERENCIAS Y BIBLIOGRAFÍA
+7. ÍNDICE DE FIGURAS/ILUSTRACIONES
+8. ANEXOS
+
+CÓMO HACERLO:
+1. Coloca el cursor en la línea "1. INTRODUCCIÓN"
+2. Ve a Inicio > Estilos
+3. Haz clic en "Título 1"
+4. Repite para cada capítulo principal (2, 3, 4, 5, 6, 7, 8)
+
+MODIFICAR EL ESTILO "Título 1":
+1. Haz clic derecho en "Título 1" en la galería de estilos
+2. Selecciona "Modificar"
+3. Configura:
+   - Fuente: Times New Roman
+   - Tamaño: 14 pt
+   - Negrita: Sí
+   - Color: Negro
+   - Mayúsculas: Sí
+4. Clic en "Aceptar"
+
+
+PASO 5: Aplicar Estilo "Título 2" a las Subsecciones
+-----------------------------------------------------
+Busca estas líneas y aplícales "Título 2":
+
+Ejemplo:
+1.1. Contexto y Motivación
+1.2. Finalidad del Proyecto
+1.3. Objetivos del Proyecto
+1.4. Alcance y Limitaciones
+1.5. Pequeño Estudio de Costes
+2.1. Tecnologías Utilizadas
+2.2. Requisitos Funcionales
+... y así todas las subsecciones con formato X.Y
+
+CÓMO HACERLO:
+1. Coloca el cursor en "1.1. Contexto y Motivación"
+2. Ve a Inicio > Estilos > "Título 2"
+3. Repite para TODAS las subsecciones (hay unas 40-50)
+
+MODIFICAR EL ESTILO "Título 2":
+1. Haz clic derecho en "Título 2"
+2. Selecciona "Modificar"
+3. Configura:
+   - Fuente: Times New Roman
+   - Tamaño: 12 pt
+   - Negrita: Sí
+   - Color: Negro
+4. Clic en "Aceptar"
+
+
+PASO 6: Aplicar Estilo "Título 3" a Subsecciones Menores (Opcional)
+--------------------------------------------------------------------
+Si hay subtítulos como "MIGRACIÓN", "CONTROLADOR", "VISTA", etc.
+puedes aplicarles "Título 3":
+
+MODIFICAR EL ESTILO "Título 3":
+- Fuente: Times New Roman
+- Tamaño: 11 pt
+- Negrita: Sí
+- Color: Negro
+
+
+================================================================================
+PARTE 3: CREAR LA PORTADA
+================================================================================
+
+PASO 7: Insertar Portada Profesional
+-------------------------------------
+1. Coloca el cursor AL PRINCIPIO del documento (antes de todo)
+2. Ve a Insertar > Portada
+3. Selecciona un diseño profesional (recomiendo "Austin" o "Faceta")
+4. Rellena los campos:
+   - Título: HOUSEFIXES - MARKETPLACE DE SERVICIOS PROFESIONALES
+   - Subtítulo: Proyecto Fin de Ciclo
+   - Autor: [Tu Nombre Completo]
+   - Fecha: 13 de junio de 2025
+   - Otros datos:
+     * Ciclo: Desarrollo de Aplicaciones Web
+     * Curso: 2024/2025
+     * Centro: [Tu centro educativo]
+
+5. Elimina campos que no necesites (clic en el campo > Suprimir)
+
+
+================================================================================
+PARTE 4: CREAR EL ÍNDICE AUTOMÁTICO
+================================================================================
+
+PASO 8: Insertar Tabla de Contenidos (Índice)
+----------------------------------------------
+1. Después de la portada, inserta una NUEVA PÁGINA:
+   - Ve a Insertar > Salto de página (o Ctrl+Enter)
+
+2. Escribe en la primera línea: "ÍNDICE"
+3. Aplícale estilo "Título 1"
+4. Presiona Enter 2 veces
+
+5. INSERTAR TABLA DE CONTENIDOS:
+   - Ve a Referencias > Tabla de contenido
+   - Selecciona "Tabla automática 2"
+   - Se generará automáticamente el índice con:
+     * Todos los Título 1 (capítulos principales)
+     * Todos los Título 2 (subsecciones)
+     * Todos los Título 3 (si los usaste)
+     * Números de página automáticos
+
+6. PERSONALIZAR EL ÍNDICE (Opcional):
+   - Haz clic en el índice
+   - Clic en "Tabla de contenido" arriba
+   - Selecciona "Tabla de contenido personalizada"
+   - Configura:
+     * Mostrar niveles: 3 (muestra Título 1, 2 y 3)
+     * Mostrar números de página: Sí
+     * Alinear números a la derecha: Sí
+     * Carácter de relleno: ........ (puntos)
+   - Clic en "Aceptar"
+
+
+ACTUALIZAR EL ÍNDICE (después de hacer cambios):
+1. Haz clic en el índice
+2. Clic en "Actualizar tabla" (aparece arriba)
+3. Selecciona "Actualizar toda la tabla"
+4. Clic en "Aceptar"
+
+
+================================================================================
+PARTE 5: NUMERACIÓN DE PÁGINAS
+================================================================================
+
+PASO 9: Insertar Números de Página
+-----------------------------------
+1. Ve a Insertar > Número de página
+2. Selecciona "Parte inferior de la página"
+3. Elige "Número simple 2" (centrado)
+
+CONFIGURACIÓN AVANZADA (Opcional):
+Si quieres que la portada NO tenga número:
+1. Haz doble clic en el pie de página de la primera página
+2. Marca "Primera página diferente" en la pestaña Diseño
+3. La portada no tendrá número, el resto sí
+
+
+================================================================================
+PARTE 6: INSERTAR SALTOS DE PÁGINA Y ORGANIZAR
+================================================================================
+
+PASO 10: Añadir Saltos de Página entre Capítulos
+-------------------------------------------------
+Cada capítulo principal debe empezar en una página nueva:
+
+1. Coloca el cursor JUSTO ANTES de:
+   - "2. REQUISITOS PREVIOS Y PLANIFICACIÓN"
+   - "3. DISEÑO"
+   - "4. COMPOSICIÓN DETALLADA DEL PROYECTO"
+   - "5. RESULTADOS Y CONCLUSIONES"
+   - "6. REFERENCIAS Y BIBLIOGRAFÍA"
+   - "7. ÍNDICE DE FIGURAS/ILUSTRACIONES"
+   - "8. ANEXOS"
+
+2. Presiona Ctrl+Enter (o ve a Insertar > Salto de página)
+
+Esto hará que cada capítulo empiece en una página nueva (más profesional).
+
+
+================================================================================
+PARTE 7: DAR FORMATO A CÓDIGO Y ELEMENTOS ESPECIALES
+================================================================================
+
+PASO 11: Formatear Bloques de Código
+-------------------------------------
+Los bloques de código (por ejemplo, código PHP, SQL) deben destacarse:
+
+1. Selecciona un bloque de código, por ejemplo:
+
+   public function isAdmin(): bool
+   {
+       return $this->role === 'admin';
+   }
+
+2. Aplica este formato:
+   - Fuente: Consolas o Courier New
+   - Tamaño: 9 pt
+   - Color de fondo: Gris claro
+   - Bordes: Opcional (Inicio > Bordes > Cuadro)
+
+FORMA RÁPIDA:
+1. Selecciona el código
+2. Ve a Inicio > Sombreado
+3. Selecciona gris claro (10%)
+4. Cambia fuente a Consolas 9pt
+
+
+PASO 12: Formatear Listas de Viñetas
+-------------------------------------
+Las listas con "-" o "✓" o "✗" deberían ser listas de viñetas:
+
+1. Selecciona las líneas con viñetas
+2. Ve a Inicio > Viñetas
+3. Selecciona el estilo de viñeta que prefieras
+
+
+PASO 13: Formatear Tablas (si hay)
+-----------------------------------
+Si copias tablas, ajústalas:
+1. Clic derecho en la tabla > Propiedades de tabla
+2. Tamaño: Ajustar al contenido
+3. Alineación: Centrada
+4. Bordes: Todos los bordes visibles
+
+
+================================================================================
+PARTE 8: INSERTAR IMÁGENES Y DIAGRAMAS
+================================================================================
+
+PASO 14: Insertar Capturas de Pantalla
+---------------------------------------
+En el documento verás marcadores como:
+[INCLUIR DIAGRAMA CREADO CON draw.io]
+[INCLUIR DIAGRAMA]
+[Figura X.X - Descripción]
+
+CÓMO INSERTAR IMÁGENES:
+
+1. Toma las capturas de pantalla de tu proyecto:
+   - Landing page
+   - Dashboard de admin
+   - Panel de profesional
+   - Panel de cliente
+   - Gestión de servicios
+   - Sistema de reservas
+   - Facturas PDF
+   - Etc.
+
+2. Para cada marcador [INCLUIR...]:
+   a) Coloca el cursor en esa línea
+   b) Ve a Insertar > Imágenes > Este dispositivo
+   c) Selecciona la imagen
+   d) Ajusta el tamaño (clic derecho > Tamaño y posición)
+      * Ancho: 15 cm (para que quepa bien)
+      * Alto: Proporcional automático
+   e) Alineación: Centrada
+   f) Ajuste del texto: En línea con el texto
+
+3. Debajo de cada imagen, escribe el pie de foto:
+   - Ejemplo: "Figura 1.1 - Landing Page de HouseFixes"
+   - Aplícale estilo "Énfasis intenso" o simplemente cursiva y centrada
+
+
+PASO 15: Crear Diagramas (ER, Casos de Uso, Clases)
+----------------------------------------------------
+Para los diagramas que faltan:
+
+OPCIÓN 1 - Usar herramientas online:
+1. Diagrama Entidad-Relación:
+   - Ve a https://dbdiagram.io/
+   - O usa MySQL Workbench
+   - Crea el diagrama con las 12 tablas
+   - Exporta como imagen PNG
+   - Inserta en Word
+
+2. Diagrama de Casos de Uso:
+   - Ve a https://app.diagrams.net/ (draw.io)
+   - Usa plantilla UML > Use Case
+   - Crea los 3 actores (Admin, Pro, Cliente)
+   - Añade los casos de uso principales
+   - Exporta como PNG
+   - Inserta en Word
+
+3. Diagrama de Clases:
+   - En draw.io, usa plantilla UML > Class Diagram
+   - Crea las clases principales (User, Service, Booking, Invoice)
+   - Exporta como PNG
+   - Inserta en Word
+
+OPCIÓN 2 - Crear en Word:
+1. Ve a Insertar > SmartArt
+2. Selecciona un diseño apropiado
+3. Rellena con tus datos
+
+
+================================================================================
+PARTE 9: ÍNDICE DE FIGURAS AUTOMÁTICO
+================================================================================
+
+PASO 16: Crear Referencias a las Figuras
+-----------------------------------------
+Para que el "ÍNDICE DE FIGURAS" sea automático:
+
+1. Haz clic en cada pie de foto (ej: "Figura 1.1 - Landing Page")
+2. Ve a Referencias > Insertar título
+3. Configura:
+   - Rótulo: Figura
+   - Posición: Debajo del elemento seleccionado
+   - Título: "Landing Page de HouseFixes"
+4. Clic en "Aceptar"
+
+Repite para TODAS las imágenes.
+
+
+PASO 17: Generar Índice de Figuras
+-----------------------------------
+1. Ve a la sección "7. ÍNDICE DE FIGURAS/ILUSTRACIONES"
+2. Borra la línea "[INSERTAR AUTOMÁTICAMENTE EN WORD]"
+3. Coloca el cursor ahí
+4. Ve a Referencias > Insertar tabla de ilustraciones
+5. Configura:
+   - Rótulo: Figura
+   - Incluir números de página: Sí
+   - Alinear a la derecha: Sí
+6. Clic en "Aceptar"
+
+Se generará automáticamente la lista de todas las figuras con páginas.
+
+
+================================================================================
+PARTE 10: REVISIÓN FINAL
+================================================================================
+
+PASO 18: Revisar Ortografía y Gramática
+----------------------------------------
+1. Ve a Revisar > Ortografía y gramática (o presiona F7)
+2. Corrige todos los errores marcados
+3. Presta atención a:
+   - Nombres propios (Laravel, MySQL, etc.)
+   - Términos técnicos en inglés
+   - Acrónimos (MVC, CRUD, PDF, etc.)
+
+
+PASO 19: Verificar Formato Consistente
+---------------------------------------
+Revisa que:
+✓ Todos los títulos principales tienen estilo "Título 1"
+✓ Todas las subsecciones tienen estilo "Título 2"
+✓ El interlineado es consistente (1 línea)
+✓ La fuente es Times New Roman 11pt en todo el cuerpo
+✓ Los márgenes son correctos (2.5 cm)
+✓ Hay saltos de página entre capítulos
+✓ Las imágenes están centradas y con pie de foto
+✓ El código tiene formato diferenciado (Consolas, fondo gris)
+✓ Los números de página están presentes
+
+
+PASO 20: Actualizar Todos los Índices
+--------------------------------------
+IMPORTANTE: Hazlo AL FINAL, después de insertar todas las imágenes:
+
+1. Actualiza la TABLA DE CONTENIDOS:
+   - Clic en el índice
+   - Clic en "Actualizar tabla"
+   - Selecciona "Actualizar toda la tabla"
+
+2. Actualiza el ÍNDICE DE FIGURAS:
+   - Clic en el índice de figuras
+   - Clic en "Actualizar tabla"
+   - Selecciona "Actualizar toda la tabla"
+
+
+================================================================================
+PARTE 11: EXPORTAR A PDF
+================================================================================
+
+PASO 21: Guardar como PDF para Entrega
+---------------------------------------
+1. Ve a Archivo > Guardar como
+2. Selecciona la ubicación
+3. Nombre: "Memoria_HouseFixes_TuNombre_2025.pdf"
+4. Tipo: PDF (*.pdf)
+5. Opciones:
+   - Optimizado para: Estándar (publicación en línea e impresión)
+   - Incluir: Documento completo
+6. Clic en "Guardar"
+
+
+PASO 22: Verificar PDF Generado
+--------------------------------
+Abre el PDF y verifica:
+✓ La portada se ve correcta
+✓ El índice tiene los números de página correctos
+✓ Las imágenes se ven bien
+✓ Los saltos de página funcionan
+✓ El código es legible
+✓ Los enlaces del índice funcionan (clic en un capítulo te lleva ahí)
+
+
+================================================================================
+RESUMEN RÁPIDO - CHECKLIST FINAL
+================================================================================
+
+ANTES DE ENTREGAR, VERIFICA:
+
+FORMATO:
+□ Fuente: Times New Roman 11pt
+□ Interlineado: Sencillo (1 línea)
+□ Márgenes: 2.5 cm todos los lados
+□ Alineación: Justificada
+
+ESTRUCTURA:
+□ Portada completa con tus datos
+□ Índice automático generado
+□ 8 capítulos principales presentes
+□ Saltos de página entre capítulos
+□ Números de página en todas las páginas
+
+CONTENIDO:
+□ Todos los títulos con estilos aplicados
+□ Mínimo 15-20 imágenes insertadas
+□ Todos los diagramas incluidos (ER, Casos de Uso, Clases)
+□ Código con formato diferenciado
+□ Pie de foto en todas las imágenes
+□ Índice de figuras generado
+
+CALIDAD:
+□ Ortografía revisada (F7)
+□ Sin errores gramaticales
+□ Tablas e índices actualizados
+□ PDF generado y verificado
+
+EXTENSIÓN:
+□ Mínimo 40 páginas
+□ Máximo 60 páginas
+□ Con todas las imágenes insertadas
+
+
+================================================================================
+ATAJOS DE TECLADO ÚTILES
+================================================================================
+
+Ctrl+A          = Seleccionar todo
+Ctrl+C          = Copiar
+Ctrl+V          = Pegar
+Ctrl+Shift+V    = Pegar sin formato
+Ctrl+Z          = Deshacer
+Ctrl+Y          = Rehacer
+Ctrl+Enter      = Salto de página
+Ctrl+B          = Negrita
+Ctrl+I          = Cursiva
+Ctrl+U          = Subrayado
+Ctrl+E          = Centrar
+Ctrl+J          = Justificar
+Ctrl+L          = Alinear izquierda
+Ctrl+R          = Alinear derecha
+F7              = Ortografía y gramática
+Ctrl+Inicio     = Ir al inicio del documento
+Ctrl+Fin        = Ir al final del documento
+
+
+================================================================================
+TIEMPO ESTIMADO
+================================================================================
+
+- Formateo básico y aplicar estilos: 30 minutos
+- Tomar capturas de pantalla: 45 minutos
+- Insertar imágenes: 30 minutos
+- Crear diagramas: 1 hora
+- Revisión final: 30 minutos
+- TOTAL: ~3 horas
+
+¡No dejes esto para el último día!
+
+
+================================================================================
+CONSEJOS FINALES
+================================================================================
+
+1. GUARDA FRECUENTEMENTE (Ctrl+G cada 10 minutos)
+
+2. Haz una COPIA DE SEGURIDAD antes de hacer cambios grandes
+
+3. Si Word se vuelve lento con muchas imágenes:
+   - Guarda y cierra
+   - Vuelve a abrir
+   - Ve a Archivo > Opciones > Avanzadas
+   - Desactiva "Mostrar marcador de recorte de imagen"
+
+4. IMPRIME UNA PÁGINA DE PRUEBA antes de imprimir todo
+
+5. Ten DOS VERSIONES:
+   - Una en .docx (Word) para editar
+   - Una en .pdf para entregar
+
+6. Si algo sale mal, usa Ctrl+Z (Deshacer)
+
+7. NO uses espacios para alinear, usa tabulaciones o tablas
+
+8. NO uses Enter múltiples veces para saltar páginas, usa Ctrl+Enter
+
+
+================================================================================
+¿NECESITAS AYUDA?
+================================================================================
+
+Si algo no sale como esperabas:
+1. Mira tutoriales de YouTube: "Cómo hacer memoria TFG en Word"
+2. Consulta a compañeros o profesores
+3. Usa la ayuda de Word (F1)
+
+
+¡MUCHO ÉXITO CON TU MEMORIA!
+================================================================================
