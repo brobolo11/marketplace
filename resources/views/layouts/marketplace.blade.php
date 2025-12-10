@@ -32,7 +32,7 @@
     
     {{-- Navegación Principal --}}
     <nav class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-4">
+        <div class="container mx-auto px-4 lg:px-6">
             <div class="flex justify-between items-center h-16">
                 {{-- Logo --}} 
                 <div class="flex items-center">

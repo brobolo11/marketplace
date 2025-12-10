@@ -135,7 +135,7 @@
 
                                 {{-- Badge de precio --}}
                                 <div class="absolute bottom-2.5 right-2.5 bg-blue-600 px-3 py-1.5 rounded-lg shadow-xl">
-                                    <span class="font-bold text-white text-sm">{{ number_format($service->price, 2) }}€</span>
+                                    <span class="font-bold text-white text-sm">{{ number_format($service->price_hour, 2) }}€/h</span>
                                 </div>
                             </div>
 

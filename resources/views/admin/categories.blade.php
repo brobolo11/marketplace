@@ -184,13 +184,12 @@
     </div>
 </div>
 
-@push('scripts')
 <script>
 function editCategory(id, name, description, icon) {
     document.getElementById('editName').value = name;
     document.getElementById('editDescription').value = description || '';
     document.getElementById('editIcon').value = icon;
-    document.getElementById('formEdit').action = `{{ url('admin/categories') }}/${id}`;
+    document.getElementById('formEdit').action = '{{ url('admin/categories') }}/' + id;
     document.getElementById('modalEdit').classList.remove('hidden');
 }
 
@@ -199,7 +198,7 @@ function confirmDelete(id, name, servicesCount) {
     const warning = document.getElementById('deleteWarning');
     
     if (servicesCount > 0) {
-        warning.innerHTML = `<i class="fas fa-exclamation-circle text-red-600"></i> Esta categoría tiene <strong>${servicesCount} servicio(s)</strong> asociado(s) y no se puede eliminar.`;
+        warning.innerHTML = '<i class="fas fa-exclamation-circle text-red-600"></i> Esta categoría tiene <strong>' + servicesCount + ' servicio(s)</strong> asociado(s) y no se puede eliminar.';
         document.getElementById('formDelete').querySelector('button[type="submit"]').disabled = true;
         document.getElementById('formDelete').querySelector('button[type="submit"]').classList.add('opacity-50', 'cursor-not-allowed');
     } else {
@@ -208,9 +207,8 @@ function confirmDelete(id, name, servicesCount) {
         document.getElementById('formDelete').querySelector('button[type="submit"]').classList.remove('opacity-50', 'cursor-not-allowed');
     }
     
-    document.getElementById('formDelete').action = `{{ url('admin/categories') }}/${id}`;
+    document.getElementById('formDelete').action = '{{ url('admin/categories') }}/' + id;
     document.getElementById('modalDelete').classList.remove('hidden');
 }
 </script>
-@endpush
 @endsection

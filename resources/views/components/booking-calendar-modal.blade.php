@@ -140,7 +140,7 @@
                     </div>
                 </div>
 
-                <!-- Selected Date Display -->
+                <!-- Mostrar fecha seleccionada -->
                 <div x-show="selectedDate" class="mb-4 p-4 bg-blue-50 rounded-lg">
                     <p class="text-sm font-medium text-blue-900 mb-1">Fecha seleccionada:</p>
                     <p class="text-lg font-semibold text-blue-700" x-text="selectedDate"></p>
@@ -149,10 +149,23 @@
                     </p>
                 </div>
 
-                <!-- Description Field -->
+                <!-- Campo de dirección -->
+                <div class="mb-4">
+                    <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
+                        Dirección del servicio <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                        x-model="address"
+                        id="address"
+                        type="text"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Calle Principal 123, Madrid">
+                </div>
+
                 <div class="mb-4">
                     <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-                        Describe tu necesidad
+                        Detalles adicionales
                     </label>
                     <textarea 
                         x-model="description"
@@ -206,6 +219,7 @@ document.addEventListener('alpine:init', () => {
         open: false,
         selectedDate: '',
         selectedTime: '',
+        address: '',
         description: '',
         loading: false,
         loadingAvailability: false,
@@ -304,6 +318,11 @@ document.addEventListener('alpine:init', () => {
                 return;
             }
 
+            if (!this.address || this.address.trim() === '') {
+                this.errorMessage = 'Por favor ingresa la dirección del servicio';
+                return;
+            }
+
             this.loading = true;
             this.errorMessage = '';
             this.successMessage = '';
@@ -335,12 +354,21 @@ document.addEventListener('alpine:init', () => {
                 datetimeInput.value = this.selectedDate + (this.selectedTime ? ' ' + this.selectedTime + ':00' : ' 09:00:00');
                 form.appendChild(datetimeInput);
 
-                // Address (from description or default)
+                // Address (campo separado)
                 const addressInput = document.createElement('input');
                 addressInput.type = 'hidden';
                 addressInput.name = 'address';
-                addressInput.value = this.description || 'Dirección a confirmar';
+                addressInput.value = this.address;
                 form.appendChild(addressInput);
+
+                // Description (opcional)
+                if (this.description) {
+                    const descInput = document.createElement('input');
+                    descInput.type = 'hidden';
+                    descInput.name = 'description';
+                    descInput.value = this.description;
+                    form.appendChild(descInput);
+                }
 
                 // Total Price (from service price_hour)
                 const priceInput = document.createElement('input');

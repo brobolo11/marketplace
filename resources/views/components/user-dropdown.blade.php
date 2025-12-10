@@ -27,16 +27,26 @@
     <button 
         @click="open = !open" 
         @click.away="open = false"
-        class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="flex items-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
     >
-        <!-- Avatar -->
-        <div class="flex-shrink-0">
+        <!-- Avatar con Badge de Notificaciones -->
+        <div class="relative">
             @if($user->profile_photo_path)
                 <img src="{{ $user->profile_photo_path }}" alt="{{ $user->name }}" class="w-8 h-8 rounded-full object-cover">
             @else
                 <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
                     {{ strtoupper(substr($user->name, 0, 1)) }}
                 </div>
+            @endif
+            
+            <!-- Badge de Notificaciones -->
+            @php
+                $totalNotifications = ($role === 'pro' ? $pendingBookingsCount : 0) + $unreadMessagesCount;
+            @endphp
+            @if($totalNotifications > 0)
+                <span class="absolute -top-2 -right-2 flex items-center justify-center min-w-[20px] h-5 px-1.5 bg-red-500 text-white text-xs font-bold rounded-full border-2 border-white shadow-md">
+                    {{ $totalNotifications > 9 ? '9+' : $totalNotifications }}
+                </span>
             @endif
         </div>
         
